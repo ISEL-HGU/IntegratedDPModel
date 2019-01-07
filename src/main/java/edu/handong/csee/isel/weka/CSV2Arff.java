@@ -7,9 +7,6 @@ import weka.core.converters.CSVLoader;
 import java.io.File;
 
 public class CSV2Arff {
-	/**
-	 * takes 2 arguments: - CSV input file - ARFF output file
-	 */
 	public static void main(String[] args) throws Exception {
 		File folder = new File("/Users/eunjiwon/Desktop/Multucollinearity/jit/input/");
 		File[] listOfFiles = folder.listFiles();
