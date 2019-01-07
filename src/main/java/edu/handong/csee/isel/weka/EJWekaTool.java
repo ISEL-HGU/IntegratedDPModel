@@ -3,82 +3,237 @@ import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;
+import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.SMO;
 import weka.classifiers.trees.RandomForest;
-//import weka.classifiers.functions.Logistic;
-//import weka.classifiers.trees.J48;
-//import weka.classifiers.bayes.BayesNet;
-//import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.functions.Logistic;
+import weka.classifiers.trees.J48;
+import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.NaiveBayes;
 
 import weka.core.Instances;
+import weka.core.SelectedTag;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
+import weka.filters.unsupervised.attribute.Remove;
 
 import java.util.Random;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.io.FileWriter;
+import java.util.Arrays;
+
+import java.util.ArrayList;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+
 public class EJWekaTool {
+	String sourcePath;
+	//	String srclabelName;
+	//	String srcPosLabelValue;
+	String type;
+	String csvPath;
+	String mlModel;
+	boolean help = false;
 
 	public static void main(String[] args) {
-		String[] targetFilelist = { "Relink/Apache.arff", "Relink/Safe.arff", "Relink/Zxing.arff", "AEEEM/EQ.arff", "AEEEM/JDT.arff", "AEEEM/LC.arff", "AEEEM/ML.arff", "AEEEM/PDE.arff" };
-		for(int i = 0; i < targetFilelist.length; i++) {
-			run(targetFilelist[i]);
+
+		EJWekaTool myRunner = new EJWekaTool();
+		myRunner.run(args);
+
+	}
+	private void run(String[] args) {
+		Options options = createOptions();
+
+		if(parseOptions(options, args)){
+			if (help){
+				printHelp(options);
+				return;
+			}
+			System.out.print(sourcePath);
+			String trainingArffPath = sourcePath;
+			try {
+				// "Model", "Targer file", "Precision", "Recall", "F-measure", "AUC", "Type"
+
+				// (1) read file
+				BufferedReader reader = new BufferedReader(new FileReader(trainingArffPath));
+				Instances trainingData = new Instances(reader);
+				// set label index to last index
+				trainingData.setClassIndex(trainingData.numAttributes()-1);
+				reader.close();
+				
+				Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); //new Logistic();//
+				
+				switch(type){
+				case "1": 
+					// original
+					// (2) no pre-processing(ready for input data to model)
+					myModel.buildClassifier(trainingData);
+					// (4) test set and apply and prediction
+					Evaluation eval_case1 = new Evaluation(trainingData);
+					eval_case1.crossValidateModel(myModel, trainingData, 10, new Random(1));
+					// (5) show result
+					System.out.println("--------------------------");
+					System.out.println(trainingArffPath);
+					showSummary(eval_case1, trainingData, mlModel, trainingArffPath, csvPath, "Original"); 
+					break;
+				case "2":
+					// within PCA
+					// (2) pre-processing(ready for input data to model)
+					trainingData = ApplyPCA(trainingData);
+					myModel.buildClassifier(trainingData);
+					// (4) test set and apply and prediction
+					Evaluation eval_case2 = new Evaluation(trainingData);
+					eval_case2.crossValidateModel(myModel, trainingData, 10, new Random(1));
+					// (5) show result
+					System.out.println("--------------------------");
+					System.out.println(trainingArffPath);
+					showSummary(eval_case2, trainingData, mlModel, trainingArffPath, csvPath, "PCA"); 
+					break;
+				case "3" :
+					// within VIF
+					trainingData = ApplyVIF(trainingData);
+					myModel.buildClassifier(trainingData);
+					// (4) test set and apply and prediction
+					Evaluation eval_case3 = new Evaluation(trainingData);
+					eval_case3.crossValidateModel(myModel, trainingData, 10, new Random(1));
+					// (5) show result
+					System.out.println("--------------------------");
+					System.out.println(trainingArffPath);
+					showSummary(eval_case3, trainingData, mlModel, trainingArffPath, csvPath, "VIF"); 
+					break;
+				default :
+					  
+				}
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
-		
 	}
 
-	public static void run(String targetFile) {
-		
-		String trainingArffPath = "/Users/eunjiwon/Desktop/Multucollinearity/TransferDefectLearningDataset/Original/" + targetFile;
-		try {
-			// (1) read file
-			BufferedReader reader = new BufferedReader(new FileReader(trainingArffPath));
-			Instances trainingData = new Instances(reader);
-			// set label index to last index
-			trainingData.setClassIndex(trainingData.numAttributes()-1);
-			reader.close();
-			// (2) no pre-processing(ready for input data to model)
+	public Instances ApplyVIF(Instances instances) throws Exception {
+		int VIFThresholdValue = 10;
+		Instances newData = null;
+		Instances forVIFData = null;
+		ArrayList<Integer> indices = new ArrayList<>();
+		Remove rm = new Remove();
+		rm.setAttributeIndices("last");  
+		rm.setInputFormat(instances);
+		forVIFData = Filter.useFilter(instances, rm);
+
+		int n = forVIFData.numAttributes();
+//		System.out.println("n = " + n);
+		double[] vifs = new double[n];
+		//System.out.println("Relation: " + instances.relationName()); 
+		for (int i = 0; i < vifs.length; i++) {        
+			forVIFData.setClassIndex(i);
+//			Using Weka Linear Regression
+//			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
+//			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
+//			regressor.setEliminateColinearAttributes(false);
+//			regressor.buildClassifier(forVIFData);
+//			double r2 = regressor.getRSquared(forVIFData);
 			
-			trainingData = ApplyPCA(trainingData);
+			double[][] x = getMatrixFromInstancesRemovingClassCol(forVIFData);
+//			System.out.println("--------------" + i + "--------------");
+//			for (int i_ = 0; i_ < x.length; i_++) {
+//	            for (int j = 0; j < x[i_].length; j++) {
+//	                System.out.print(x[i_][j] + "\t"); 
+//	            }
+//	            System.out.println(); 
+//	        }
+			double[] y = getArrayOfLabels(forVIFData);
+//			System.out.println("--------------y "  + "--------------");
+//			for (int i_ = 0; i_ < y.length; i_++) {
+//				System.out.println(y[i_]); 
+//	        }
+//			
+			OLSMultipleLinearRegression OLS = new OLSMultipleLinearRegression();
+//			OLS.setNoIntercept(true); //The default value for Apache Commons Math is false.
+			OLS.newSampleData(y, x);
+			double r2 = OLS.calculateRSquared();
 			
-			// (3) make model
-//			Classifier myModel = new Logistic(); 
-//			Classifier myModel = new J48();
-//			Classifier myModel = new BayesNet();
-//			Classifier myModel = new NaiveBayes();
-//			Classifier myModel = new RandomForest();
-			Classifier myModel = new SMO();
-			
-			myModel.buildClassifier(trainingData);
-			// (4) test set and apply and prediction
-			Evaluation eval = new Evaluation(trainingData);
-			eval.crossValidateModel(myModel, trainingData, 10, new Random(1));
-			// (5) show result
-			System.out.println("--------------------------");
-			System.out.println(targetFile);
-			showSummary(eval,trainingData);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+//			System.out.println("R2 is : " + r2);
+			vifs[i] = 1d / (1d - r2);
+//			System.out.println(i + "\t" + instances.attribute(i).name() + "\t" + vifs[i]); 
+			if (vifs[i] >= VIFThresholdValue) {   
+				indices.add(i);
+			}
 		}
+		int[] removingIndexArray = new int[indices.size()];
+		int size = 0;
+		for(int temp : indices){
+			removingIndexArray[size++] = temp;
+		}
+		Remove removeFilter = new Remove();
+		removeFilter.setAttributeIndicesArray(removingIndexArray);
+		//removeFilter.setInvertSelection(true); 	// If true, leaves only the index of the array.
+		removeFilter.setInputFormat(instances);
+		newData = Filter.useFilter(instances, removeFilter);
+		return newData;
+	}
+
+	static public double[] getArrayOfLabels(Instances instances) {
+		int classIndex = instances.classIndex();
+		double[] matrix = new double[instances.numInstances()];
+	
+		for(int i = 0; i < instances.numInstances() ;i++){
+			matrix[i] = instances.get(i).value(classIndex);
+		}
+		return matrix;
 	}
 	
-	public static void showSummary(Evaluation eval,Instances instances) {
-		// Class True
-		for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
-			System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-			System.out.println("Precision " + eval.precision(i));
-			System.out.println("Recall " + eval.recall(i));
-			System.out.println("F-Measure " + eval.fMeasure(i));
-			System.out.println("AUC " + eval.areaUnderROC(i));
+	static public double[][] getMatrixFromInstancesRemovingClassCol(Instances instances){
+		double[][] matrix = new double[instances.numInstances()][instances.numAttributes()];
+		int indexOfClassLabel = instances.classIndex();
+//		System.out.println("indexOfClassLabel : " + indexOfClassLabel);
+
+		for(int i=0;i<instances.numInstances();i++){
+			for(int attrIndex=0;attrIndex<instances.numAttributes();attrIndex++){
+				if(attrIndex==indexOfClassLabel)
+					continue;
+				matrix[i][attrIndex] = instances.get(i).value(attrIndex);
+			}
 		}
+		matrix = removeCol(matrix, indexOfClassLabel);
+		return matrix;
+	}
+	
+	static public double[][] removeCol(double [][] array, int colRemove)
+	{
+	    int row = array.length;
+	    int col = array[0].length;
+
+	    double [][] newArray = new double[row][col-1]; //new Array will have one column less
+
+	    for(int i = 0; i < row; i++)
+	    {
+	        for(int j = 0,currColumn=0; j < col; j++)
+	        {
+	            if(j != colRemove)
+	            {
+	                newArray[i][currColumn++] = array[i][j];
+	            }
+	        }
+	    }
+	    return newArray;
 	}
 	
 	static public Instances ApplyPCA(Instances data) {
@@ -93,10 +248,111 @@ public class EJWekaTool {
 			filter.setSearch(ranker); // add ranker
 			// generate new data
 			newData = Filter.useFilter(data, filter);
-//			System.out.println(eval.toString());
+//						System.out.println(eval.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return newData;
 	}
+
+	public static void showSummary(Evaluation eval,Instances instances, String modelName, String targetFile, String csvPath, String type) throws Exception {
+		String csvFile = csvPath + "/result.csv";
+		FileWriter writer =  new FileWriter(csvFile, true);
+		for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
+			System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
+			System.out.println("Precision " + eval.precision(i));
+			System.out.println("Recall " + eval.recall(i));
+			System.out.println("F-Measure " + eval.fMeasure(i));
+			System.out.println("AUC " + eval.areaUnderROC(i));
+
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, targetFile, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type));
+
+		}
+		writer.flush();
+		writer.close();
+	}
+	
+	Options createOptions(){
+
+		// create Options object
+		Options options = new Options();
+
+		// add options
+		options.addOption(Option.builder("s").longOpt("source")
+				.desc("Source arff file path to train a prediciton model")
+				.hasArg()
+				.argName("file")
+				.required()
+				.build());
+
+		options.addOption(Option.builder("h").longOpt("help")
+				.desc("Help")
+				.build());
+
+		//		options.addOption(Option.builder("sp").longOpt("srcposlabel")
+		//				.desc("String value of buggy label in source data.")
+		//				.hasArg()
+		//				.required()
+		//				.argName("attribute value")
+		//				.build());
+
+		options.addOption(Option.builder("t").longOpt("type")
+				.desc("1 is original or 2 is applying PCA or 3 is applying VIF.")
+				.hasArg()
+				.required()
+				.argName("attribute value")
+				.build());
+
+		options.addOption(Option.builder("c").longOpt("csv")
+				.desc("Where to save the csv file.")
+				.hasArg()
+				.required()
+				.argName("attribute value")
+				.build());
+		
+		options.addOption(Option.builder("m").longOpt("model")
+				.desc("Machine Learning Model")
+				.hasArg()
+				.required()
+				.argName("attribute value")
+				.build());
+
+		return options;
+	}
+
+	boolean parseOptions(Options options,String[] args){
+
+		CommandLineParser parser = new DefaultParser();
+
+		try {
+
+			CommandLine cmd = parser.parse(options, args);
+
+			sourcePath = cmd.getOptionValue("s");
+			//			srcPosLabelValue = cmd.getOptionValue("sp");
+			help = cmd.hasOption("h");
+			type = cmd.getOptionValue("t"); 
+			csvPath = cmd.getOptionValue("c"); 
+			mlModel = cmd.getOptionValue("m");
+
+
+		} catch (Exception e) {
+			printHelp(options);
+			return false;
+		}
+
+		return true;
+	}
+
+	private void printHelp(Options options) {
+		// automatically generate the help statement
+		HelpFormatter formatter = new HelpFormatter();
+		String header = "Execute heterogeneous defect prediction. On Windows, use HDP.bat instead of ./HDP";
+		String footer ="\nPlease report issues at https://github.com/lifove/HDP/issues";
+		formatter.printHelp( "./HDP", header, options, footer, true);
+	}
+
+
 }
+
+

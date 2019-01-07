@@ -1,3 +1,4 @@
+// for JIT data
 package edu.handong.csee.isel.weka;
 
 import weka.core.Instances;

@@ -10,8 +10,14 @@ plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
 }
+apply plugin: 'application'
+mainClassName = "edu.handong.csee.isel.weka.EJWekaTool"
+
 
 dependencies {
+	// https://mvnrepository.com/artifact/commons-cli/commons-cli
+	compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api 'org.apache.commons:commons-math3:3.6.1'
 
@@ -32,3 +38,4 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
+
