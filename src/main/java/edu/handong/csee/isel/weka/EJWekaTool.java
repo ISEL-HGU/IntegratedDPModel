@@ -45,6 +45,7 @@ public class EJWekaTool {
 	String type;
 	String csvPath;
 	String mlModel;
+	String vifThreshold;
 	boolean help = false;
 
 	public static void main(String[] args) {
@@ -64,7 +65,7 @@ public class EJWekaTool {
 			System.out.print(sourcePath);
 			String trainingArffPath = sourcePath;
 			try {
-				// "Model", "Targer file", "Precision", "Recall", "F-measure", "AUC", "Type"
+				// "Model", "Target file", "Precision", "Recall", "F-measure", "AUC", "Type", "VIF Threshold"
 
 				// (1) read file
 				BufferedReader reader = new BufferedReader(new FileReader(trainingArffPath));
@@ -73,7 +74,7 @@ public class EJWekaTool {
 				trainingData.setClassIndex(trainingData.numAttributes()-1);
 				reader.close();
 				
-				Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); //new Logistic();//
+				Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); //new Logistic();
 				
 				switch(type){
 				case "1": 
@@ -86,10 +87,10 @@ public class EJWekaTool {
 					// (5) show result
 					System.out.println("--------------------------");
 					System.out.println(trainingArffPath);
-					showSummary(eval_case1, trainingData, mlModel, trainingArffPath, csvPath, "Original"); 
+					showSummary(eval_case1, trainingData, mlModel, trainingArffPath, csvPath, "Original", vifThreshold); 
 					break;
 				case "2":
-					// within PCA
+					// applying PCA
 					// (2) pre-processing(ready for input data to model)
 					trainingData = ApplyPCA(trainingData);
 					myModel.buildClassifier(trainingData);
@@ -99,10 +100,10 @@ public class EJWekaTool {
 					// (5) show result
 					System.out.println("--------------------------");
 					System.out.println(trainingArffPath);
-					showSummary(eval_case2, trainingData, mlModel, trainingArffPath, csvPath, "PCA"); 
+					showSummary(eval_case2, trainingData, mlModel, trainingArffPath, csvPath, "PCA", vifThreshold); 
 					break;
 				case "3" :
-					// within VIF
+					// applying non stepwise VIF
 					trainingData = ApplyVIF(trainingData);
 					myModel.buildClassifier(trainingData);
 					// (4) test set and apply and prediction
@@ -111,10 +112,21 @@ public class EJWekaTool {
 					// (5) show result
 					System.out.println("--------------------------");
 					System.out.println(trainingArffPath);
-					showSummary(eval_case3, trainingData, mlModel, trainingArffPath, csvPath, "VIF"); 
+					showSummary(eval_case3, trainingData, mlModel, trainingArffPath, csvPath, "non stepwise VIF", vifThreshold); 
+					break;
+				case "4" :
+					// applying stepwise VIF
+					trainingData = ApplyStepwiseVIF(trainingData);
+					myModel.buildClassifier(trainingData);
+					// (4) test set and apply and prediction
+					Evaluation eval_case4 = new Evaluation(trainingData);
+					eval_case4.crossValidateModel(myModel, trainingData, 10, new Random(1));
+					// (5) show result
+					System.out.println("--------------------------");
+					System.out.println(trainingArffPath);
+					showSummary(eval_case4, trainingData, mlModel, trainingArffPath, csvPath, "stepwise VIF", vifThreshold); 
 					break;
 				default :
-					  
 				}
 
 			} catch (FileNotFoundException e) {
@@ -129,7 +141,7 @@ public class EJWekaTool {
 	}
 
 	public Instances ApplyVIF(Instances instances) throws Exception {
-		int VIFThresholdValue = 10;
+		double VIFThresholdValue = Double.parseDouble(vifThreshold);
 		Instances newData = null;
 		Instances forVIFData = null;
 		ArrayList<Integer> indices = new ArrayList<>();
@@ -145,30 +157,30 @@ public class EJWekaTool {
 		for (int i = 0; i < vifs.length; i++) {        
 			forVIFData.setClassIndex(i);
 //			Using Weka Linear Regression
-//			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
-//			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
-//			regressor.setEliminateColinearAttributes(false);
-//			regressor.buildClassifier(forVIFData);
-//			double r2 = regressor.getRSquared(forVIFData);
+			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
+			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
+			regressor.setEliminateColinearAttributes(false);
+			regressor.buildClassifier(forVIFData);
+			double r2 = regressor.getRSquared(forVIFData);
 			
-			double[][] x = getMatrixFromInstancesRemovingClassCol(forVIFData);
-//			System.out.println("--------------" + i + "--------------");
-//			for (int i_ = 0; i_ < x.length; i_++) {
-//	            for (int j = 0; j < x[i_].length; j++) {
-//	                System.out.print(x[i_][j] + "\t"); 
-//	            }
-//	            System.out.println(); 
-//	        }
-			double[] y = getArrayOfLabels(forVIFData);
-//			System.out.println("--------------y "  + "--------------");
-//			for (int i_ = 0; i_ < y.length; i_++) {
-//				System.out.println(y[i_]); 
-//	        }
-//			
-			OLSMultipleLinearRegression OLS = new OLSMultipleLinearRegression();
-//			OLS.setNoIntercept(true); //The default value for Apache Commons Math is false.
-			OLS.newSampleData(y, x);
-			double r2 = OLS.calculateRSquared();
+//			double[][] x = getMatrixFromInstancesRemovingClassCol(forVIFData);
+////			System.out.println("--------------" + i + "--------------");
+////			for (int i_ = 0; i_ < x.length; i_++) {
+////	            for (int j = 0; j < x[i_].length; j++) {
+////	                System.out.print(x[i_][j] + "\t"); 
+////	            }
+////	            System.out.println(); 
+////	        }
+//			double[] y = getArrayOfLabels(forVIFData);
+////			System.out.println("--------------y "  + "--------------");
+////			for (int i_ = 0; i_ < y.length; i_++) {
+////				System.out.println(y[i_]); 
+////	        }
+////			
+//			OLSMultipleLinearRegression OLS = new OLSMultipleLinearRegression();
+////			OLS.setNoIntercept(true); //The default value for Apache Commons Math is false.
+//			OLS.newSampleData(y, x);
+//			double r2 = OLS.calculateRSquared();
 			
 //			System.out.println("R2 is : " + r2);
 			vifs[i] = 1d / (1d - r2);
@@ -189,53 +201,117 @@ public class EJWekaTool {
 		newData = Filter.useFilter(instances, removeFilter);
 		return newData;
 	}
-
-	static public double[] getArrayOfLabels(Instances instances) {
-		int classIndex = instances.classIndex();
-		double[] matrix = new double[instances.numInstances()];
 	
-		for(int i = 0; i < instances.numInstances() ;i++){
-			matrix[i] = instances.get(i).value(classIndex);
-		}
-		return matrix;
-	}
-	
-	static public double[][] getMatrixFromInstancesRemovingClassCol(Instances instances){
-		double[][] matrix = new double[instances.numInstances()][instances.numAttributes()];
-		int indexOfClassLabel = instances.classIndex();
-//		System.out.println("indexOfClassLabel : " + indexOfClassLabel);
-
-		for(int i=0;i<instances.numInstances();i++){
-			for(int attrIndex=0;attrIndex<instances.numAttributes();attrIndex++){
-				if(attrIndex==indexOfClassLabel)
-					continue;
-				matrix[i][attrIndex] = instances.get(i).value(attrIndex);
+	public Instances ApplyStepwiseVIF(Instances instances) throws Exception {
+		double VIFThresholdValue = Double.parseDouble(vifThreshold);
+		Instances newData = null;
+		Instances forVIFData = null;
+		ArrayList<Integer> indices = new ArrayList<>();
+		Remove rm = new Remove();
+		rm.setAttributeIndices("last");  
+		rm.setInputFormat(instances);
+		forVIFData = Filter.useFilter(instances, rm);
+		int vif_max_index = 0;
+		double vif_max_value = 0.0;
+		int n = forVIFData.numAttributes();
+//		System.out.println("n = " + n);
+		double[] vifs = new double[n];
+		//System.out.println("Relation: " + instances.relationName()); 
+		
+		for (int i = 0; i < vifs.length; i++) {        
+			forVIFData.setClassIndex(i);
+//			Using Weka Linear Regression
+			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
+			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
+			regressor.setEliminateColinearAttributes(false);
+			regressor.buildClassifier(forVIFData);
+			double r2 = regressor.getRSquared(forVIFData);
+//			Using apache.commons.math3.stat.regression.OLSMultipleLinearRegression
+//			double[][] x = getMatrixFromInstancesRemovingClassCol(forVIFData);
+//			double[] y = getArrayOfLabels(forVIFData);
+//			OLSMultipleLinearRegression OLS = new OLSMultipleLinearRegression();
+////			OLS.setNoIntercept(true); //The default value for Apache Commons Math is false.
+//			OLS.newSampleData(y, x);
+//			double r2 = OLS.calculateRSquared();
+//			System.out.println("R2 is : " + r2);
+			vifs[i] = 1d / (1d - r2);
+//			System.out.println(i + "\t" + instances.attribute(i).name() + "\t" + vifs[i]); 
+			if(vifs[i] > vif_max_value) {
+				vif_max_value = vifs[i];
+				vif_max_index = i;
 			}
 		}
-		matrix = removeCol(matrix, indexOfClassLabel);
-		return matrix;
+		
+		if(vif_max_value >= VIFThresholdValue) {
+			indices.add(vif_max_index);
+			int[] removingIndexArray = new int[indices.size()];
+			int size = 0;
+			for(int temp : indices){
+				removingIndexArray[size++] = temp;
+			}
+			Remove removeFilter = new Remove();
+			removeFilter.setAttributeIndicesArray(removingIndexArray);
+			removeFilter.setInputFormat(instances);
+			newData = Filter.useFilter(instances, removeFilter);
+			System.out.println("Removed index: " + vif_max_index + " / value: " + vif_max_value);
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"); 
+			
+			newData = ApplyStepwiseVIF(newData);
+			return newData;
+		}
+		else {
+			return instances;
+		}
+		
 	}
-	
-	static public double[][] removeCol(double [][] array, int colRemove)
-	{
-	    int row = array.length;
-	    int col = array[0].length;
 
-	    double [][] newArray = new double[row][col-1]; //new Array will have one column less
-
-	    for(int i = 0; i < row; i++)
-	    {
-	        for(int j = 0,currColumn=0; j < col; j++)
-	        {
-	            if(j != colRemove)
-	            {
-	                newArray[i][currColumn++] = array[i][j];
-	            }
-	        }
-	    }
-	    return newArray;
-	}
 	
+//	static public double[] getArrayOfLabels(Instances instances) {
+//		int classIndex = instances.classIndex();
+//		double[] matrix = new double[instances.numInstances()];
+//	
+//		for(int i = 0; i < instances.numInstances() ;i++){
+//			matrix[i] = instances.get(i).value(classIndex);
+//		}
+//		return matrix;
+//	}
+//	
+//	static public double[][] getMatrixFromInstancesRemovingClassCol(Instances instances){
+//		double[][] matrix = new double[instances.numInstances()][instances.numAttributes()];
+//		int indexOfClassLabel = instances.classIndex();
+////		System.out.println("indexOfClassLabel : " + indexOfClassLabel);
+//
+//		for(int i=0;i<instances.numInstances();i++){
+//			for(int attrIndex=0;attrIndex<instances.numAttributes();attrIndex++){
+//				if(attrIndex==indexOfClassLabel)
+//					continue;
+//				matrix[i][attrIndex] = instances.get(i).value(attrIndex);
+//			}
+//		}
+//		matrix = removeCol(matrix, indexOfClassLabel);
+//		return matrix;
+//	}
+//	
+//	static public double[][] removeCol(double [][] array, int colRemove)
+//	{
+//	    int row = array.length;
+//	    int col = array[0].length;
+//
+//	    double [][] newArray = new double[row][col-1]; //new Array will have one column less
+//
+//	    for(int i = 0; i < row; i++)
+//	    {
+//	        for(int j = 0,currColumn=0; j < col; j++)
+//	        {
+//	            if(j != colRemove)
+//	            {
+//	                newArray[i][currColumn++] = array[i][j];
+//	            }
+//	        }
+//	    }
+//	    return newArray;
+//	}
+//	
 	static public Instances ApplyPCA(Instances data) {
 		Instances newData = null;
 		Ranker ranker = new Ranker();
@@ -248,14 +324,13 @@ public class EJWekaTool {
 			filter.setSearch(ranker); // add ranker
 			// generate new data
 			newData = Filter.useFilter(data, filter);
-//						System.out.println(eval.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return newData;
 	}
 
-	public static void showSummary(Evaluation eval,Instances instances, String modelName, String targetFile, String csvPath, String type) throws Exception {
+	public static void showSummary(Evaluation eval,Instances instances, String modelName, String targetFile, String csvPath, String type, String threshold) throws Exception {
 		String csvFile = csvPath + "/result.csv";
 		FileWriter writer =  new FileWriter(csvFile, true);
 		for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
@@ -265,7 +340,7 @@ public class EJWekaTool {
 			System.out.println("F-Measure " + eval.fMeasure(i));
 			System.out.println("AUC " + eval.areaUnderROC(i));
 
-			CSVUtils.writeLine(writer, Arrays.asList(modelName, targetFile, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type));
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, targetFile, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, threshold));
 
 		}
 		writer.flush();
@@ -297,7 +372,7 @@ public class EJWekaTool {
 		//				.build());
 
 		options.addOption(Option.builder("t").longOpt("type")
-				.desc("1 is original or 2 is applying PCA or 3 is applying VIF.")
+				.desc("1 is original or 2 is applying PCA or 3 is applying non stepwise VIF or 4 is applying stepwise VIF.")
 				.hasArg()
 				.required()
 				.argName("attribute value")
@@ -307,14 +382,21 @@ public class EJWekaTool {
 				.desc("Where to save the csv file.")
 				.hasArg()
 				.required()
-				.argName("attribute value")
+				.argName("csv file location")
 				.build());
 		
 		options.addOption(Option.builder("m").longOpt("model")
 				.desc("Machine Learning Model")
 				.hasArg()
 				.required()
-				.argName("attribute value")
+				.argName("machine learning model")
+				.build());
+		
+		options.addOption(Option.builder("th").longOpt("threshold")
+				.desc("VIF threshold value (type is double). If you select types 1 and 2, you will not use this value, so just write 0.")
+				.hasArg()
+				.required()
+				.argName("vif threshold")
 				.build());
 
 		return options;
@@ -329,11 +411,12 @@ public class EJWekaTool {
 			CommandLine cmd = parser.parse(options, args);
 
 			sourcePath = cmd.getOptionValue("s");
-			//			srcPosLabelValue = cmd.getOptionValue("sp");
+//			srcPosLabelValue = cmd.getOptionValue("sp");
 			help = cmd.hasOption("h");
 			type = cmd.getOptionValue("t"); 
 			csvPath = cmd.getOptionValue("c"); 
 			mlModel = cmd.getOptionValue("m");
+			vifThreshold = cmd.getOptionValue("th");
 
 
 		} catch (Exception e) {
@@ -344,14 +427,14 @@ public class EJWekaTool {
 		return true;
 	}
 
+	
 	private void printHelp(Options options) {
 		// automatically generate the help statement
 		HelpFormatter formatter = new HelpFormatter();
-		String header = "Execute heterogeneous defect prediction. On Windows, use HDP.bat instead of ./HDP";
-		String footer ="\nPlease report issues at https://github.com/lifove/HDP/issues";
-		formatter.printHelp( "./HDP", header, options, footer, true);
+		String header = "Multicollineaity paper experiment tool";
+		String footer ="\nPlease report issues at https://github.com/HGUISEL/EJTool/issues";
+		formatter.printHelp("CLIExample", header, options, footer, true);
 	}
-
 
 }
 
