@@ -1,4 +1,5 @@
 package edu.handong.csee.isel.weka;
+
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.PrincipalComponents;
@@ -45,7 +46,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
-public class EJExperimentTool implements Runnable{
+public class EJToolMultithread implements Runnable{
 	static String sourcePath;
 	static String dataUnbalancingMode;
 	static String type;
@@ -53,57 +54,54 @@ public class EJExperimentTool implements Runnable{
 	static String mlModel;
 	String iter;
 	String fold;
-	boolean help = false;
 
-	public static void main(String[] args) {
-		EJExperimentTool myRunner = new EJExperimentTool();
-		myRunner.run(args);
-
+	public EJToolMultithread(String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String iter, String fold) {
+		this.sourcePath = sourcePath;
+		this.dataUnbalancingMode = dataUnbalancingMode;
+		this.type = type;
+		this.csvPath = csvPath;
+		this.mlModel = mlModel;
+		this.iter = iter;
+		this.fold = fold;
 	}
 	
-	public void run(String[] args) {
-		Options options = createOptions();
-
-		if(parseOptions(options, args)){
-			if (help){
-				printHelp(options);
-				return;
-			}
-			try {
-				ArrayList<String> filePathList = new ArrayList<String>();
-				String path;
-				// if sourcePath contain ".arff", delete extensions
-				System.out.println("sourcePath is : " + sourcePath); //
-				int index = sourcePath.lastIndexOf(".");
-		        if (index != -1) {
-		        		sourcePath = sourcePath.substring(0, index);
-		        		System.out.println("file name is : " + sourcePath);
-		        }
-		        for(int i = 0; i < Integer.parseInt(iter); i++){
-					for(int n = 0; n < Integer.parseInt(fold); n++){
-						path = sourcePath + "_" + i + "_" + n + ".arff";
-						filePathList.add(path);							
-					}
-					if(type.equals("1")) { // unsupervised
-						for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-							crossValidation(idx, filePathList);
-						}
-					}
-					else if(type.equals("2")) { // supervised
-						for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-							crossValidationFS(idx, filePathList);
-						}
-					}
-				
-					filePathList.clear();
+	@Override
+	public synchronized void run() {
+		try {
+			ArrayList<String> filePathList = new ArrayList<String>();
+			String path;
+			// if sourcePath contain ".arff", delete extensions
+			System.out.println("sourcePath is : " + sourcePath); //
+			int index = sourcePath.lastIndexOf(".");
+	        if (index != -1) {
+	        		sourcePath = sourcePath.substring(0, index);
+	        		System.out.println("file name is : " + sourcePath);
+	        }
+	        for(int i = 0; i < Integer.parseInt(iter); i++){
+				for(int n = 0; n < Integer.parseInt(fold); n++){
+					path = sourcePath + "_" + i + "_" + n + ".arff";
+					filePathList.add(path);							
 				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
+				if(type.equals("1")) { // unsupervised
+					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
+						crossValidation(idx, filePathList);
+					}
+				}
+				else if(type.equals("2")) { // supervised
+					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
+						crossValidationFS(idx, filePathList);
+					}
+				}
+			
+				filePathList.clear();
 			}
 			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 	}
+	
 	
 	public static Instances spreadSubsampling(Instances trainData) throws Exception {
 		// training data undersampling
@@ -199,8 +197,7 @@ public class EJExperimentTool implements Runnable{
 		trainData.setClassIndex(trainData.numAttributes()-1);
 		testData.setClassIndex(testData.numAttributes()-1);
 		
-
-
+		
 		if (dataUnbalancingMode.equals("1")) {
 			// no handling unbalancing data problem
 		}
@@ -210,7 +207,6 @@ public class EJExperimentTool implements Runnable{
 		else if(dataUnbalancingMode.equals("3")) {
 			trainData = smote(trainData);
 		}
-		
 
 		Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
 		// feature selection -> using only trainData 
@@ -248,8 +244,8 @@ public class EJExperimentTool implements Runnable{
 //	}
 
 	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
-		String csvFile = csvPath + "/result.csv";
-		FileWriter writer =  new FileWriter(csvFile, true);
+//		String csvFile = csvPath + "/result.csv";
+		FileWriter writer =  new FileWriter(csvPath, true);
 		for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
 			System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
 			System.out.println("Precision " + eval.precision(i));
@@ -264,110 +260,4 @@ public class EJExperimentTool implements Runnable{
 		writer.close();
 	}
 
-	
-	Options createOptions(){
-
-		// create Options object
-		Options options = new Options();
-
-		// add options
-		options.addOption(Option.builder("s").longOpt("source")
-				.desc("Source arff file path to train a prediciton model")
-				.hasArg()
-				.argName("file")
-				.required()
-				.build());
-		
-		options.addOption(Option.builder("d").longOpt("dataUnbalancingMode")
-				.desc("1 is noHandling data unbalance or 2 is applying spread subsampling or 3 is applying smote")
-				.hasArg()
-				.argName("data unbalancing mode")
-				.required()
-				.build());
-
-		options.addOption(Option.builder("h").longOpt("help")
-				.desc("Help")
-				.build());
-
-		options.addOption(Option.builder("t").longOpt("type")
-				.desc("1 is unsupervised or 2 is supervised.")
-				.hasArg()
-				.required()
-				.argName("attribute value")
-				.build());
-
-		options.addOption(Option.builder("c").longOpt("csv")
-				.desc("Where to save the csv file.")
-				.hasArg()
-				.required()
-				.argName("csv file location")
-				.build());
-		
-		options.addOption(Option.builder("m").longOpt("model")
-				.desc("Machine Learning Model")
-				.hasArg()
-				.required()
-				.argName("machine learning model")
-				.build());
-		
-		options.addOption(Option.builder("i").longOpt("iter")
-				.desc("number of iteration")
-				.hasArg()
-				.required()
-				.argName("number of cross-validation iterations")
-				.build());
-		
-		options.addOption(Option.builder("f").longOpt("fold")
-				.desc("the number of fold")
-				.hasArg()
-				.required()
-				.argName("the number of cross-validation folds")
-				.build());
-
-		return options;
-	}
-
-	boolean parseOptions(Options options,String[] args){
-
-		CommandLineParser parser = new DefaultParser();
-
-		try {
-
-			CommandLine cmd = parser.parse(options, args);
-
-			sourcePath = cmd.getOptionValue("s");
-			dataUnbalancingMode = cmd.getOptionValue("d");
-			help = cmd.hasOption("h");
-			type = cmd.getOptionValue("t"); 
-			csvPath = cmd.getOptionValue("c"); 
-			mlModel = cmd.getOptionValue("m");
-			iter = cmd.getOptionValue("i");
-			fold = cmd.getOptionValue("f");
-
-
-		} catch (Exception e) {
-			printHelp(options);
-			return false;
-		}
-
-		return true;
-	}
-
-	
-	private void printHelp(Options options) {
-		// automatically generate the help statement
-		HelpFormatter formatter = new HelpFormatter();
-		String header = "Multicollineaity paper experiment tool";
-		String footer ="\nPlease report issues at https://github.com/HGUISEL/EJTool/issues";
-		formatter.printHelp("CLIExample", header, options, footer, true);
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
-
-

@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - SimpleThreadPool",
+            "request": "launch",
+            "mainClass": "edu.handong.csee.isel.weka.SimpleThreadPool",
+            "projectName": "EJTool"
+        }
+    ]
+}

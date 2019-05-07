@@ -1,4 +1,6 @@
 package edu.handong.csee.isel.weka;
+import weka.attributeSelection.BestFirst;
+import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.PrincipalComponents;
 import weka.attributeSelection.Ranker;
 import weka.classifiers.Classifier;
@@ -20,8 +22,10 @@ import weka.filters.unsupervised.attribute.Remove;
 import java.util.Random;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -36,7 +40,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
 
 public class EJWekaTool {
 	String sourcePath;
@@ -54,6 +57,7 @@ public class EJWekaTool {
 		myRunner.run(args);
 
 	}
+	
 	private void run(String[] args) {
 		Options options = createOptions();
 
@@ -62,7 +66,7 @@ public class EJWekaTool {
 				printHelp(options);
 				return;
 			}
-			System.out.print(sourcePath);
+//			System.out.print(sourcePath);
 			String trainingArffPath = sourcePath;
 			try {
 				// "Model", "Target file", "Precision", "Recall", "F-measure", "AUC", "Type", "VIF Threshold"
@@ -75,7 +79,7 @@ public class EJWekaTool {
 				reader.close();
 				
 				Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); //new Logistic();
-				
+//				
 				switch(type){
 				case "1": 
 					// original
@@ -126,18 +130,117 @@ public class EJWekaTool {
 					System.out.println(trainingArffPath);
 					showSummary(eval_case4, trainingData, mlModel, trainingArffPath, csvPath, "stepwise VIF", vifThreshold); 
 					break;
+				case "5" : 
+					// applying feature selection using cfs subset evaluation
+					trainingData = featrueSelectionByCfsSubsetEval(trainingData);
+					myModel.buildClassifier(trainingData);
+					// (4) test set and apply and prediction
+					Evaluation eval_case5 = new Evaluation(trainingData);
+					eval_case5.crossValidateModel(myModel, trainingData, 10, new Random(1));
+					// (5) show result
+					System.out.println("--------------------------");
+					System.out.println(trainingArffPath);
+					showSummary(eval_case5, trainingData, mlModel, trainingArffPath, csvPath, "FS", vifThreshold); 
+					break;
+				case "6" :
+					// 이걸 나중 함수로 만들기
+					int n = 10; // fold number
+					File folder = new File(trainingArffPath);
+					File[] listOfFiles = folder.listFiles();
+					saveNFilePath(0, n - 1, listOfFiles, n);
+					break;
 				default :
 				}
-
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
+	}
+	public void saveNFilePath(int start, int end, File[] listOfFiles, int n) throws IOException {
+		// base case 
+		if(end > listOfFiles.length) return;
+		
+		ArrayList<String> filePathList = new ArrayList<String>();
+		for(int i = start; i <= end; i++) {
+			if(listOfFiles[i].isFile() && !listOfFiles[i].getName().equals(".DS_Store")) {
+				filePathList.add(listOfFiles[i].getAbsolutePath());
+			}
+			else {
+				end++;
+			}
+		}
+		System.out.println(start + " " + end);
+		for(int i = 0; i < filePathList.size(); i++) {
+			System.out.println(filePathList.get(i));
+		}
+		System.out.println("---------------------");
+		
+//		for(int i = 0; i < n; i++) {
+//			crossValidation(i, filePathList);
+//		}
+		
+		
+		saveNFilePath(end + 1, end + 1 + n - 1, listOfFiles, n);
+	}
+	
+	
+	static public void crossValidation(int idx, ArrayList<String> filePathList) throws IOException {
+		Instances trainData = null, testData = null, temp;
+		for(int i = 0; i < filePathList.size(); i++) {
+			if(i == idx) {
+		    		BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+		    		testData = new Instances(reader);
+				reader.close();
+				continue;
+			}
+			BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+	    		temp = new Instances(reader);
+			reader.close();
+			if(trainData == null) {
+				trainData = temp;
+			}
+			else {
+				trainData.addAll(temp);
+			}
+		}
+		System.out.println("test " + testData.size());
+		System.out.println("train " + trainData.size());
+		System.out.println("--------------------");
+		
+		// training and prediction part
+		
+		
+	}
+	
+	/**
+	 * Feature selection by CfsSubsetEval
+	 * @param data
+	 * @return newData with selected attributes
+	 */
+	static public Instances featrueSelectionByCfsSubsetEval(Instances data){
+		Instances newData = null;
+
+		AttributeSelection filter = new AttributeSelection();  // package weka.filters.supervised.attribute!
+		CfsSubsetEval eval = new CfsSubsetEval();
+		BestFirst search = new BestFirst();
+		//search.ssetSearchBackwards(false);
+		filter.setEvaluator(eval);
+		filter.setSearch(search);
+		try {
+			filter.setInputFormat(data);
+
+			// generate new data
+			newData = Filter.useFilter(data, filter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return newData;
 	}
 
 	public Instances ApplyVIF(Instances instances) throws Exception {
@@ -162,26 +265,6 @@ public class EJWekaTool {
 			regressor.setEliminateColinearAttributes(false);
 			regressor.buildClassifier(forVIFData);
 			double r2 = regressor.getRSquared(forVIFData);
-			
-//			double[][] x = getMatrixFromInstancesRemovingClassCol(forVIFData);
-////			System.out.println("--------------" + i + "--------------");
-////			for (int i_ = 0; i_ < x.length; i_++) {
-////	            for (int j = 0; j < x[i_].length; j++) {
-////	                System.out.print(x[i_][j] + "\t"); 
-////	            }
-////	            System.out.println(); 
-////	        }
-//			double[] y = getArrayOfLabels(forVIFData);
-////			System.out.println("--------------y "  + "--------------");
-////			for (int i_ = 0; i_ < y.length; i_++) {
-////				System.out.println(y[i_]); 
-////	        }
-////			
-//			OLSMultipleLinearRegression OLS = new OLSMultipleLinearRegression();
-////			OLS.setNoIntercept(true); //The default value for Apache Commons Math is false.
-//			OLS.newSampleData(y, x);
-//			double r2 = OLS.calculateRSquared();
-			
 //			System.out.println("R2 is : " + r2);
 			vifs[i] = 1d / (1d - r2);
 //			System.out.println(i + "\t" + instances.attribute(i).name() + "\t" + vifs[i]); 
@@ -217,7 +300,6 @@ public class EJWekaTool {
 //		System.out.println("n = " + n);
 		double[] vifs = new double[n];
 		//System.out.println("Relation: " + instances.relationName()); 
-		
 		for (int i = 0; i < vifs.length; i++) {        
 			forVIFData.setClassIndex(i);
 //			Using Weka Linear Regression
@@ -226,14 +308,6 @@ public class EJWekaTool {
 			regressor.setEliminateColinearAttributes(false);
 			regressor.buildClassifier(forVIFData);
 			double r2 = regressor.getRSquared(forVIFData);
-//			Using apache.commons.math3.stat.regression.OLSMultipleLinearRegression
-//			double[][] x = getMatrixFromInstancesRemovingClassCol(forVIFData);
-//			double[] y = getArrayOfLabels(forVIFData);
-//			OLSMultipleLinearRegression OLS = new OLSMultipleLinearRegression();
-////			OLS.setNoIntercept(true); //The default value for Apache Commons Math is false.
-//			OLS.newSampleData(y, x);
-//			double r2 = OLS.calculateRSquared();
-//			System.out.println("R2 is : " + r2);
 			vifs[i] = 1d / (1d - r2);
 //			System.out.println(i + "\t" + instances.attribute(i).name() + "\t" + vifs[i]); 
 			if(vifs[i] > vif_max_value) {
@@ -265,53 +339,6 @@ public class EJWekaTool {
 		
 	}
 
-	
-//	static public double[] getArrayOfLabels(Instances instances) {
-//		int classIndex = instances.classIndex();
-//		double[] matrix = new double[instances.numInstances()];
-//	
-//		for(int i = 0; i < instances.numInstances() ;i++){
-//			matrix[i] = instances.get(i).value(classIndex);
-//		}
-//		return matrix;
-//	}
-//	
-//	static public double[][] getMatrixFromInstancesRemovingClassCol(Instances instances){
-//		double[][] matrix = new double[instances.numInstances()][instances.numAttributes()];
-//		int indexOfClassLabel = instances.classIndex();
-////		System.out.println("indexOfClassLabel : " + indexOfClassLabel);
-//
-//		for(int i=0;i<instances.numInstances();i++){
-//			for(int attrIndex=0;attrIndex<instances.numAttributes();attrIndex++){
-//				if(attrIndex==indexOfClassLabel)
-//					continue;
-//				matrix[i][attrIndex] = instances.get(i).value(attrIndex);
-//			}
-//		}
-//		matrix = removeCol(matrix, indexOfClassLabel);
-//		return matrix;
-//	}
-//	
-//	static public double[][] removeCol(double [][] array, int colRemove)
-//	{
-//	    int row = array.length;
-//	    int col = array[0].length;
-//
-//	    double [][] newArray = new double[row][col-1]; //new Array will have one column less
-//
-//	    for(int i = 0; i < row; i++)
-//	    {
-//	        for(int j = 0,currColumn=0; j < col; j++)
-//	        {
-//	            if(j != colRemove)
-//	            {
-//	                newArray[i][currColumn++] = array[i][j];
-//	            }
-//	        }
-//	    }
-//	    return newArray;
-//	}
-//	
 	static public Instances ApplyPCA(Instances data) {
 		Instances newData = null;
 		Ranker ranker = new Ranker();
@@ -372,7 +399,7 @@ public class EJWekaTool {
 		//				.build());
 
 		options.addOption(Option.builder("t").longOpt("type")
-				.desc("1 is original or 2 is applying PCA or 3 is applying non stepwise VIF or 4 is applying stepwise VIF.")
+				.desc("1 is original or 2 is applying PCA or 3 is applying non stepwise VIF or 4 is applying stepwise VIF or 5 is applying featrue selection by CfsSubsetEval.")
 				.hasArg()
 				.required()
 				.argName("attribute value")
