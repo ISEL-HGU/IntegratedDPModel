@@ -248,8 +248,8 @@ public class EJExperimentTool implements Runnable{
 //	}
 
 	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
-		String csvFile = csvPath + "/result.csv";
-		FileWriter writer =  new FileWriter(csvFile, true);
+//		String csvFile = csvPath + "/result.csv";
+		FileWriter writer =  new FileWriter(csvPath, true);
 		for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
 			System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
 			System.out.println("Precision " + eval.precision(i));

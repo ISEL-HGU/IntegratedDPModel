@@ -22,9 +22,10 @@ public class SimpleThreadPool {
 	static String mlModel;
 	static String iter;
 	static String fold;
+	static String poolSize;
 	static boolean help = false;
 	
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws Exception {
     		Options options = createOptions();
 
 		if(parseOptions(options, args)){
@@ -32,16 +33,15 @@ public class SimpleThreadPool {
 				printHelp(options);
 				return;
 			}
-
-	    		ExecutorService executor = Executors.newFixedThreadPool(20);
 	    		String searchDirPath = "";
 	    		if(type.equals("1")) {
 	    			searchDirPath = "/home/eunjiwon/EJTool/origin_pca_vif_data";
 	    		}
 	    		else if(type.equals("2")) {
 	    			searchDirPath = "/home/eunjiwon/EJTool/origin_data";
+//	    			searchDirPath = "/Users/eunjiwon/Desktop/origin_data"; // 로컬에서 실험해보기 위해 
 	    		}
-	    		//
+
 	    		File searchDir = new File(searchDirPath);
 	    		File []fileList = searchDir.listFiles();
 	    		String copySourcePath = sourcePath;
@@ -49,16 +49,12 @@ public class SimpleThreadPool {
 	    		  if(tempFile.isFile()) {
 	    		    String tempFileName = tempFile.getName();
 	    		    sourcePath = sourcePath + tempFileName;
-	    		    Runnable worker = new EJToolMultithread(sourcePath, dataUnbalancingMode, type, csvPath, mlModel, iter, fold);
-			    executor.execute(worker);
-			    sourcePath = copySourcePath;
+	    		    EJToolMultithread EJTool = new EJToolMultithread(sourcePath, dataUnbalancingMode, type, csvPath, mlModel, iter, fold, poolSize);
+	    		    EJTool.run();
+	    		    sourcePath = copySourcePath;
+
 	    		  }
 	    		}
-	        //
-	    		executor.shutdown();
-	    		while (!executor.isTerminated()) {
-	    		}
-	    		System.out.println("Finished all threads");	
 	    }
 	}
 	
@@ -120,6 +116,13 @@ public class SimpleThreadPool {
 				.required()
 				.argName("the number of cross-validation folds")
 				.build());
+		
+		options.addOption(Option.builder("p").longOpt("pool")
+				.desc("thread pool size")
+				.hasArg()
+				.required()
+				.argName("thread pool size")
+				.build());
 	
 		return options;
 	}
@@ -140,6 +143,7 @@ public class SimpleThreadPool {
 			mlModel = cmd.getOptionValue("m");
 			iter = cmd.getOptionValue("i");
 			fold = cmd.getOptionValue("f");
+			poolSize = cmd.getOptionValue("p");
 	
 	
 		} catch (Exception e) {
@@ -161,21 +165,4 @@ public class SimpleThreadPool {
 }
 
 
-//import java.util.concurrent.ExecutorService;
-//import java.util.concurrent.Executors;
-//
-//public class SimpleThreadPool {
-//
-//    public static void main(String[] args) {
-//        ExecutorService executor = Executors.newFixedThreadPool(5);
-//        for (int i = 0; i < 10; i++) {
-//            Runnable worker = new WorkerThread("" + i);
-//            executor.execute(worker);
-//          }
-//        executor.shutdown();
-//        while (!executor.isTerminated()) {
-//        }
-//        System.out.println("Finished all threads");
-//    }
-//}
 

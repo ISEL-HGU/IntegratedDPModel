@@ -25,8 +25,7 @@ import weka.filters.supervised.instance.SpreadSubsample;
 import weka.filters.supervised.instance.SMOTE;
 
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -47,69 +46,74 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
-public class EJToolMultithread{
-	static String sourcePath;
-	static String dataUnbalancingMode;
-	static String type;
-	static String csvPath;
-	static String mlModel;
-	String poolSize;
-	String iter;
-	String fold;
-
-	public EJToolMultithread(String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String iter, String fold, String poolSize) {
+public class CrossValidation implements Runnable{
+	int idx;
+	ArrayList<String> filePathList;
+	String sourcePath;
+	String dataUnbalancingMode;
+	String type;
+	String csvPath;
+	String mlModel;
+	Evaluation eval_case = null;
+	Instances trainData = null;
+	String testPath = null;
+	
+	public CrossValidation(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel) {
+		this.idx = idx;
+		this.filePathList = filePathList;
 		this.sourcePath = sourcePath;
 		this.dataUnbalancingMode = dataUnbalancingMode;
 		this.type = type;
 		this.csvPath = csvPath;
 		this.mlModel = mlModel;
-		this.iter = iter;
-		this.fold = fold;
-		this.poolSize = poolSize;
 	}
 	
-	public void run() {
+	@Override
+	public void run(){
 		try {
-    			ExecutorService executor = Executors.newFixedThreadPool(Integer.parseInt(poolSize));
-	    		
-			String path;
-			// if sourcePath contain ".arff", delete extensions
-			System.out.println("sourcePath is : " + sourcePath); //
-			System.out.println("mlModel is : " + mlModel); //
-			int index = sourcePath.lastIndexOf(".");
-	        if (index != -1) {
-	        		sourcePath = sourcePath.substring(0, index);
-	        		System.out.println("file name is : " + sourcePath);
-	        }
-	        for(int i = 0; i < Integer.parseInt(iter); i++){
-				ArrayList<String> filePathList = new ArrayList<String>(); // 여기에서 local 선언하는게 에러를 잡았던 방법 
-				for(int n = 0; n < Integer.parseInt(fold); n++){
-					path = sourcePath + "_" + i + "_" + n + ".arff";
-					filePathList.add(path);							
+			Instances testData = null, temp = null;
+			for(int i = 0; i < filePathList.size(); i++) {
+				if(i == idx) {
+			    		BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+			    		testData = new Instances(reader);
+					reader.close();
+					testPath = filePathList.get(i);
+					continue;
 				}
-				if(type.equals("1")) { // unsupervised
-					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-			    		    Runnable CV = new CrossValidation(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel);
-					    executor.execute(CV);
-					}
+				BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+		    		temp = new Instances(reader);
+				reader.close();
+				if(trainData == null) {
+					trainData = temp;
 				}
-				else if(type.equals("2")) { // supervised
-					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-						Runnable CVFS = new CrossValidationFS(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel);
-		    		    		executor.execute(CVFS);
-					}
+				else {
+					trainData.addAll(temp);
 				}
 			}
-	        executor.shutdown();
-	    		while (!executor.isTerminated()) {
-	    		}
-	    			    		
-	    		System.out.println("Finished all threads");	
-				
-		} catch (Exception e) {
+
+			// training and prediction part
+			trainData.setClassIndex(trainData.numAttributes()-1);
+			testData.setClassIndex(testData.numAttributes()-1);
+			
+			if (dataUnbalancingMode.equals("1")) {
+				// no handling unbalancing data problem
+			}
+			else if(dataUnbalancingMode.equals("2")) { 
+				trainData = spreadSubsampling(trainData);
+			}
+			else if(dataUnbalancingMode.equals("3")) {
+				trainData = smote(trainData);
+			}
+			
+			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
+			myModel.buildClassifier(trainData);
+			eval_case = new Evaluation(trainData);
+			eval_case.evaluateModel(myModel, testData);  
+			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath); 
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
@@ -129,5 +133,23 @@ public class EJToolMultithread{
 		writer.flush();
 		writer.close();
 	}
-
+	
+	public static Instances spreadSubsampling(Instances trainData) throws Exception {
+		// training data undersampling
+		SpreadSubsample spreadsubsample = new SpreadSubsample();
+		spreadsubsample.setInputFormat(trainData);
+		spreadsubsample.setDistributionSpread(1.0);
+		trainData = Filter.useFilter(trainData, spreadsubsample);
+		return trainData;
+	}
+	
+	public static Instances smote(Instances trainData) throws Exception {
+		// smote 
+		SMOTE smote = new SMOTE();
+		smote.setInputFormat(trainData);
+		smote.setNearestNeighbors(1);
+		trainData = Filter.useFilter(trainData, smote);
+		return trainData;
+	}
+	
 }
