@@ -93,12 +93,13 @@ public class EJToolMultithread{
 					    executor.execute(CV);
 					}
 				}
-				else if(type.equals("2")) { // supervised
+				else if(type.equals("2") || type.equals("3") || type.equals("4") || type.equals("5")) { // supervised 
 					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
 						Runnable CVFS = new CrossValidationFS(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel);
 		    		    		executor.execute(CVFS);
 					}
 				}
+	
 			}
 	        executor.shutdown();
 	    		while (!executor.isTerminated()) {

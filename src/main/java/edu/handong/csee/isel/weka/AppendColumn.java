@@ -12,6 +12,19 @@ import java.util.List;
 
 
 public class AppendColumn {
+	static String path = "/Users/eunjiwon/Desktop/total_result/";
+	static String[] filenameArray = {
+			"DecisionTree_noHadling_total_result",
+			"DecisionTree_smote_total_result",
+			"DecisionTree_spread_total_result",
+			"Logistic_noHandling_total_result",
+			"Logistic_smote_total_result",
+			"Logistic_spread_total_result",
+			"RandomForest_noHandling_total_result",
+			"RandomForest_smote_total_result",
+			"RandomForest_spread_total_result"	
+	};
+	
 	public static void main(String[] args){
 		String pca = "_PCA";
 		String vif_non_10 = "_NONSTEPWISE_10";
@@ -24,59 +37,65 @@ public class AppendColumn {
 		String vif_2_5 = "_STEPWISE_2_5";
 		String baseline = "";
 		
-        //출력 스트림 생성
-        BufferedWriter bufWriter = null;
-        try{
-            bufWriter = Files.newBufferedWriter(Paths.get("/Users/eunjiwon/Desktop/smote_total_baseline.csv"));
-            //csv파일 읽기
-            List<List<String>> allData = readCSV();
-            
-            for(List<String> newLine : allData){
-                List<String> list = newLine;
-                for(String data : list){
-                    bufWriter.write(data);
-                    bufWriter.write(",");
-                }
-//                System.out.println(list.get(5) + " / " + (list.get(5).equals("1")) +  " ..../ " + list.get(6) + " / " + list.get(6).contains(pca));
-                if(list.get(5).equals("2")) baseline = "baseline11";
-                else if(list.get(5).equals("1") && list.get(6).contains(pca)) baseline = "baseline2";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_10)) baseline = "baseline3";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_5)) baseline = "baseline4";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_4)) baseline = "baseline5";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_2_5)) baseline = "baseline6";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_10)) baseline = "baseline7";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_5)) baseline = "baseline8";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_4)) baseline = "baseline9";
-                else if(list.get(5).equals("1") && list.get(6).contains(vif_2_5)) baseline = "baseline10";
-                else baseline = "baseline1";
-                 
-                //추가하기
-                bufWriter.write(baseline);
-                //개행코드추가
-                bufWriter.newLine();
-            }
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-        }catch(IOException e){
-            e.printStackTrace();
-        }finally{
-            try{
-                if(bufWriter != null){
-                    bufWriter.close();
-                }
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-        }
+
+		
+		for (String filename : filenameArray) {
+			 //출력 스트림 생성
+	        BufferedWriter bufWriter = null;
+	        try{
+	            bufWriter = Files.newBufferedWriter(Paths.get(path+filename + "_baseline.csv"));
+	            //csv파일 읽기
+	            List<List<String>> allData = readCSV(path+filename + ".csv");
+	            
+	            for(List<String> newLine : allData){
+	                List<String> list = newLine;
+	                for(String data : list){
+	                    bufWriter.write(data);
+	                    bufWriter.write(",");
+	                }
+//	                System.out.println(list.get(5) + " / " + (list.get(5).equals("1")) +  " ..../ " + list.get(6) + " / " + list.get(6).contains(pca));
+	                if(list.get(5).equals("2")) baseline = "baseline11";
+	                else if(list.get(5).equals("1") && list.get(6).contains(pca)) baseline = "baseline2";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_10)) baseline = "baseline3";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_5)) baseline = "baseline4";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_4)) baseline = "baseline5";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_2_5)) baseline = "baseline6";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_10)) baseline = "baseline7";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_5)) baseline = "baseline8";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_4)) baseline = "baseline9";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_2_5)) baseline = "baseline10";
+	                else baseline = "baseline1";
+	                 
+	                //추가하기
+	                bufWriter.write(baseline);
+	                //개행코드추가
+	                bufWriter.newLine();
+	            }
+	        }catch(FileNotFoundException e){
+	            e.printStackTrace();
+	        }catch(IOException e){
+	            e.printStackTrace();
+	        }finally{
+	            try{
+	                if(bufWriter != null){
+	                    bufWriter.close();
+	                }
+	            }catch(IOException e){
+	                e.printStackTrace();
+	            }
+	        }
+	        System.out.println(filename + " is complete");
+		}
+       
     }
     
-    public static List<List<String>> readCSV(){
+    public static List<List<String>> readCSV(String file_path){
         //반환용 리스트
         List<List<String>> ret = new ArrayList<List<String>>();
         BufferedReader br = null;
         
         try{
-            br = Files.newBufferedReader(Paths.get("/Users/eunjiwon/Desktop/smote_total_result.csv"));
+            br = Files.newBufferedReader(Paths.get(file_path));
             String line = "";
             while((line = br.readLine()) != null){
                 //CSV 1행을 저장하는 리스트

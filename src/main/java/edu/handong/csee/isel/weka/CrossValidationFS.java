@@ -1,5 +1,6 @@
 package edu.handong.csee.isel.weka;
 
+import weka.attributeSelection.WrapperSubsetEval;
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.PrincipalComponents;
@@ -13,9 +14,11 @@ import weka.classifiers.functions.Logistic;
 import weka.classifiers.trees.J48;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.lazy.IBk;
 
 import weka.core.Instances;
 import weka.core.SelectedTag;
+import weka.core.Tag;
 import weka.core.converters.ArffSaver;
 import weka.filters.Filter;
 import weka.attributeSelection.AttributeSelection;
@@ -58,6 +61,24 @@ public class CrossValidationFS implements Runnable{
 	Instances trainData = null;
 	String testPath = null;
 	
+	public static final int EVAL_DEFAULT = 1;
+	public static final int EVAL_ACCURACY = 2;
+	public static final int EVAL_RMSE = 3;
+	public static final int EVAL_MAE = 4;
+	public static final int EVAL_FMEASURE = 5;
+	public static final int EVAL_AUC = 6;
+	public static final int EVAL_AUPRC = 7;
+  
+	public static final Tag[] TAGS_EVALUATION = {
+	    new Tag(EVAL_DEFAULT, "Default: accuracy (discrete class); RMSE (numeric class)"),
+	    new Tag(EVAL_ACCURACY, "Accuracy (discrete class only)"),
+	    new Tag(EVAL_RMSE, "RMSE (of the class probabilities for discrete class)"),
+	    new Tag(EVAL_MAE, "MAE (of the class probabilities for discrete class)"),
+	    new Tag(EVAL_FMEASURE, "F-measure (discrete class only)"),
+	    new Tag(EVAL_AUC, "AUC (area under the ROC curve - discrete class only)"),
+	    new Tag(EVAL_AUPRC, "AUPRC (area under the precision-recall curve - discrete class only)")
+	};
+	  
 	public CrossValidationFS(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel) {
 		this.idx = idx;
 		this.filePathList = filePathList;
@@ -112,12 +133,35 @@ public class CrossValidationFS implements Runnable{
 			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
 			// feature selection -> using only trainData 
 			AttributeSelection attsel = new AttributeSelection();  // package weka.attributeSelection! 
-			CfsSubsetEval eval = new CfsSubsetEval(); 
 			BestFirst search = new BestFirst(); 
-			attsel.setEvaluator(eval); 
+			if(type.equals("2")) { // CFS
+				CfsSubsetEval eval = new CfsSubsetEval(); 
+				attsel.setEvaluator(eval); 
+			}
+			else if(type.equals("3")) { // LR
+				WrapperSubsetEval wrapperEval = new WrapperSubsetEval();
+				wrapperEval.setClassifier(new Logistic());
+				wrapperEval.setEvaluationMeasure(new SelectedTag(EVAL_AUC, TAGS_EVALUATION));
+				attsel.setEvaluator(wrapperEval); 
+			}
+			else if(type.equals("4")) { // NB
+				WrapperSubsetEval wrapperEval = new WrapperSubsetEval();
+				wrapperEval.setClassifier(new NaiveBayes());
+				wrapperEval.setEvaluationMeasure(new SelectedTag(EVAL_AUC, TAGS_EVALUATION));
+				attsel.setEvaluator(wrapperEval); 
+			}
+			else { // type.equals("5") kNN
+				WrapperSubsetEval wrapperEval = new WrapperSubsetEval();
+				Classifier knn = new IBk(10);
+				wrapperEval.setClassifier(knn);
+				wrapperEval.setEvaluationMeasure(new SelectedTag(EVAL_AUC, TAGS_EVALUATION));
+				attsel.setEvaluator(wrapperEval); 
+			}
+			
 			attsel.setSearch(search);
 			attsel.SelectAttributes(trainData); 
-//			System.out.println(attsel.toResultsString()); 
+//			System.out.println(attsel.toResultsString());
+			
 			int[] indices = attsel.selectedAttributes(); // to find feature selected index
 			// trainData and testData dimension reduction
 			Remove removeFilter = new Remove();

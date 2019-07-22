@@ -37,7 +37,7 @@ public class SimpleThreadPool {
 	    		if(type.equals("1")) {
 	    			searchDirPath = "/home/eunjiwon/EJTool/origin_pca_vif_data";
 	    		}
-	    		else if(type.equals("2")) {
+	    		else if(type.equals("2") || type.equals("3") || type.equals("4") || type.equals("5")) {
 	    			searchDirPath = "/home/eunjiwon/EJTool/origin_data";
 //	    			searchDirPath = "/Users/eunjiwon/Desktop/origin_data"; // 로컬에서 실험해보기 위해 
 	    		}
