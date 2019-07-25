@@ -12,17 +12,17 @@ import java.util.List;
 
 
 public class AppendColumn {
-	static String path = "/Users/eunjiwon/Desktop/total_result/";
+	static String path = "/Users/eunjiwon/Desktop/0723_csv_results/";
 	static String[] filenameArray = {
-			"DecisionTree_noHadling_total_result",
-			"DecisionTree_smote_total_result",
-			"DecisionTree_spread_total_result",
-			"Logistic_noHandling_total_result",
-			"Logistic_smote_total_result",
-			"Logistic_spread_total_result",
-			"RandomForest_noHandling_total_result",
-			"RandomForest_smote_total_result",
-			"RandomForest_spread_total_result"	
+//			"DecisionTree_noHadling_total_result",
+			"Add_DecisionTree_smote_total_result",
+//			"DecisionTree_spread_total_result",
+//			"Logistic_noHandling_total_result",
+			"Add_Logistic_smote_total_result",
+//			"Logistic_spread_total_result",
+//			"RandomForest_noHandling_total_result",
+			"Add_RandomForest_smote_total_result"
+//			"RandomForest_spread_total_result"	
 	};
 	
 	public static void main(String[] args){
@@ -54,17 +54,19 @@ public class AppendColumn {
 	                    bufWriter.write(",");
 	                }
 //	                System.out.println(list.get(5) + " / " + (list.get(5).equals("1")) +  " ..../ " + list.get(6) + " / " + list.get(6).contains(pca));
-	                if(list.get(5).equals("2")) baseline = "baseline11";
-	                else if(list.get(5).equals("1") && list.get(6).contains(pca)) baseline = "baseline2";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_10)) baseline = "baseline3";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_5)) baseline = "baseline4";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_4)) baseline = "baseline5";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_2_5)) baseline = "baseline6";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_10)) baseline = "baseline7";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_5)) baseline = "baseline8";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_4)) baseline = "baseline9";
-	                else if(list.get(5).equals("1") && list.get(6).contains(vif_2_5)) baseline = "baseline10";
-	                else baseline = "baseline1";
+	                if(list.get(5).equals("2")) baseline = "CFS-BestFirst";
+	                else if(list.get(5).equals("3")) baseline = "LR+AUC";
+	                else if(list.get(5).equals("4")) baseline = "NB+AUC";
+	                else if(list.get(5).equals("1") && list.get(6).contains(pca)) baseline = "Default-PCA";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_10)) baseline = "NSVIF10";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_5)) baseline = "NSVIF5";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_4)) baseline = "NSVIF4";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_2_5)) baseline = "NSVIF2.5";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_10)) baseline = "SVIF10";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_5)) baseline = "SVIF5";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_4)) baseline = "SVIF4";
+	                else if(list.get(5).equals("1") && list.get(6).contains(vif_2_5)) baseline = "SVIF2.5";
+	                else baseline = "None";
 	                 
 	                //추가하기
 	                bufWriter.write(baseline);

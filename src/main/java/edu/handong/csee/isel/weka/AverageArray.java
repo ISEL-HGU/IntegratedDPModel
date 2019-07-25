@@ -14,26 +14,27 @@ import java.util.List;
 
 
 public class AverageArray {
-	static String path = "/Users/eunjiwon/Desktop/total_result/";
+	int numberOfApproaches = 13;
+	static String path = "/Users/eunjiwon/Desktop/0723_csv_results/";
 	static String[] filenameArray = {
-			"DecisionTree_noHadling_total_result",
-			"DecisionTree_smote_total_result",
-			"DecisionTree_spread_total_result",
-			"Logistic_noHandling_total_result",
-			"Logistic_smote_total_result",
-			"Logistic_spread_total_result",
-			"RandomForest_noHandling_total_result",
-			"RandomForest_smote_total_result",
-			"RandomForest_spread_total_result"	
+//			"DecisionTree_noHadling_total_result",
+			"Add_DecisionTree_smote_total_result",
+//			"DecisionTree_spread_total_result",
+//			"Logistic_noHandling_total_result",
+			"Add_Logistic_smote_total_result",
+//			"Logistic_spread_total_result",
+//			"RandomForest_noHandling_total_result",
+			"Add_RandomForest_smote_total_result"
+//			"RandomForest_spread_total_result"
 	};
 	
 
 	public static void main(String[] args){
 		AverageArray myAverageArray = new AverageArray();
 		for(String filename : filenameArray) {
-			myAverageArray.run(filename);
+//			myAverageArray.run(filename);
 //			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
+			myAverageArray.saveRankingAverageCSV(filename);
 		}
 
 	}
@@ -51,6 +52,8 @@ public class AverageArray {
 		ArrayList<Double> b9List = new ArrayList<Double>();
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
+		ArrayList<Double> b12List = new ArrayList<Double>();
+		ArrayList<Double> b13List = new ArrayList<Double>();
         BufferedWriter bufWriter = null;
 
         try{
@@ -72,10 +75,12 @@ public class AverageArray {
                 		if(i == 9) b9List.add(Double.valueOf(list.get(i)));
                 		if(i == 10) b10List.add(Double.valueOf(list.get(i))); 
                 		if(i == 11) b11List.add(Double.valueOf(list.get(i)));
+                		if(i == 12) b12List.add(Double.valueOf(list.get(i)));
+                		if(i == 13) b13List.add(Double.valueOf(list.get(i)));
                 }
             }
             
-            for(int i = 0; i < 12; i++) {
+            for(int i = 0; i < numberOfApproaches + 1; i++) {
             		if(i == 0) {
             			bufWriter.write(",");
             		}
@@ -94,7 +99,7 @@ public class AverageArray {
 	        		bufWriter.newLine();
 	        }
             
-	        for(int i = 0; i < 12; i++) {
+	        for(int i = 0; i < numberOfApproaches + 1; i++) {
 	        		if(i == 1) bufWriter.write(String.valueOf(averageArray(b1List)));
 	        		if(i == 2) bufWriter.write(String.valueOf(averageArray(b2List)));
 	        		if(i == 3) bufWriter.write(String.valueOf(averageArray(b3List)));
@@ -106,6 +111,8 @@ public class AverageArray {
 	        		if(i == 9) bufWriter.write(String.valueOf(averageArray(b9List)));
 	        		if(i == 10) bufWriter.write(String.valueOf(averageArray(b10List))); 
 	        		if(i == 11) bufWriter.write(String.valueOf(averageArray(b11List)));
+	        		if(i == 12) bufWriter.write(String.valueOf(averageArray(b12List))); 
+	        		if(i == 13) bufWriter.write(String.valueOf(averageArray(b13List)));
 	    			bufWriter.write(",");
 	        }
 	        
@@ -134,6 +141,7 @@ public class AverageArray {
             List<List<String>> allData = readCSV(path + baselinePath + "_average.csv");
             
             for(List<String> newLine : allData){
+            		if(newLine.contains("None")) continue; // average 파일에 헤더 추가해서 
                 List<String> list = newLine;
                 for(int i = 1; i < list.size(); i++) {
                 		datasetAverageList.add(Double.valueOf(list.get(i)));
@@ -163,7 +171,7 @@ public class AverageArray {
 	}
 	
 	public int[] ranking(ArrayList<Double> list) {
-		int[] ranking = new int[11];
+		int[] ranking = new int[numberOfApproaches];
 		for(int i = 0; i < ranking.length; i++) {
 			ranking[i] = 1;
 		} 
@@ -190,6 +198,8 @@ public class AverageArray {
     		ArrayList<Double> b9List = new ArrayList<Double>();
     		ArrayList<Double> b10List = new ArrayList<Double>();
     		ArrayList<Double> b11List = new ArrayList<Double>();
+    		ArrayList<Double> b12List = new ArrayList<Double>(); // LR
+    		ArrayList<Double> b13List = new ArrayList<Double>(); // NB
     		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
 
         // f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 in "/Users/eunjiwon/Desktop/spreadsubsampling_total_baseline.csv".
@@ -206,54 +216,63 @@ public class AverageArray {
         for(String datasetName : dataset) {
             for(List<String> newLine : allData) {
                 List<String> list = newLine;
-                    if(list.get(6).contains(datasetName) && list.get(7).equals("baseline1")) {
+                    if(list.get(6).contains(datasetName) && list.get(7).equals("None")) {
                     		if(list.get(4).equals("NaN")) continue;
                     		else b1List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline2")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("Default-PCA")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b2List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline3")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF10")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b3List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline4")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF5")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b4List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline5")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF4")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b5List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline6")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF2.5")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b6List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline7")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF10")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b7List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline8")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF5")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b8List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline9")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF4")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b9List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline10")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF2.5")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b10List.add(Double.valueOf(list.get(4)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("baseline11")) {
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("CFS-BestFirst")) {
 	                		if(list.get(4).equals("NaN")) continue;
 	                		else b11List.add(Double.valueOf(list.get(4)));
                     }
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("LR+AUC")) {
+                		if(list.get(4).equals("NaN")) continue;
+                		else b12List.add(Double.valueOf(list.get(4)));
+                }
+                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NB+AUC")) {
+                		if(list.get(4).equals("NaN")) continue;
+                		else b13List.add(Double.valueOf(list.get(4)));
+                }
+                    
             }
             // 여기에 플래그를 둬서 처음에 쓸 때만 위에 헤더 달게 할까? 그거 해야지 R로 프리드만 진행할 수 있음!
             try {
-            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List));
+            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List), averageArray(b12List), averageArray(b13List));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -264,27 +283,29 @@ public class AverageArray {
  
     }
     
-	public static void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b11Average) throws Exception {
+	public static void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b11Average, Double b12Average, Double b13Average) throws Exception {
 //		String csvFile = "/Users/eunjiwon/Desktop/exp_results/smote_AUC_average.csv";
 		FileWriter writer =  new FileWriter(path + baselinePath + "_average.csv", true);
 
 		if(dataset.equals("AEEEM_EQ")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
 			baselineList.add("");
-			baselineList.add("baseline1");
-			baselineList.add("baseline2");
-			baselineList.add("baseline3");
-			baselineList.add("baseline4");
-			baselineList.add("baseline5");
-			baselineList.add("baseline6");
-			baselineList.add("baseline7");
-			baselineList.add("baseline8");
-			baselineList.add("baseline9");
-			baselineList.add("baseline10");
-			baselineList.add("baseline11");
+			baselineList.add("None");
+			baselineList.add("Default-PCA");
+			baselineList.add("NSVIF10");
+			baselineList.add("NSVIF5");
+			baselineList.add("NSVIF4");
+			baselineList.add("NSVIF2.5");
+			baselineList.add("SVIF10");
+			baselineList.add("SVIF5");
+			baselineList.add("SVIF4");
+			baselineList.add("SVIF2.5");
+			baselineList.add("CFS-BestFirst");
+			baselineList.add("LR+AUC");
+			baselineList.add("NB+AUC");
 			CSVUtils.writeLine(writer, baselineList);
 		}
-		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average), String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b11Average)));
+		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average), String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b11Average), String.valueOf(b12Average), String.valueOf(b13Average)));
 		writer.flush();
 		writer.close();
 	}

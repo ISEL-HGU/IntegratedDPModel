@@ -37,7 +37,7 @@ public class SimpleThreadPool {
 	    		if(type.equals("1")) {
 	    			searchDirPath = "/home/eunjiwon/EJTool/origin_pca_vif_data";
 	    		}
-	    		else if(type.equals("2") || type.equals("3") || type.equals("4") || type.equals("5")) {
+	    		else if(type.equals("2") || type.equals("3")) {
 	    			searchDirPath = "/home/eunjiwon/EJTool/origin_data";
 //	    			searchDirPath = "/Users/eunjiwon/Desktop/origin_data"; // 로컬에서 실험해보기 위해 
 	    		}
@@ -83,7 +83,7 @@ public class SimpleThreadPool {
 				.build());
 	
 		options.addOption(Option.builder("t").longOpt("type")
-				.desc("1 is unsupervised or 2 is supervised.")
+				.desc("1 is unsupervised techniques related to feature reduction (None, Default-PCA, SVIF, NSVIF) or 2 is supervised techniques related to feature reduction (CFS) or 3 is supervised techniques related to feature reduction (WFS).")
 				.hasArg()
 				.required()
 				.argName("attribute value")

@@ -48,7 +48,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-
+import weka.core.converters.CSVSaver;
 public class CrossValidationFS implements Runnable{
 	int idx;
 	ArrayList<String> filePathList;
@@ -91,6 +91,7 @@ public class CrossValidationFS implements Runnable{
 	
 	@Override
 	public void run(){
+		String isMulticollinearity = "";
 		try {
 			Instances testData = null, temp = null;
 			for(int i = 0; i < filePathList.size(); i++) {
@@ -130,6 +131,12 @@ public class CrossValidationFS implements Runnable{
 				trainData = smote(trainData);
 			}
 
+			// Save original test data as CSV file 
+//			CSVSaver saver = new CSVSaver();
+//			saver.setInstances(testData);
+//			saver.setFile(new File("/Users/eunjiwon/Desktop/arff/arff.csv"));
+//			saver.writeBatch();
+			
 			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
 			// feature selection -> using only trainData 
 			AttributeSelection attsel = new AttributeSelection();  // package weka.attributeSelection! 
@@ -138,22 +145,9 @@ public class CrossValidationFS implements Runnable{
 				CfsSubsetEval eval = new CfsSubsetEval(); 
 				attsel.setEvaluator(eval); 
 			}
-			else if(type.equals("3")) { // LR
+			else if(type.equals("3")) { // WFS
 				WrapperSubsetEval wrapperEval = new WrapperSubsetEval();
-				wrapperEval.setClassifier(new Logistic());
-				wrapperEval.setEvaluationMeasure(new SelectedTag(EVAL_AUC, TAGS_EVALUATION));
-				attsel.setEvaluator(wrapperEval); 
-			}
-			else if(type.equals("4")) { // NB
-				WrapperSubsetEval wrapperEval = new WrapperSubsetEval();
-				wrapperEval.setClassifier(new NaiveBayes());
-				wrapperEval.setEvaluationMeasure(new SelectedTag(EVAL_AUC, TAGS_EVALUATION));
-				attsel.setEvaluator(wrapperEval); 
-			}
-			else { // type.equals("5") kNN
-				WrapperSubsetEval wrapperEval = new WrapperSubsetEval();
-				Classifier knn = new IBk(10);
-				wrapperEval.setClassifier(knn);
+				wrapperEval.setClassifier(myModel); // It is the same ML model as the prediction ML model 
 				wrapperEval.setEvaluationMeasure(new SelectedTag(EVAL_AUC, TAGS_EVALUATION));
 				attsel.setEvaluator(wrapperEval); 
 			}
@@ -174,17 +168,21 @@ public class CrossValidationFS implements Runnable{
 //			System.out.println("test " + testData.numAttributes());
 //			System.out.println("train " + trainData.numAttributes());
 //			System.out.println("--------------------");
+			
+			// Check the multicollinearity to train data using VIF
+			isMulticollinearity = checkMulticollinearity(trainData); 
+			
 			myModel.buildClassifier(trainData);
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);  
-			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath); 
+			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, isMulticollinearity);  // CSV 파일에다가 한 콜럼 추가해서 다중공선성 유무 같이 제거해야 한다. 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
+	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String isMulticollinearity) throws Exception { //
 		FileWriter writer =  new FileWriter(csvPath, true);
 		if(eval == null) System.out.println("showSummary - eval is null");
 		else
@@ -195,11 +193,41 @@ public class CrossValidationFS implements Runnable{
 				System.out.println("F-Measure " + eval.fMeasure(i));
 				System.out.println("AUC " + eval.areaUnderROC(i));
 	
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, isMulticollinearity));
 	
 			}
 		writer.flush();
 		writer.close();
+	}
+	
+	public String checkMulticollinearity(Instances instances) throws Exception {
+		double VIFThresholdValue = 10.0;
+		String isMulticollinearity = "";
+		Instances forVIFData = null;
+		Remove rm = new Remove();
+		rm.setAttributeIndices("last");
+		rm.setInputFormat(instances);
+		forVIFData = Filter.useFilter(instances, rm);
+		int n = forVIFData.numAttributes();
+		double[] vifs = new double[n];
+		for (int i = 0; i < vifs.length; i++) {
+			forVIFData.setClassIndex(i);
+			// Using Weka Linear Regression
+			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
+			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
+			regressor.setEliminateColinearAttributes(false);
+			regressor.buildClassifier(forVIFData);
+			double r2 = regressor.getRSquared(forVIFData);
+			vifs[i] = 1d / (1d - r2);
+			if (vifs[i] >= VIFThresholdValue) {
+				isMulticollinearity = "Y"; // Occur multicollinearity
+				break;
+			}
+			else {
+				isMulticollinearity = "N";
+			}
+		}
+		return isMulticollinearity;	
 	}
 	
 	public static Instances spreadSubsampling(Instances trainData) throws Exception {
