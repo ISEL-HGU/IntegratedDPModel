@@ -12,16 +12,16 @@ import java.util.List;
 
 
 public class AppendColumn {
-	static String path = "/Users/eunjiwon/Desktop/0723_csv_results/";
+	static String path = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
-			"Add_DecisionTree_smote_total_result",
+			"LR_total_results",
 //			"DecisionTree_spread_total_result",
 //			"Logistic_noHandling_total_result",
-			"Add_Logistic_smote_total_result",
+//			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
 //			"RandomForest_noHandling_total_result",
-			"Add_RandomForest_smote_total_result"
+//			"Add_RandomForest_smote_total_result"
 //			"RandomForest_spread_total_result"	
 	};
 	
@@ -43,9 +43,9 @@ public class AppendColumn {
 			 //출력 스트림 생성
 	        BufferedWriter bufWriter = null;
 	        try{
-	            bufWriter = Files.newBufferedWriter(Paths.get(path+filename + "_baseline.csv"));
+	            bufWriter = Files.newBufferedWriter(Paths.get(path + filename + "_baseline.csv"));
 	            //csv파일 읽기
-	            List<List<String>> allData = readCSV(path+filename + ".csv");
+	            List<List<String>> allData = readCSV(path + filename + ".csv");
 	            
 	            for(List<String> newLine : allData){
 	                List<String> list = newLine;
@@ -55,8 +55,7 @@ public class AppendColumn {
 	                }
 //	                System.out.println(list.get(5) + " / " + (list.get(5).equals("1")) +  " ..../ " + list.get(6) + " / " + list.get(6).contains(pca));
 	                if(list.get(5).equals("2")) baseline = "CFS-BestFirst";
-	                else if(list.get(5).equals("3")) baseline = "LR+AUC";
-	                else if(list.get(5).equals("4")) baseline = "NB+AUC";
+	                else if(list.get(5).equals("3")) baseline = "WFS-BestFirst";
 	                else if(list.get(5).equals("1") && list.get(6).contains(pca)) baseline = "Default-PCA";
 	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_10)) baseline = "NSVIF10";
 	                else if(list.get(5).equals("1") && list.get(6).contains(vif_non_5)) baseline = "NSVIF5";

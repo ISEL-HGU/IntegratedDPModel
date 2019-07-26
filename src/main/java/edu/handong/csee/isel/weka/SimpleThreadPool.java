@@ -33,13 +33,13 @@ public class SimpleThreadPool {
 				printHelp(options);
 				return;
 			}
-	    		String searchDirPath = "";
+	    		String searchDirPath = ""; // the dir path includes experiment data set name list 
 	    		if(type.equals("1")) {
-	    			searchDirPath = "/home/eunjiwon/EJTool/origin_pca_vif_data";
+	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_pca_vif_data";
 	    		}
 	    		else if(type.equals("2") || type.equals("3")) {
-	    			searchDirPath = "/home/eunjiwon/EJTool/origin_data";
-//	    			searchDirPath = "/Users/eunjiwon/Desktop/origin_data"; // 로컬에서 실험해보기 위해 
+	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
+//	    			searchDirPath = "/Users/eunjiwon/Desktop/origin_data"; // for local test
 	    		}
 
 	    		File searchDir = new File(searchDirPath);
