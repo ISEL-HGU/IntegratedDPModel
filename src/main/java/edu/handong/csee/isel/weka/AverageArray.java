@@ -18,8 +18,8 @@ public class AverageArray {
 	static String path = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
-			"LR_total_results",
-//			"DecisionTree_spread_total_result",
+//			"LR_total_results",
+			"DT_total_results",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
@@ -204,14 +204,6 @@ public class AverageArray {
 
         // f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1), baselineType is a column 8 (type2, 3).
     		List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
-    		
-//        List<List<String>> allData = readCSV("/Users/eunjiwon/Desktop/exp_results/smote_total_baseline.csv");
-//        try {
-//			saveAverageCSV("Dataset Name", Double.valueOf("1"), Double.valueOf("2"), Double.valueOf("3"), Double.valueOf("4"), Double.valueOf("5"), Double.valueOf("6"), Double.valueOf("7"), Double.valueOf("8"), Double.valueOf("9"), Double.valueOf("10"), Double.valueOf("11"));
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
     		
         for(String datasetName : dataset) {
             for(List<String> newLine : allData) {

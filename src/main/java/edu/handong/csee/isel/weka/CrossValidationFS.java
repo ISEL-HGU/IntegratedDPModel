@@ -166,23 +166,32 @@ public class CrossValidationFS implements Runnable{
 			trainData = Filter.useFilter(trainData, removeFilter);
 			testData = Filter.useFilter(testData, removeFilter);
 //			System.out.println("test " + testData.numAttributes());
-//			System.out.println("train " + trainData.numAttributes());
+//			System.out.println("train " + trainData.numAttributes());			
 //			System.out.println("--------------------");
 			
+			saveFeaturesNumber(mlModel, csvPath, type, testPath, trainData.numAttributes());
+			/*
 			// Check the multicollinearity to train data using VIF
 			isMulticollinearity = checkMulticollinearity(trainData); 
 			
 			myModel.buildClassifier(trainData);
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);  
-			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, isMulticollinearity);  // CSV 파일에다가 한 콜럼 추가해서 다중공선성 유무 같이 제거해야 한다. 
+			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, isMulticollinearity); 
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
+	public static void saveFeaturesNumber(String modelName, String csvPath, String type, String srcPath, int numAttributes) throws IOException {
+		FileWriter writer =  new FileWriter(csvPath, true);
+		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, String.valueOf(numAttributes)));	
+		writer.flush();
+		writer.close();
+	}
 	
-	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String isMulticollinearity) throws Exception { //
+	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String isMulticollinearity) throws Exception { 
 		FileWriter writer =  new FileWriter(csvPath, true);
 		if(eval == null) System.out.println("showSummary - eval is null");
 		else

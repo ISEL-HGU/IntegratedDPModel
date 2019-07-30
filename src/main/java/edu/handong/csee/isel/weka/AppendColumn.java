@@ -15,8 +15,8 @@ public class AppendColumn {
 	static String path = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
-			"LR_total_results",
-//			"DecisionTree_spread_total_result",
+//			"LR_total_results",
+			"DT_total_results",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
@@ -53,7 +53,6 @@ public class AppendColumn {
 	                    bufWriter.write(data);
 	                    bufWriter.write(",");
 	                }
-//	                System.out.println(list.get(5) + " / " + (list.get(5).equals("1")) +  " ..../ " + list.get(6) + " / " + list.get(6).contains(pca));
 	                if(list.get(5).equals("2")) baseline = "CFS-BestFirst";
 	                else if(list.get(5).equals("3")) baseline = "WFS-BestFirst";
 	                else if(list.get(5).equals("1") && list.get(6).contains(pca)) baseline = "Default-PCA";
