@@ -25,7 +25,7 @@ public class CountMulticollinearity {
 //			"Add_RandomForest_smote_total_result"
 //			"RandomForest_spread_total_result"	
 	};
-	// semantic error라서 나중에 고쳐야 한다. 
+
 	public static void main(String[] args) throws IOException {
 		double T2YesCount = 0;
 		double T2NoCount = 0;
@@ -50,17 +50,17 @@ public class CountMulticollinearity {
 		T3ratio = T3YesCount / ( T3YesCount + T3NoCount);
 		bufWriter.newLine();
 		if (T2YesCount != 0) {
-			bufWriter.write("T2 multicollinearity ratio : " + T2ratio);
+			bufWriter.write("CFS multicollinearity ratio : " + T2ratio);
 		}
 		else {
-			bufWriter.write("T2 multicollinearity ratio : 0" );
+			bufWriter.write("CFS multicollinearity ratio : 0" );
 		}
 		bufWriter.newLine();
 		if (T3YesCount != 0) {
-			bufWriter.write("T3 multicollinearity ratio : " + T3ratio);
+			bufWriter.write("WFS multicollinearity ratio : " + T3ratio);
 		}
 		else {
-			bufWriter.write("T3 multicollinearity ratio : 0" );
+			bufWriter.write("WFS multicollinearity ratio : 0" );
 		}
 		bufWriter.close();
 		fw.close();
@@ -68,7 +68,6 @@ public class CountMulticollinearity {
 //		System.out.println(T2YesCount +  "  " + T2NoCount);
 //		T3ratio = T3YesCount / ( T3YesCount + T3NoCount);
 //		System.out.println(T3ratio);
-		
 		
 	
 	}
