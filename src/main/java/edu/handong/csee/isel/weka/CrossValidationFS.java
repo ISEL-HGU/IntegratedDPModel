@@ -169,8 +169,8 @@ public class CrossValidationFS implements Runnable{
 //			System.out.println("train " + trainData.numAttributes());			
 //			System.out.println("--------------------");
 			
-			saveFeaturesNumber(mlModel, csvPath, type, testPath, trainData.numAttributes());
-			/*
+//			saveFeaturesNumber(mlModel, csvPath, type, testPath, trainData.numAttributes());
+			
 			// Check the multicollinearity to train data using VIF
 			isMulticollinearity = checkMulticollinearity(trainData); 
 			
@@ -178,12 +178,13 @@ public class CrossValidationFS implements Runnable{
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);  
 			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, isMulticollinearity); 
-			*/
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
+	
 	public static void saveFeaturesNumber(String modelName, String csvPath, String type, String srcPath, int numAttributes) throws IOException {
 		FileWriter writer =  new FileWriter(csvPath, true);
 		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, String.valueOf(numAttributes)));	

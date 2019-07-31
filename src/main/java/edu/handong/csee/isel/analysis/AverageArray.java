@@ -1,4 +1,4 @@
-package edu.handong.csee.isel.weka;
+package edu.handong.csee.isel.analysis;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.handong.csee.isel.weka.CSVUtils;
+
 
 
 public class AverageArray {
@@ -19,7 +21,7 @@ public class AverageArray {
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 //			"LR_total_results",
-			"DT_total_results",
+			"NB_total_results",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
