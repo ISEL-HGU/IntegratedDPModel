@@ -39,7 +39,7 @@ public class SimpleThreadPool {
 	    		}
 	    		else if(type.equals("2") || type.equals("3")) {
 	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
-//	    			searchDirPath = "/Users/eunjiwon/Desktop/origin_data"; // for local test
+//	    			searchDirPath = "/Users/eunjiwon/Desktop/Multicollinearity/for_local_test/origin_data"; // for local test
 	    		}
 
 	    		File searchDir = new File(searchDirPath);

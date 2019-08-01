@@ -13,8 +13,6 @@ import java.util.List;
 
 import edu.handong.csee.isel.weka.CSVUtils;
 
-
-
 public class AverageArray {
 	int numberOfApproaches = 12;
 	static String path = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";

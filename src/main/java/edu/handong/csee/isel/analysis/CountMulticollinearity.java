@@ -36,11 +36,11 @@ public class CountMulticollinearity {
 		for(String filename : filenameArray) {
 			List<List<String>> allData = readText(path + "0726_exp_results/" + filename);
 			for(List<String> newLine : allData){
-                List<String> list = newLine;
-                if(list.get(5).equals("2") && list.get(7).equals("N")) T2NoCount++;
-                if(list.get(5).equals("2") && list.get(7).equals("Y")) T2YesCount++;
-                if(list.get(5).equals("3") && list.get(7).equals("N")) T3NoCount++;
-                if(list.get(5).equals("3") && list.get(7).equals("Y")) T3YesCount++;
+	            List<String> list = newLine;
+	            if(list.get(5).equals("2") && list.get(7).equals("N")) T2NoCount++;
+	            if(list.get(5).equals("2") && list.get(7).equals("Y")) T2YesCount++;
+	            if(list.get(5).equals("3") && list.get(7).equals("N")) T3NoCount++;
+	            if(list.get(5).equals("3") && list.get(7).equals("Y")) T3YesCount++;
 			}
 			
 		}
