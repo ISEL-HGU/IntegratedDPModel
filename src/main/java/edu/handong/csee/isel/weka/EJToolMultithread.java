@@ -103,10 +103,9 @@ public class EJToolMultithread{
 			}
 	        executor.shutdown();
 	    		while (!executor.isTerminated()) {
-	    		}
-	    			    		
+	    		}	    		
 	    		System.out.println("Finished all threads");	
-				
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

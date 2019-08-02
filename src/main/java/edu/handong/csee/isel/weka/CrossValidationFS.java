@@ -94,10 +94,12 @@ public class CrossValidationFS implements Runnable {
 	@Override
 	public void run() {
 		String isMulticollinearity = "";
+		
 		ArrayList<String> vif10_multicollinearity_sourcepath_list = new ArrayList<String>();
 		ArrayList<String> vif5_multicollinearity_sourcepath_list = new ArrayList<String>();
 		ArrayList<String> vif4_multicollinearity_sourcepath_list = new ArrayList<String>();
 		ArrayList<String> vif2_5_multicollinearity_sourcepath_list = new ArrayList<String>();
+		
 		try {
 			Instances testData = null, temp = null;
 			for (int i = 0; i < filePathList.size(); i++) {
@@ -156,7 +158,7 @@ public class CrossValidationFS implements Runnable {
 
 			attsel.setSearch(search);
 			attsel.SelectAttributes(trainData);
-			// System.out.println(attsel.toResultsString());
+//			System.out.println(attsel.toResultsString());
 
 			int[] indices = attsel.selectedAttributes(); // to find feature selected index
 			// trainData and testData dimension reduction
@@ -174,29 +176,35 @@ public class CrossValidationFS implements Runnable {
 			// saveFeaturesNumber(mlModel, csvPath, type, testPath,
 			// trainData.numAttributes());
 
-			// Check the multicollinearity to train data using VIF & save the source path to
-			// arraylist
+			// Check the multicollinearity to train data using VIF & save the source path to arraylist
+			File file = new File(testPath);
 			isMulticollinearity = checkMulticollinearity(trainData, 10.0);
-			if (isMulticollinearity.equals("Y"))
-				vif10_multicollinearity_sourcepath_list.add(testPath);
+			if (isMulticollinearity.equals("Y")) {
+				vif10_multicollinearity_sourcepath_list.add(file.getName());
+				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "10.0", vif10_multicollinearity_sourcepath_list);
+			}
+				
 
 			isMulticollinearity = checkMulticollinearity(trainData, 5.0);
-			if (isMulticollinearity.equals("Y"))
+			if (isMulticollinearity.equals("Y")) {
 				vif5_multicollinearity_sourcepath_list.add(testPath);
+				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "5.0", vif5_multicollinearity_sourcepath_list);
+			}
+				
 
 			isMulticollinearity = checkMulticollinearity(trainData, 4.0);
-			if (isMulticollinearity.equals("Y"))
+			if (isMulticollinearity.equals("Y")) {
 				vif4_multicollinearity_sourcepath_list.add(testPath);
+				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "4.0", vif4_multicollinearity_sourcepath_list);
+			}
+				
 
 			isMulticollinearity = checkMulticollinearity(trainData, 2.5);
-			if (isMulticollinearity.equals("Y"))
+			if (isMulticollinearity.equals("Y")) {
 				vif2_5_multicollinearity_sourcepath_list.add(testPath);
-
-			saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "10.0", vif10_multicollinearity_sourcepath_list);
-			saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "5.0", vif5_multicollinearity_sourcepath_list);
-			saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "4.0", vif4_multicollinearity_sourcepath_list);
-			saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "2.5", vif2_5_multicollinearity_sourcepath_list);
-
+				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "2.5", vif2_5_multicollinearity_sourcepath_list);
+			}
+				
 			// myModel.buildClassifier(trainData);
 			// eval_case = new Evaluation(trainData);
 			// eval_case.evaluateModel(myModel, testData);
@@ -211,22 +219,14 @@ public class CrossValidationFS implements Runnable {
 
 	public static void saveMulticollinearityWFSCompareTheOtherApporoachesResults(String modelName, String csvPath, String type, String srcPath, String vif_threshold,
 			ArrayList<String> multicollinearity_sourcepath_list) throws IOException {
-		ArrayList<Double> b1List = new ArrayList<Double>();
-		ArrayList<Double> b2List = new ArrayList<Double>();
-		ArrayList<Double> b3List = new ArrayList<Double>();
-		ArrayList<Double> b4List = new ArrayList<Double>();
-		ArrayList<Double> b5List = new ArrayList<Double>();
-		ArrayList<Double> b6List = new ArrayList<Double>();
-		ArrayList<Double> b7List = new ArrayList<Double>();
-		ArrayList<Double> b8List = new ArrayList<Double>();
-		ArrayList<Double> b9List = new ArrayList<Double>();
-		ArrayList<Double> b10List = new ArrayList<Double>();
-		ArrayList<Double> b11List = new ArrayList<Double>();
-		ArrayList<Double> b12List = new ArrayList<Double>(); 
-		List<List<String>> allData = CSVUtils.readCSV("/home/eunjiwon/Git/EJTool/multi_results/DT_total_results_baseline.csv"); // 나중에 인자로 받기 
 
+		List<List<String>> allData = CSVUtils.readCSV("/home/eunjiwon/Git/EJTool/multi_results/DT_total_results_baseline.csv"); // 나중에 인자로 받기 
+//		List<List<String>> allData = CSVUtils.readCSV("/Users/eunjiwon/Desktop/exp_results/0726_exp_results/DT_total_results_baseline.csv"); // for local test
+		
+		FileWriter writer = new FileWriter(csvPath, true);
+		
 		for (String multicollinearity_sourcepath : multicollinearity_sourcepath_list) {
-			multicollinearity_sourcepath.replace(".arff", "");
+			multicollinearity_sourcepath = multicollinearity_sourcepath.replace(".arff", ""); 
 			String[] multicollinearity_sourcepath_array;
 			multicollinearity_sourcepath_array = multicollinearity_sourcepath.split("_");
 			String project = multicollinearity_sourcepath_array[0];
@@ -235,88 +235,72 @@ public class CrossValidationFS implements Runnable {
 			String fold = multicollinearity_sourcepath_array[multicollinearity_sourcepath_array.length - 1];
 			for (List<String> newLine : allData) {
 				List<String> list = newLine;
-				if (list.get(6).equals(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(7).equals("None")) {
+				if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(7).equals("None")) {
+					if (list.get(4).equals("NaN")) 
+						continue;
+					else 
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "None"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_PCA_" + iter + "_" + fold + ".arff") && list.get(7).equals("Default-PCA")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b1List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_PCA_" + iter + "_" + fold + ".arff") && list.get(7).equals("Default-PCA")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "Default-PCA"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF10")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b2List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_NONSTEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF10")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "NSVIF10"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF5")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b3List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_NONSTEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF5")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "NSVIF5"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF4")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b4List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_NONSTEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF4")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "NSVIF4"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF2.5")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b5List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_NONSTEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF2.5")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "NSVIF2.5"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF10")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b6List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_STEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF10")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "SVIF10"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF5")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b7List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_STEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF5")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "SVIF5"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF4")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b8List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_STEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF4")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "SVIF4"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF2.5")) {
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b9List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_STEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF2.5")) {
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "SVIF2.5"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("CFS-BestFirst")) { // type2
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b10List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("CFS-BestFirst")) { // type2
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "CFS-BestFirst"));
+				} else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("WFS-BestFirst")) { // type3
 					if (list.get(4).equals("NaN"))
 						continue;
 					else
-						b11List.add(Double.valueOf(list.get(4)));
-				} else if (list.get(6).equals(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("WFS-BestFirst")) { // type3
-					if (list.get(4).equals("NaN"))
-						continue;
-					else
-						b12List.add(Double.valueOf(list.get(4)));
+						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "WFS-BestFirst"));
 				}
 			}
 
 		}
-		
-		AverageArray averageArray = new AverageArray();
-		FileWriter writer = new FileWriter(csvPath, true);
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b1List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b2List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b3List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b4List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b5List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b6List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b7List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b8List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b9List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b10List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b11List))));
-		CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(averageArray.averageArray(b12List))));
 		writer.flush();
-		writer.close();
-		
+		writer.close();	
 	}
 
 	public static void saveFeaturesNumber(String modelName, String csvPath, String type, String srcPath, int numAttributes) throws IOException {

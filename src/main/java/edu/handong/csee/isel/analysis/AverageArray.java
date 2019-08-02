@@ -297,6 +297,10 @@ public class AverageArray {
 	}
 	
 	public double averageArray(ArrayList<Double> list) {
+		if(list.size() == 0) {
+			System.out.println("Can not average list because list size is 0, check your list!");
+			System.exit(-1);
+		}
 		double sum = 0;
 		double average = 0;
 		for(int i = 0; i < list.size(); i++) {
