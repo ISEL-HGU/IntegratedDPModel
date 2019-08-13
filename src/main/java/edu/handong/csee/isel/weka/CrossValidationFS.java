@@ -172,33 +172,32 @@ public class CrossValidationFS implements Runnable {
 			// saveFeaturesNumber(mlModel, csvPath, type, testPath,trainData.numAttributes());
 
 			// Check the multicollinearity to train data using VIF & save the source path to arraylist
-			File file = new File(testPath); // absolute path
-			String fileName = file.getName(); // only file name
-			isMulticollinearity = checkMulticollinearity(trainData, 10.0);
-			if (isMulticollinearity.equals("Y")) {
-				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "10.0", fileName);
-			}
-			
-			isMulticollinearity = checkMulticollinearity(trainData, 5.0);
-			if (isMulticollinearity.equals("Y")) {
-				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "5.0", fileName);
-			}
-			
-			isMulticollinearity = checkMulticollinearity(trainData, 4.0);
-			if (isMulticollinearity.equals("Y")) {
-				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "4.0", fileName);
-			}
-			
-			isMulticollinearity = checkMulticollinearity(trainData, 2.5);
-			if (isMulticollinearity.equals("Y")) {
-				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "2.5", fileName);
-			}
+//			File file = new File(testPath); // absolute path
+//			String fileName = file.getName(); // only file name
+//			isMulticollinearity = checkMulticollinearity(trainData, 10.0);
+//			if (isMulticollinearity.equals("Y")) {
+//				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "10.0", fileName);
+//			}
+//			
+//			isMulticollinearity = checkMulticollinearity(trainData, 5.0);
+//			if (isMulticollinearity.equals("Y")) {
+//				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "5.0", fileName);
+//			}
+//			
+//			isMulticollinearity = checkMulticollinearity(trainData, 4.0);
+//			if (isMulticollinearity.equals("Y")) {
+//				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "4.0", fileName);
+//			}
+//			
+//			isMulticollinearity = checkMulticollinearity(trainData, 2.5);
+//			if (isMulticollinearity.equals("Y")) {
+//				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "2.5", fileName);
+//			}
 				
-			// myModel.buildClassifier(trainData);
-			// eval_case = new Evaluation(trainData);
-			// eval_case.evaluateModel(myModel, testData);
-			// showSummary(eval_case, trainData, mlModel, csvPath, type, testPath,
-			// isMulticollinearity);
+			 myModel.buildClassifier(trainData);
+			 eval_case = new Evaluation(trainData);
+			 eval_case.evaluateModel(myModel, testData);
+			 showSummary(eval_case, trainData, mlModel, csvPath, type, testPath,isMulticollinearity);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -304,15 +303,15 @@ public class CrossValidationFS implements Runnable {
 			System.out.println("showSummary - eval is null");
 		else
 			for (int i = 0; i < instances.classAttribute().numValues() - 1; i++) {
-				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-				System.out.println("Precision " + eval.precision(i));
-				System.out.println("Recall " + eval.recall(i));
-				System.out.println("F-Measure " + eval.fMeasure(i));
-				System.out.println("AUC " + eval.areaUnderROC(i));
-
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)),
-						String.valueOf(eval.areaUnderROC(i)), type, srcPath, isMulticollinearity));
-
+//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
+//				System.out.println("Precision " + eval.precision(i));
+//				System.out.println("Recall " + eval.recall(i));
+//				System.out.println("F-Measure " + eval.fMeasure(i));
+//				System.out.println("AUC " + eval.areaUnderROC(i));
+//				
+//				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)),
+//						String.valueOf(eval.areaUnderROC(i)), type, srcPath, isMulticollinearity));
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath));
 			}
 		writer.flush();
 		writer.close();

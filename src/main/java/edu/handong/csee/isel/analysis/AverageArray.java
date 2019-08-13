@@ -19,7 +19,7 @@ public class AverageArray {
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 //			"LR_total_results",
-			"NB_total_results",
+			"DT_total_results",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
@@ -31,18 +31,20 @@ public class AverageArray {
 
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
-//		for(String filename : filenameArray) {
-//			myAverageArray.run(filename);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
-//		}
+		for(String filename : filenameArray) {
+			myAverageArray.run(filename);
+			myAverageArray.saveRankingCSV(filename);
+			myAverageArray.saveRankingAverageCSV(filename);
+		}
 		
 		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset)
-		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv");
+//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "10.0");
+//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "5.0");
+//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "4.0");
+//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "2.5");
 	}
 	
-	public void calculateMeanAUCOfEachApproaches(String csv_path) throws IOException {
-		// 파일 읽고
+	public void calculateMeanAUCOfEachApproaches(String csv_path, String threshold) throws IOException {
 		ArrayList<Double> b1List = new ArrayList<Double>();
 		ArrayList<Double> b2List = new ArrayList<Double>();
 		ArrayList<Double> b3List = new ArrayList<Double>();
@@ -54,80 +56,82 @@ public class AverageArray {
 		ArrayList<Double> b9List = new ArrayList<Double>();
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
-		ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
-		BufferedWriter bufWriter = null;
+		ArrayList<Double> b12List = new ArrayList<Double>(); 
+		
 		List<List<String>> allData = readCSV(csv_path);
-		// 평균 내고
+
 		for(List<String> newLine : allData) {
             List<String> list = newLine;
-                if(list.get(5).equals("None")) {
+                if(list.get(5).equals("None") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b1List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("Default-PCA")) {
+                else if(list.get(5).equals("Default-PCA") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b2List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("NSVIF10")) {
+                else if(list.get(5).equals("NSVIF10") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b3List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("NSVIF5")) {
+                else if(list.get(5).equals("NSVIF5") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b4List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("NSVIF4")) {
+                else if(list.get(5).equals("NSVIF4") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b5List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("NSVIF2.5")) {
+                else if(list.get(5).equals("NSVIF2.5") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b6List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("SVIF10")) {
+                else if(list.get(5).equals("SVIF10") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b7List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("SVIF5")) {
+                else if(list.get(5).equals("SVIF5") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b8List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("SVIF4")) {
+                else if(list.get(5).equals("SVIF4") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b9List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("SVIF2.5")) {
+                else if(list.get(5).equals("SVIF2.5") && list.get(3).equals(threshold)) {
                 		if(list.get(4).equals("NaN")) continue;
                 		else b10List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("CFS-BestFirst")) { 
+                else if(list.get(5).equals("CFS-BestFirst") && list.get(3).equals(threshold)) { 
                 		if(list.get(4).equals("NaN")) continue;
                 		else b11List.add(Double.valueOf(list.get(4)));
                 }
-                else if(list.get(5).equals("WFS-BestFirst")) { 
+                else if(list.get(5).equals("WFS-BestFirst") && list.get(3).equals(threshold)) {
             			if(list.get(4).equals("NaN")) continue;
             			else b12List.add(Double.valueOf(list.get(4)));
                 }
 		}
-		// 12개의 행으로 평균 저장함 
-		FileWriter writer =  new FileWriter(path + "DT_compare_average.csv", true);
-	    // Add header for R studio when the first data set 
 
-		ArrayList<String> baselineList = new ArrayList<String>();
-		baselineList.add("None");
-		baselineList.add("Default-PCA");
-		baselineList.add("NSVIF10");
-		baselineList.add("NSVIF5");
-		baselineList.add("NSVIF4");
-		baselineList.add("NSVIF2.5");
-		baselineList.add("SVIF10");
-		baselineList.add("SVIF5");
-		baselineList.add("SVIF4");
-		baselineList.add("SVIF2.5");
-		baselineList.add("CFS-BestFirst");
-		baselineList.add("WFS-BestFirst");
-		CSVUtils.writeLine(writer, baselineList);
-		CSVUtils.writeLine(writer, Arrays.asList(String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List)), String.valueOf(averageArray(b12List))));
+		FileWriter writer =  new FileWriter(path + "DT_compare_average.csv", true);
+		// Only when threshold is 10
+		if (threshold.equals("10.0")) {
+			ArrayList<String> baselineList = new ArrayList<String>();
+			baselineList.add("Threshold");
+			baselineList.add("None");
+			baselineList.add("Default-PCA");
+			baselineList.add("NSVIF10");
+			baselineList.add("NSVIF5");
+			baselineList.add("NSVIF4");
+			baselineList.add("NSVIF2.5");
+			baselineList.add("SVIF10");
+			baselineList.add("SVIF5");
+			baselineList.add("SVIF4");
+			baselineList.add("SVIF2.5");
+			baselineList.add("CFS-BestFirst");
+			baselineList.add("WFS-BestFirst");
+			CSVUtils.writeLine(writer, baselineList);
+		}
+		CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List)), String.valueOf(averageArray(b12List))));
 		writer.flush();
 		writer.close();
 		

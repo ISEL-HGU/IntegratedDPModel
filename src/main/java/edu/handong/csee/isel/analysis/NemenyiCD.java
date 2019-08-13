@@ -16,15 +16,7 @@ import java.util.HashMap;
 public class NemenyiCD {
 	static String rootPath = "/Users/eunjiwon/Desktop/nemenyi/";
 	static String[] filenameArray = {
-//			"DecisionTree_noHadling_total_result_ranking_average",
-			"NB.csv",
-//			"DecisionTree_spread_total_result_ranking_average",
-//			"Logistic_noHandling_total_result_ranking_average",
-//			"Add_Logistic_smote_total_result_ranking_average",
-//			"Logistic_spread_total_result_ranking_average",
-//			"RandomForest_noHandling_total_result_ranking_average",
-//			"Add_RandomForest_smote_total_result_ranking_average"
-//			"RandomForest_spread_total_result_ranking_average"
+			"RF.csv",
 	};
 	
 	public static void main(String[] args) throws IOException {

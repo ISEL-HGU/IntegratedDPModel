@@ -121,14 +121,13 @@ public class CrossValidation implements Runnable{
 		if(eval == null) System.out.println("showSummary - eval is null");
 		else
 			for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
-				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-				System.out.println("Precision " + eval.precision(i));
-				System.out.println("Recall " + eval.recall(i));
-				System.out.println("F-Measure " + eval.fMeasure(i));
-				System.out.println("AUC " + eval.areaUnderROC(i));
-	
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
-	
+//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
+//				System.out.println("Precision " + eval.precision(i));
+//				System.out.println("Recall " + eval.recall(i));
+//				System.out.println("F-Measure " + eval.fMeasure(i));
+//				System.out.println("AUC " + eval.areaUnderROC(i));
+//				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath));
 			}
 		writer.flush();
 		writer.close();
