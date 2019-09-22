@@ -19,7 +19,7 @@ public class AverageArray {
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 //			"LR_total_results",
-			"DT_total_results",
+			"MCC_DT_total_result",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
@@ -33,8 +33,8 @@ public class AverageArray {
 		AverageArray myAverageArray = new AverageArray();
 		for(String filename : filenameArray) {
 			myAverageArray.run(filename);
-			myAverageArray.saveRankingCSV(filename);
-			myAverageArray.saveRankingAverageCSV(filename);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
 		}
 		
 		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset)
@@ -136,7 +136,6 @@ public class AverageArray {
 		writer.close();
 		
 	}
-	
 	
 	public void saveRankingAverageCSV(String baselinePath) {
 		ArrayList<Double> b1List = new ArrayList<Double>();
@@ -299,62 +298,73 @@ public class AverageArray {
     		ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
 //    		ArrayList<Double> b13List = new ArrayList<Double>(); 
     		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
-
-        // f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1), baselineType is a column 8 (type2, 3).
-    		List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
+    		// f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1), baselineType is a column 8 (type2, 3).
+    		// precision, recall, and f-measure
+//    		int precision_col = 1;
+//    		int recall_col = 2;
+//    		int fmeasure_col = 3;
+//    		int dataname_col = 6;
+//    		int approachname_col = 7; // WFS와 CFS에서는 multicollinearity col 때문에 8로 해야함 
+    		// mcc
+    		int mcc_col = 1; 
+     	int dataname_col = 3;
+    		int approachname_col = 4;
+    		int evaluation_measure = mcc_col; //
     		
-        for(String datasetName : dataset) {
+        List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
+    		
+    		for(String datasetName : dataset) {
             for(List<String> newLine : allData) {
                 List<String> list = newLine;
-                    if(list.get(6).contains(datasetName) && list.get(7).equals("None")) {
-                    		if(list.get(4).equals("NaN")) continue;
-                    		else b1List.add(Double.valueOf(list.get(4)));
+                    if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("None")) {
+                    		if(list.get(evaluation_measure).equals("NaN")) continue;
+                    		else b1List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("Default-PCA")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b2List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("Default-PCA")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b2List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF10")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b3List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("NSVIF10")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b3List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF5")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b4List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("NSVIF5")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b4List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF4")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b5List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("NSVIF4")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b5List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("NSVIF2.5")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b6List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("NSVIF2.5")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b6List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF10")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b7List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("SVIF10")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b7List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF5")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b8List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("SVIF5")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b8List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF4")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b9List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("SVIF4")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b9List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(7).equals("SVIF2.5")) {
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b10List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("SVIF2.5")) {
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b10List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(8).equals("CFS-BestFirst")) { // type2
-	                		if(list.get(4).equals("NaN")) continue;
-	                		else b11List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("CFS-BestFirst")) { // type2
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b11List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    else if(list.get(6).contains(datasetName) && list.get(8).equals("WFS-BestFirst")) { // type3
-                			if(list.get(4).equals("NaN")) continue;
-                			else b12List.add(Double.valueOf(list.get(4)));
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("WFS-BestFirst")) { // type3
+                			if(list.get(evaluation_measure).equals("NaN")) continue;
+                			else b12List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-      
+                    
                     
             }
             try {
@@ -395,10 +405,10 @@ public class AverageArray {
 	}
 	
 	public double averageArray(ArrayList<Double> list) {
-		if(list.size() == 0) {
-			System.out.println("Can not average list because list size is 0, check your list!");
-			System.exit(-1);
-		}
+//		if(list.size() == 0) {
+//			System.out.println("Can not average list because list size is 0, check your list!");
+//			System.exit(-1);
+//		}
 		double sum = 0;
 		double average = 0;
 		for(int i = 0; i < list.size(); i++) {
