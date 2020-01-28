@@ -1,0 +1,2 @@
+ * [HTTPCLIENT-1137] Values for the Via header are cached and reused by httpclient-cache.
+  Contributed by Alin Vasile <alinachegalati at yahoo dot com>

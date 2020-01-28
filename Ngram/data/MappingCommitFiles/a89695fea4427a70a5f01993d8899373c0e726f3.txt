@@ -1,0 +1,17 @@
+ import org.apache.http.conn.scheme.HostNameResolver;
+    private final HostNameResolver nameResolver;
+        final SecureRandom random,
+        final HostNameResolver nameResolver) 
+        this.nameResolver = nameResolver;
+        this(TLS, keystore, keystorePassword, truststore, null, null);
+        this(TLS, keystore, keystorePassword, null, null, null);
+        this(TLS, null, null, truststore, null, null);
+        this.nameResolver = null;
+        InetSocketAddress remoteAddress;
+        if (this.nameResolver != null) {
+            remoteAddress = new InetSocketAddress(this.nameResolver.resolve(host), port); 
+        } else {
+            remoteAddress = new InetSocketAddress(host, port);            
+        }
+        
+        sslsock.connect(remoteAddress, connTimeout);

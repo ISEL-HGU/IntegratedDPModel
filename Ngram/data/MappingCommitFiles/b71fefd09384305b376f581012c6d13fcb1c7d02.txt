@@ -1,0 +1,11 @@
+ import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+            // Obtain the scheme registry
+            SchemeRegistry sr = (SchemeRegistry) context.getAttribute(
+                    ClientContext.AUTHSCHEME_REGISTRY);
+            if (sr != null) {
+                Scheme scheme = sr.get(targetHost.getSchemeName());
+                port = scheme.resolvePort(port);
+            } else {
+                port = conn.getRemotePort();
+            }

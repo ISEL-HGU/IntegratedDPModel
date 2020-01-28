@@ -1,0 +1,16 @@
+                 new FileBody(tmpfile, "test-file", "text/plain", "ANSI_X3.4-1968"));
+        FormBodyPart p3 = new FormBodyPart(
+                "field3",
+        multipart.addBodyPart(p3);
+        multipart.setMode(HttpMultipartMode.STRICT);
+            "Content-Type: application/octet-stream\r\n" +
+            "Content-Transfer-Encoding: binary\r\n" +
+                "filename=\"test-file\"\r\n" +
+            "Content-Type: text/plain; charset=ANSI_X3.4-1968\r\n" +
+            "Content-Transfer-Encoding: binary\r\n" +
+            "\r\n" +
+            "some random whatever\r\n" +
+            "--foo\r\n" +
+            "Content-Disposition: form-data; name=\"field3\"; " +
+            "Content-Type: application/octet-stream\r\n" +
+            "Content-Transfer-Encoding: binary\r\n" +

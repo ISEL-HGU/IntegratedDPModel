@@ -1,0 +1,4 @@
+     //@@@ to be removed in HTTPCLIENT-677
+    /*default@@@*/ boolean interruptedByConnectionPool;
+    public void await(long timeout)
+        //@@@ for now, leave the check to the condition

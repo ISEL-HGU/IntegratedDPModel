@@ -1,0 +1,2 @@
+         entity.setContentType(URLEncodedUtils.CONTENT_TYPE + "; charset=US-ASCII");
+        assertTrue(URLEncodedUtils.isEncoded(entity));

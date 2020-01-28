@@ -1,0 +1,7 @@
+     private transient final Log log = LogFactory.getLog(getClass());
+                if (log.isDebugEnabled()) {
+                    log.debug("ThreadSafeClientConnManager.getConnection: "
+                if (log.isDebugEnabled()) {
+                    log.debug
+            if (log.isDebugEnabled())
+                log.debug("Exception shutting down released connection.",

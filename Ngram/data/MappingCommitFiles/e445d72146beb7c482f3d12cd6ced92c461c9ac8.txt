@@ -1,0 +1,18 @@
+ import java.net.ConnectException;
+import org.apache.http.conn.HttpHostConnectException;
+        try {
+            sock = sf.connectSocket(sock, target.getHostName(),
+                    schm.resolvePort(target.getPort()),
+                    local, 0, params);
+        } catch (ConnectException ex) {
+            throw new HttpHostConnectException(target, ex);
+        }
+        final LayeredSocketFactory lsf = (LayeredSocketFactory) schm.getSocketFactory();
+        final Socket sock; 
+        try {
+            sock = lsf.createSocket
+                (conn.getSocket(), target.getHostName(), target.getPort(), true);
+        } catch (ConnectException ex) {
+            throw new HttpHostConnectException(target, ex);
+        }
+        conn.update(sock, target, lsf.isSecure(sock), params);

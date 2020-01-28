@@ -1,0 +1,5 @@
+      * The default factory using the default JVM settings for secure connections.
+     * Gets the default factory, which uses the default JVM settings for secure 
+     * connections.
+     * 
+     * @return the default factory

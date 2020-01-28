@@ -1,0 +1,11 @@
+ import org.apache.http.io.EofSensor;
+public class LoggingSessionInputBuffer implements SessionInputBuffer, EofSensor {
+    private final EofSensor eofSensor;
+        this.eofSensor = in instanceof EofSensor ? (EofSensor) in : null;
+    public boolean isEof() {
+        if (this.eofSensor != null) {
+            return this.eofSensor.isEof();
+        } else {
+            return false;
+        }
+    }

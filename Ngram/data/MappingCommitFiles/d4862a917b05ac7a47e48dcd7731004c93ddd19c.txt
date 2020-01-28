@@ -1,0 +1,5 @@
+         HttpConnectionManagerParams.setMaxConnectionsPerHost(params,route2, 2);
+        HttpConnectionManagerParams.setMaxConnectionsPerHost(params,route3, 3);
+                     mgr.getConnectionsInPool(route), 1);
+                     mgr.getConnectionsInPool(route), 1);
+                     mgr.getConnectionsInPool(route), 0);

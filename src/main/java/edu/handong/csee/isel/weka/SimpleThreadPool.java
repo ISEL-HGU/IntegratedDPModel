@@ -65,7 +65,7 @@ public class SimpleThreadPool {
 	
 		// add options
 		options.addOption(Option.builder("s").longOpt("source")
-				.desc("Source arff file path to train a prediciton model")
+				.desc("source arff file path to train a prediction model")
 				.hasArg()
 				.argName("file")
 				.required()
@@ -83,35 +83,35 @@ public class SimpleThreadPool {
 				.build());
 	
 		options.addOption(Option.builder("t").longOpt("type")
-				.desc("1 is unsupervised techniques related to feature reduction (None, Default-PCA, SVIF, NSVIF) or 2 is supervised techniques related to feature reduction (CFS) or 3 is supervised techniques related to feature reduction (WFS).")
+				.desc("1 is a original dataset or applying PCA or VIF to remove multicollinearity or 2 is applying Correlation-based feature selection or 3 is applying Wrapper-based feature selection.")
 				.hasArg()
 				.required()
 				.argName("attribute value")
 				.build());
 	
 		options.addOption(Option.builder("c").longOpt("csv")
-				.desc("Where to save the csv file.")
+				.desc("file path of output to output file.")
 				.hasArg()
 				.required()
 				.argName("csv file location")
 				.build());
 		
 		options.addOption(Option.builder("m").longOpt("model")
-				.desc("Machine Learning Model")
+				.desc("machine learning model")
 				.hasArg()
 				.required()
 				.argName("machine learning model")
 				.build());
 		
 		options.addOption(Option.builder("i").longOpt("iter")
-				.desc("number of iteration")
+				.desc("number of cross-validation iterations")
 				.hasArg()
 				.required()
 				.argName("number of cross-validation iterations")
 				.build());
 		
 		options.addOption(Option.builder("f").longOpt("fold")
-				.desc("the number of fold")
+				.desc("the number of cross-validation folds")
 				.hasArg()
 				.required()
 				.argName("the number of cross-validation folds")

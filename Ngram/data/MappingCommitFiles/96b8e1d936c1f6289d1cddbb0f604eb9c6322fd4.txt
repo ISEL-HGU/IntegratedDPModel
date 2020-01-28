@@ -1,0 +1,5 @@
+             // Unset auth scope
+            targetAuthState.setAuthScope(null);
+            proxyAuthState.setAuthScope(null);
+            
+            // Invalidate auth states if redirecting to another host

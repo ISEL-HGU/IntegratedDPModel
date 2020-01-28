@@ -1,0 +1,5 @@
+         Assert.assertEquals(new HttpHost("localhost",-1),URIUtils.extractHost(
+        Assert.assertEquals(new HttpHost("local_host",-1),URIUtils.extractHost(
+        Assert.assertEquals(new HttpHost("localhost",8080),
+        Assert.assertEquals(new HttpHost("localhost",-1),
+                URIUtils.extractHost(new URI("http://localhost:;sessionid=stuff/abcd")));

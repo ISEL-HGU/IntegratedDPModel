@@ -1,0 +1,7 @@
+         request = new BasicHttpRequest("GET","/",HTTP_1_1);
+    public void testResponsesToRequestsWithNoStoreAreNotCacheable() {
+        request.setHeader("Cache-Control","no-store");
+        response.setHeader("Cache-Control","public");
+        Assert.assertFalse(policy.isResponseCacheable(request,response));
+    }
+    @Test

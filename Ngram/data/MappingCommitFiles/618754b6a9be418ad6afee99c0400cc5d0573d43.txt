@@ -1,0 +1,9 @@
+ import java.util.HashMap;
+import java.util.Map;
+        String etag1 = "\"123\"";
+        String etag2 = "\"456\"";
+        String etag3 = "\"789\"";
+        Map<String,HttpCacheEntry> variantEntries = new HashMap<String,HttpCacheEntry>();
+        variantEntries.put(etag1, HttpTestUtils.makeCacheEntry(new Header[] { new BasicHeader("ETag", etag1) }));
+        variantEntries.put(etag2, HttpTestUtils.makeCacheEntry(new Header[] { new BasicHeader("ETag", etag2) }));
+        variantEntries.put(etag3, HttpTestUtils.makeCacheEntry(new Header[] { new BasicHeader("ETag", etag3) }));

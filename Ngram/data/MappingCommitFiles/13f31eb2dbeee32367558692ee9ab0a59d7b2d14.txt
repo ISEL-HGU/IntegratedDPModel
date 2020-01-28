@@ -1,0 +1,40 @@
+ import junit.framework.Assert;
+import org.apache.http.HttpStatus;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+        public void handle(
+                final HttpRequest request,
+            response.setStatusCode(HttpStatus.SC_UNAUTHORIZED);
+            response.setEntity(new StringEntity("auth required "));
+        
+        GSSManager manager = Mockito.mock(GSSManager.class);
+        GSSName name = Mockito.mock(GSSName.class);
+        GSSContext context = Mockito.mock(GSSContext.class);
+            Mockito.when(context.initSecContext(
+                    Matchers.any(byte[].class), Matchers.anyInt(), Matchers.anyInt()))
+                    .thenReturn("12345678".getBytes());
+            Mockito.when(manager.createName(
+                    Matchers.any(String.class), Matchers.any(Oid.class)))
+                    .thenReturn(name);
+            Mockito.when(manager.createContext(
+                    Matchers.any(GSSName.class), Matchers.any(Oid.class), 
+                    Matchers.any(GSSCredential.class), Matchers.anyInt()))
+                    .thenReturn(context);
+        
+        
+        
+        
+        
+        
+        
+        if (e != null) {
+            e.consumeContent();
+        }
+        Assert.assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());
+    public void testNoTokenGeneratedError() throws Exception {
+        Mockito.when(nsf.scheme.context.initSecContext(
+                Matchers.any(byte[].class), Matchers.anyInt(), Matchers.anyInt())).thenReturn(null);
+        if (e != null) {
+            e.consumeContent();
+        }
+        Assert.assertEquals(HttpStatus.SC_UNAUTHORIZED, response.getStatusLine().getStatusCode());

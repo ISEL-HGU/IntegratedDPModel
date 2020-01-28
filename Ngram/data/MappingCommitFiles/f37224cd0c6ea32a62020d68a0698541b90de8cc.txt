@@ -1,0 +1,10 @@
+     //@@@ temporarily, used in BasicPoolEntry
+    /*private*/ AbstractConnPool connectionPool;
+        //@@@ synchronized(BadStaticMaps.ALL_CONNECTION_MANAGERS) {
+        //@@@    BadStaticMaps.ALL_CONNECTION_MANAGERS.put(this, null);
+        //@@@}
+    private void releasePoolEntry(BasicPoolEntry entry) {
+    /* *
+     * /
+        //@@@ BadStaticMaps.shutdownAll();
+    */

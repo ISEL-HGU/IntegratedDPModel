@@ -11,7 +11,8 @@ plugins {
     id 'java-library'
 }
 apply plugin: 'application'
-mainClassName = "edu.handong.csee.isel.weka.SimpleThreadPool"
+// mainClassName = "edu.handong.csee.isel.weka.SimpleThreadPool"
+mainClassName = "edu.handong.csee.isel.weka.SaveCrossValidation"
 
 
 dependencies {

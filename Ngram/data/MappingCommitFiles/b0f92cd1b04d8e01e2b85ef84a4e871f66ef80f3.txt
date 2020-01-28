@@ -1,0 +1,36 @@
+ * {About}
+* {Scenario}
+* {Caveat}
+* {Not a Browser}
+[images/browser.png] {Browser}
+[images/httpclient.png] {HTTP Client}
+* {Terminology}
+    <<<{HTTP Message}>>>
+    <<<{HTTP Request}>>> 
+    <<<{HTTP Response}>>>
+    <<<{Method}>>>
+    <<<{Header Fields}>>>
+    <<<{Entity}>>>
+    <<<{Session}>>>
+    <<<{Cookies}>>>
+* {Step by Step}
+** {GET the Login Page}
+** {Establish the Session}
+** {Analyze the Form}
+    relevant. Let's start with the {attributes of the <form> tag}:
+    <<<{method}=>>>
+    <<<{action}=>>>
+    <<<{enctype}=>>>
+    <<<{accept-charset}=>>>
+** {Analyze the Form, Again}
+** {POST the Form}
+    Here is a possibly incomplete {list of headers that need special consideration}:
+    <<<{Host}:>>>
+    <<<{Content-Type}:>>>
+    <<<{Content-Length}:>>>
+    <<<{Transfer-Encoding}:>>>
+    <<<{Connection}:>>>
+    <<<{Content-Encoding}:>>>
+** {Follow Redirects}
+** {Logout}
+* {Further Reading}

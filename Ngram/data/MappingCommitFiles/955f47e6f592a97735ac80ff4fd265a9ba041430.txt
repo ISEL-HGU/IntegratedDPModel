@@ -1,0 +1,1 @@
+             sslsock.setReuseAddress(HttpConnectionParams.getSoReuseaddr(params));

@@ -1,0 +1,3 @@
+     public void testPassesOnOrigin407WithoutAProxyAuthenticateHeader() throws Exception {
+        HttpResponse result = impl.execute(host, request);
+        Assert.assertSame(originResponse, result);

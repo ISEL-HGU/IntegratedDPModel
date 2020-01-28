@@ -1,0 +1,2 @@
+ import java.util.Locale;
+        String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);

@@ -1,0 +1,6 @@
+         for (HeaderElement headerelement : elems) {
+            if (name == null || name.length() == 0) {
+            Map<String, NameValuePair> attribmap =
+                    new HashMap<String, NameValuePair>(attribs.length);
+            for (Map.Entry<String, NameValuePair> entry : attribmap.entrySet()) {
+     * @param origin origin where cookie is received from or being sent to.

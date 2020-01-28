@@ -1,0 +1,2 @@
+             .andReturn(HttpTestUtils.makeCacheEntry());
+        impl.execute(host, request);

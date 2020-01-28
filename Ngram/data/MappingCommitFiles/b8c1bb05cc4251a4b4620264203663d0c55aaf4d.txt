@@ -1,0 +1,17 @@
+         policy = new ResponseCachingPolicy(0, true);
+    public void testResponsesToRequestsWithAuthorizationHeadersAreNotCacheableBySharedCache() {
+    public void testResponsesToRequestsWithAuthorizationHeadersAreCacheableByNonSharedCache() {
+        policy = new ResponseCachingPolicy(0, false);
+        request = new BasicHttpRequest("GET","/",HTTP_1_1);
+        request.setHeader("Authorization","Basic dXNlcjpwYXNzd2Q=");
+        Assert.assertTrue(policy.isResponseCacheable(request,response));
+    }
+    @Test
+    public void testNon206WithPrivateCacheControlIsNotCacheableBySharedCache() {
+    public void test200ResponseWithPrivateCacheControlIsCacheableByNonSharedCache() {
+        policy = new ResponseCachingPolicy(0, false);
+        response.setStatusCode(HttpStatus.SC_OK);
+        response.setHeader("Cache-Control", "private");
+        Assert.assertTrue(policy.isResponseCacheable("GET", response));
+    }
+    @Test

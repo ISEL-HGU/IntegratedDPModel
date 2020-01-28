@@ -1,0 +1,12 @@
+     public SSLSocketFactory(
+        final SSLContext sslContext,
+        final HostNameResolver nameResolver)
+    {
+        this.sslcontext = sslContext;
+        this.socketfactory = this.sslcontext.getSocketFactory();
+        this.nameResolver = nameResolver;
+    }
+    public SSLSocketFactory(final SSLContext sslContext)
+    {
+        this(sslContext, null);
+    }

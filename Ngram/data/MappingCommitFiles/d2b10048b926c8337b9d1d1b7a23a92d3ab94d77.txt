@@ -1,0 +1,9 @@
+ import org.apache.james.mime4j.message.BodyPart;
+    /**
+     * @since 4.1
+     */
+    public void addPart(final BodyPart bodyPart) {
+        this.multipart.addBodyPart(bodyPart);
+    public void addPart(final String name, final ContentBody contentBody) {
+        addPart(new FormBodyPart(name, contentBody));
+    }

@@ -1,0 +1,9 @@
+ import java.io.InputStream;
+ * This example demonstrates the recommended way of using API to make sure
+        HttpGet httpget = new HttpGet("http://www.apache.org/");
+            InputStream instream = entity.getContent();
+                instream.read();
+                // the HTTP request in order to shut down the underlying
+                instream.close();
+        // When HttpClient instance is no longer needed,
+        httpclient.getConnectionManager().shutdown();

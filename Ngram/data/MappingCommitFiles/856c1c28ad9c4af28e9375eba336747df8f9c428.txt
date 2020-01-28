@@ -1,0 +1,2 @@
+         mockCache.flushInvalidatedCacheEntriesFor(EasyMock.isA(HttpHost.class),
+                EasyMock.isA(HttpRequest.class), EasyMock.isA(HttpResponse.class));

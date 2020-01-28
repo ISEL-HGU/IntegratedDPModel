@@ -1,0 +1,11 @@
+ import java.util.concurrent.ConcurrentHashMap;
+    private final ConcurrentHashMap<String,Scheme> registeredSchemes;
+        registeredSchemes = new ConcurrentHashMap<String,Scheme>();
+    public final Scheme getScheme(String name) {
+    public final Scheme getScheme(HttpHost host) {
+    public final Scheme get(String name) {
+    public final Scheme register(Scheme sch) {
+    public final Scheme unregister(String name) {
+     * Obtains the names of the registered schemes.
+    public final List<String> getSchemeNames() {
+    public void setItems(final Map<String, Scheme> map) {

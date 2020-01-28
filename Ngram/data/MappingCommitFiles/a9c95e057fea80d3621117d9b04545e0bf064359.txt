@@ -1,0 +1,17 @@
+     
+        if (sslContext == null) {
+            throw new IllegalArgumentException("SSL context may not be null");
+        }
+     * @since 4.2
+     */
+    public SSLSocketFactory(
+            final javax.net.ssl.SSLSocketFactory socketfactory, 
+            final X509HostnameVerifier hostnameVerifier) {
+        if (socketfactory == null) {
+            throw new IllegalArgumentException("SSL socket factory may not be null");
+        }
+        this.socketfactory = socketfactory;
+        this.hostnameVerifier = hostnameVerifier;
+        this.nameResolver = null;
+    }
+    /**
