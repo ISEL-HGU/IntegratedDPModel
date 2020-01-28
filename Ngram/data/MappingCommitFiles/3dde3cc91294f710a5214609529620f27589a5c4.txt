@@ -1,2 +1,0 @@
- * [HTTPCLIENT-735] unsetting of DEFAULT_PROXY and FORCED_ROUTE in hierarchies
-  Contributed by Roland Weber <rolandw at apache.org>

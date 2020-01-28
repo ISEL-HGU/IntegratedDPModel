@@ -1,3 +1,0 @@
-         <para><interfacename>HttpContext</interfacename> can contain arbitrary objects and 
-            therefore may be unsafe to share between multiple threads. It is recommended that
-            each thread of execution maintains its own context.</para>

@@ -1,4 +1,0 @@
-         int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
-        int soTimeout = HttpConnectionParams.getSoTimeout(params);
-        sslock.connect(target, connTimeout);
-        sslock.setSoTimeout(soTimeout);

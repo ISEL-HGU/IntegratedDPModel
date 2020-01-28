@@ -1,3 +1,0 @@
-         ClientProtocolException expected = new ClientProtocolException("ouch");
-            Assert.assertSame(expected, ex);
-    private void requestCannotBeMadeCompliantThrows(ClientProtocolException exception) throws Exception {

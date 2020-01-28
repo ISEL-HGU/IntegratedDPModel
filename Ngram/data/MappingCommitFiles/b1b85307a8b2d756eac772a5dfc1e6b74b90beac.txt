@@ -1,3 +1,0 @@
- import org.mockito.Mockito;
-            ManagedClientConnection conn = Mockito.mock(ManagedClientConnection.class);
-            mgr.releaseConnection(conn, -1, null);

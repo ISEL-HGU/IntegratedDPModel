@@ -1,5 +1,0 @@
-     @Test
-    public void testPassesOnOrigin405WithoutAllowHeader() throws Exception {
-        HttpResponse result = impl.execute(host, request);
-        verifyMocks();
-        Assert.assertSame(originResponse, result);

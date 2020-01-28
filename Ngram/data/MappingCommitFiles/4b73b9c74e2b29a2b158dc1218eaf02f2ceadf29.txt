@@ -1,2 +1,0 @@
-             workers[i] = new WorkerThread(httpclient, target, httpget, 200);
-                    Thread.sleep(10);

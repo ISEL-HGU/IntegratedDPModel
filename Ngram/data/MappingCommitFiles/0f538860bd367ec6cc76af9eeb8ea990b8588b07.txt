@@ -1,3 +1,0 @@
-  *  <li>{@link org.apache.http.params.CoreConnectionPNames#SO_REUSEADDR}</li>
- *  <li>{@link org.apache.http.params.CoreConnectionPNames#TCP_NODELAY}</li>
- *  <li>{@link org.apache.http.params.CoreConnectionPNames#CONNECTION_TIMEOUT}</li>

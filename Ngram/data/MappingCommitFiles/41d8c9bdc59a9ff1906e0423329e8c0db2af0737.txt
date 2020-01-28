@@ -1,2 +1,0 @@
-      * @param schreg    the scheme registry
-     * @param schreg    the scheme registry

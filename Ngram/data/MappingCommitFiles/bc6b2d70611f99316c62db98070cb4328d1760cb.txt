@@ -1,2 +1,0 @@
- import org.apache.http.conn.params.ConnPerRouteBean;
-        HttpConnectionManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(1));

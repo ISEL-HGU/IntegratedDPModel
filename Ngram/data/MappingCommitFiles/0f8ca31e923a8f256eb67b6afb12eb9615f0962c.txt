@@ -1,5 +1,0 @@
-         int connectCount = 0;
-            // Increment connect count
-            connectCount++;
-                if (retryHandler.retryRequest(ex, connectCount, context)) {
-                if (retryHandler.retryRequest(ex, wrapper.getExecCount(), context)) {

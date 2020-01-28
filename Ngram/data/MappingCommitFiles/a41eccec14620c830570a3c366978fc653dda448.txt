@@ -1,2 +1,0 @@
-         checkMatching(bhv, "a.a.b.c", cns, alt, false); // OK
-        checkMatching(shv, "a.a.b.c", cns, alt, true); // subdomain not OK

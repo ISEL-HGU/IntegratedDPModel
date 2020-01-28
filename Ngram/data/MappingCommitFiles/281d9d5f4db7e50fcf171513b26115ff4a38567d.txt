@@ -1,8 +1,0 @@
-         try {
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int l;
-            while ((l = instream.read(buffer)) != -1) {
-                outstream.write(buffer, 0, l);
-            }
-        } finally {
-            instream.close();

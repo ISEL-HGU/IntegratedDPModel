@@ -1,5 +1,0 @@
- import org.apache.http.client.ClientProtocolException;
-        public CustomGet(String uri, CountDownLatch releaseTriggerLatch) {
-            fail("ClientProtocolException should have been thrown");
-        } catch (ClientProtocolException ex) {
-            assertTrue(ex.getCause() instanceof NonRepeatableRequestException);

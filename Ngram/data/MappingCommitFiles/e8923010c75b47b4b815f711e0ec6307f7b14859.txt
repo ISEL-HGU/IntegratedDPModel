@@ -1,4 +1,0 @@
- import org.apache.http.client.utils.URIUtils;
-                URI absoluteRequestURI = URIUtils.rewriteURI(requestURI, target, true);
-                uri = URIUtils.resolve(absoluteRequestURI, uri); 
-                    redirectURI = URIUtils.rewriteURI(uri, target, true);

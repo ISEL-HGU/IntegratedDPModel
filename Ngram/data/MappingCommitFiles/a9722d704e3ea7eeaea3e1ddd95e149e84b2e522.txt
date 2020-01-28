@@ -1,8 +1,0 @@
-     public ManagedClientConnection getConnection(HttpRoute route)
-        throws InterruptedException {
-                // These exceptions are only thrown when the timeout occurs
-                // and since we have no timeout, it doesn't happen.
-                LOG.debug
-                    ("Unexpected exception while waiting for connection", e);
-                //@@@ throw RuntimeException or Error to indicate the problem?
-        throws ConnectionPoolTimeoutException, InterruptedException {

@@ -1,2 +1,0 @@
- import org.apache.http.conn.HttpInetSocketAddress;
-            InetSocketAddress remoteAddress = new HttpInetSocketAddress(target, address, port);

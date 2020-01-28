@@ -1,5 +1,0 @@
- import java.net.ConnectException;
-        if (exception instanceof ConnectException) {
-            // Connection refused 
-            return false;
-        }

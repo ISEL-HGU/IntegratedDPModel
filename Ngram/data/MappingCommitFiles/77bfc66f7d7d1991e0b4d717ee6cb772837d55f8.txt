@@ -1,3 +1,0 @@
- * [HTTPCLIENT-903] Use ConcurrentHashMap instead of [Linked]HashMap for thread-safety
-  Improve performance of AuthSchemeRegistry, CookieSpecRegistry and SchemeRegistry classes.
-  

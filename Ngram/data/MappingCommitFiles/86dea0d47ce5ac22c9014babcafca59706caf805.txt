@@ -1,8 +1,0 @@
-         // We now have a manager with an open connection in it's pool.
-        // We drop all potential hard reference to the manager and check
-        // whether it is GCed. Internal references might prevent that
-        // if set up incorrectly.
-        // Note that we still keep references to the connection wrapper
-        // we got from the manager, directly as well as in the request
-        // and in the context. The manager will be GCed only if the
-        // connection wrapper is truly detached.

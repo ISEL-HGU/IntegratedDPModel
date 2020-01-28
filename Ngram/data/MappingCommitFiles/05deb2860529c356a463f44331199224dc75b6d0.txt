@@ -1,2 +1,0 @@
-             "Content-Type: application/octet-stream\r\n" +
-            "Content-Type: application/octet-stream\r\n" +

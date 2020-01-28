@@ -1,2 +1,0 @@
- import org.apache.http.conn.routing.RouteInfo.TunnelType;
-import org.apache.http.conn.routing.RouteInfo.LayerType;

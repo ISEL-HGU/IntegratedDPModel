@@ -1,2 +1,0 @@
-               <Specification-Title>HttpComponents HttpMime</Specification-Title>
-              <Implementation-Title>HttpComponents HttpMime</Implementation-Title>

@@ -1,1 +1,0 @@
-         setHeaders(request.getAllHeaders());

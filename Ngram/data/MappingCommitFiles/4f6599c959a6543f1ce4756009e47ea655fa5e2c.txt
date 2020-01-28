@@ -1,5 +1,0 @@
-  * Unit tests for {@link X509HostnameVerifier}.
-        X509HostnameVerifier DEFAULT = new BrowserCompatHostnameVerifier();
-        X509HostnameVerifier STRICT = new StrictHostnameVerifier();
-        X509HostnameVerifier ALLOW_ALL = new AllowAllHostnameVerifier();
-    private void exceptionPlease(X509HostnameVerifier hv, String host,

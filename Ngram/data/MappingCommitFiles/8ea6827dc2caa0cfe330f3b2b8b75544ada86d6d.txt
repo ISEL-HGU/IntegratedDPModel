@@ -1,6 +1,0 @@
-         assertEquals("wrong enum tunnelled: " + rts,
-                     t ? TunnelType.TUNNELLED : TunnelType.PLAIN,
-                     rt.getTunnelType());
-        assertEquals("wrong enum layered: "   + rts,
-                     l ? LayerType.LAYERED : LayerType.PLAIN,
-                     rt.getLayerType());

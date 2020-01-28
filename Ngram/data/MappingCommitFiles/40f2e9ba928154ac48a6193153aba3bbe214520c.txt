@@ -1,1 +1,0 @@
-     <commons-codec.version>1.4</commons-codec.version>

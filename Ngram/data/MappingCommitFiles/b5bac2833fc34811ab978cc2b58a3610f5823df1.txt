@@ -1,1 +1,0 @@
-     <mime4j.version>0.4-SNAPSHOT</mime4j.version>

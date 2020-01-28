@@ -1,1 +1,0 @@
-                 new Scheme("https", 443, SSLSocketFactory.getSystemSocketFactory()));

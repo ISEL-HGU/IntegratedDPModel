@@ -1,1 +1,0 @@
-             RequestWrapper wrapper = wrapRequest(redirect);

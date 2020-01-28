@@ -1,5 +1,0 @@
-             client.execute(request, null);
-            client.execute(request, null);
-            client.execute(request, null);
-            client.execute(request, null);
-            client.execute(request, null);

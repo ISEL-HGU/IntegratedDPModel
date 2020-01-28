@@ -1,2 +1,0 @@
-         HttpRoute route = (HttpRoute)
-            request.getParams().getParameter(ConnRoutePNames.FORCED_ROUTE);

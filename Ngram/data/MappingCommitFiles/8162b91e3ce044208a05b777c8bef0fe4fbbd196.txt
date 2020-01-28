@@ -1,6 +1,0 @@
-         Assert.assertEquals("/stuff///morestuff", URIUtils.rewriteURI(uri, null).toString());
-    public void testRewite06() throws Exception {
-        URI uri = URI.create("http://thishost//////////////stuff/");
-        Assert.assertEquals("/stuff/", URIUtils.rewriteURI(uri, null).toString());
-    }
-    @Test

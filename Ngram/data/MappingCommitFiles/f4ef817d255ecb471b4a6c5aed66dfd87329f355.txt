@@ -1,1 +1,0 @@
-                 new AuthScope(host, AuthScope.ANY_REALM, schemeName));

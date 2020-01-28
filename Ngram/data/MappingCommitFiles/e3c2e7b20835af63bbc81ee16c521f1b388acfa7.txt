@@ -1,5 +1,0 @@
- import java.util.HashSet;
-        HashSet<String> m = new HashSet<String>(names);
-        assertTrue(m.contains(BROWSER_COMPATIBILITY.toLowerCase(Locale.ENGLISH)));
-        assertTrue(m.contains(NETSCAPE.toLowerCase(Locale.ENGLISH)));
-        assertTrue(m.contains(RFC_2109.toLowerCase(Locale.ENGLISH)));

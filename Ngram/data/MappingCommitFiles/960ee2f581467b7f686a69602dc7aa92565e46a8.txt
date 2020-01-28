@@ -1,2 +1,0 @@
-         this(schemeRegistry, timeToLive, tunit, new SystemDefaultDnsResolver());
-        this.dnsResolver  = dnsResolver;

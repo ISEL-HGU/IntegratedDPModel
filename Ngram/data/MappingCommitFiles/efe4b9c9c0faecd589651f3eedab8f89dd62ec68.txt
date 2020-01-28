@@ -1,5 +1,0 @@
- import org.apache.http.HttpHost;
-    public void tunnelTarget(boolean secure, HttpParams params) {
-        throw new UnsupportedOperationException("just a mockup");
-    }
-    public void tunnelProxy(HttpHost next, boolean secure, HttpParams params) {

@@ -1,6 +1,0 @@
-     protected final HttpParams params;
-    
-        this.params = params;
-        ConnPerRoute connPerRoute = ConnManagerParams.getMaxConnectionsPerRoute(params);
-        int maxTotalConnections = ConnManagerParams.getMaxTotalConnections(params);
-        

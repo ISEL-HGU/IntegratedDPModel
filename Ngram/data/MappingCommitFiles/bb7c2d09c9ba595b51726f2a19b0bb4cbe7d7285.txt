@@ -1,3 +1,0 @@
-     <connection>scm:svn:https://svn.apache.org/repos/asf/httpcomponents/httpclient/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/httpcomponents/httpclient/trunk</developerConnection>
-    <url>https://svn.apache.org/repos/asf/httpcomponents/httpclient/trunk</url>

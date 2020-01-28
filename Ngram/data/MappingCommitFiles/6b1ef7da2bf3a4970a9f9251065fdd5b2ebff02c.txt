@@ -1,1 +1,0 @@
-     protected boolean isRedirectable(String method) {

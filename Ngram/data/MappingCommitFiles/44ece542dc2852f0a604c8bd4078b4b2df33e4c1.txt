@@ -1,5 +1,0 @@
-             Socket connsock = sf.connectSocket(sock, target.getHostName(),
-            if (sock != connsock) {
-                sock = connsock;
-                conn.opening(sock, target);
-            }

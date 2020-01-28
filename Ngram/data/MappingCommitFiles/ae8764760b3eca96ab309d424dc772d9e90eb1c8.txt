@@ -1,2 +1,0 @@
-         EasyMock.expect(mockCache.getCacheEntry(host, request)).andReturn(cacheEntry);
-        EasyMock.expect(mockCache.cacheAndReturnResponse(EasyMock.same(host), EasyMock.same(request), EasyMock.same(originResponse), EasyMock.isA(Date.class), EasyMock.isA(Date.class))).andReturn(response);

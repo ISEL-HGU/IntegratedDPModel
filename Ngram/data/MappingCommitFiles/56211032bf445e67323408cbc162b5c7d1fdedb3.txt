@@ -1,8 +1,0 @@
- import java.util.Locale;
-     * Handles the following {@code Content-Encoding}s by
-     *
-     *
-                    String codecname = codec.getName().toLowerCase(Locale.US);
-                    if ("gzip".equals(codecname) || "x-gzip".equals(codecname)) {
-                    } else if ("deflate".equals(codecname)) {
-                    } else if ("identity".equals(codecname)) {
