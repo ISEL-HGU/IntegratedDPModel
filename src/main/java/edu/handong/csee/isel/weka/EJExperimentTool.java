@@ -146,7 +146,6 @@ public class EJExperimentTool implements Runnable{
 		}
 //		System.out.println("test " + testData.size());
 //		System.out.println("train " + trainData.size());
-//		System.out.println("--------------------");
 		// training and prediction part
 		trainData.setClassIndex(trainData.numAttributes()-1);
 		testData.setClassIndex(testData.numAttributes()-1);
