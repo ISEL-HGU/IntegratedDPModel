@@ -1,0 +1,28 @@
+ import java.net.InetAddress;
+ * This implementation is based on {@link ConnRoutePNames parameters}.
+        // If we have a forced route, we can do without a target.
+        // Check the context first, it might have been set by a retry handler.
+        HttpRoute route = null;
+        if (context != null) {
+            route = (HttpRoute)
+                context.getAttribute(ConnRoutePNames.FORCED_ROUTE);
+        }
+        if (route == null) {
+            route = (HttpRoute)
+                request.getParams().getParameter(ConnRoutePNames.FORCED_ROUTE);
+        }
+        if (route != null)
+            return route;
+        // If we get here, there is no forced route.
+        // So we need a target to compute a route.
+        if (target == null) {
+            throw new IllegalStateException
+                ("Target host must not be null.");
+        }
+        final InetAddress local = (InetAddress)
+            request.getParams().getParameter(ConnRoutePNames.LOCAL_ADDRESS);
+        final HttpHost proxy = (HttpHost)
+        final Scheme schm = this.connectionManager.getSchemeRegistry().
+        final boolean secure = schm.isLayered();
+            route = new HttpRoute(target, local, secure);
+            route = new HttpRoute(target, local, proxy, secure);

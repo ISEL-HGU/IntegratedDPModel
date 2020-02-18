@@ -1,0 +1,17 @@
+ import java.util.HashMap;
+import java.util.Map;
+import org.apache.http.protocol.HttpContext;
+    implements OperatedClientConnection, HttpContext {
+    /** connection specific attributes */
+    private final Map<String, Object> attributes;
+    
+        this.attributes = new HashMap<String, Object>();
+    public Object getAttribute(final String id) {
+        return this.attributes.get(id);
+    }
+    public Object removeAttribute(final String id) {
+        return this.attributes.remove(id);
+    }
+    public void setAttribute(final String id, final Object obj) {
+        this.attributes.put(id, obj);
+    }

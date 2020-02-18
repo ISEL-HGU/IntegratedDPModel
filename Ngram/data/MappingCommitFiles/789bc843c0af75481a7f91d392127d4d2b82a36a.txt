@@ -1,0 +1,14 @@
+ import org.apache.http.conn.HttpRoute.TunnelType;
+import org.apache.http.conn.HttpRoute.LayerType;
+        r = new HttpRoute(TARGET1, LOCAL61, PROXY3, false,
+                          TunnelType.TUNNELLED, LayerType.PLAIN);
+        r = new HttpRoute(TARGET1, LOCAL61, PROXY3, false,
+                          TunnelType.TUNNELLED, LayerType.LAYERED);
+        HttpRoute r = new HttpRoute(TARGET2, LOCAL42, proxies, false,
+                                    TunnelType.PLAIN, LayerType.PLAIN);
+        r = new HttpRoute(TARGET1, null, proxies, false,
+                          TunnelType.TUNNELLED, LayerType.PLAIN);
+        r = new HttpRoute(TARGET2, LOCAL61, proxies, false,
+                          TunnelType.TUNNELLED, LayerType.LAYERED);
+        r = new HttpRoute(TARGET1, LOCAL61, proxies, true,
+                          TunnelType.TUNNELLED, LayerType.LAYERED);

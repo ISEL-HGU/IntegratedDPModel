@@ -1,0 +1,1 @@
+             <para><interfacename>SchemeLayeredSocketFactory</interfacename> is an extension of

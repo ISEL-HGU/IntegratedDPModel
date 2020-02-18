@@ -1,0 +1,4 @@
+         originResponse.addHeader("Content-Encoding", "x-coding");
+        originResponse.addHeader("Content-Encoding", "x-coding");
+            Assert.assertEquals("x-coding", result.getFirstHeader("Content-Encoding").getValue());
+        resp1.setHeader("Content-Encoding", "x-coding");

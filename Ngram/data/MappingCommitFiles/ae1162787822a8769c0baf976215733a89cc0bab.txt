@@ -1,0 +1,3 @@
+ * [HTTPCLIENT-1152] MemcachedHttpCacheStorage should verify class of
+  returned object before casting.
+  Contributed by Rajika Kumarasiri <rajika at wso2 dot com>.

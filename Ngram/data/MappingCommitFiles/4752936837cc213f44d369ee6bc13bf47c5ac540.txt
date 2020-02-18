@@ -1,0 +1,7 @@
+             connPool.freeEntry(e3, true, -1, null);
+            connPool.freeEntry(e1, true, -1, null);
+            connPool.freeEntry(e2, true, -1, null);
+            connPool.freeEntry(e3, true, -1, null);
+            connPool.freeEntry(e4, true, -1, null);
+            connPool.freeEntry(e5, true, -1, null);
+            connPool.freeEntry(e6, true, -1, null);

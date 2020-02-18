@@ -1,0 +1,3 @@
+ import org.apache.http.conn.util.InetAddressUtils;
+                                 acceptableCountryWildcard(cn) &&
+                                 !InetAddressUtils.isIPv4Address(host);

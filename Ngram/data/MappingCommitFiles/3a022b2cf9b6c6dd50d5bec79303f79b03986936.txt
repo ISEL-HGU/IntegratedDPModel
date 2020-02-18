@@ -1,0 +1,3 @@
+      * @param charset the character set, may be {@code null}, in which case the US-ASCII charset is used
+            charset = Charset.forName("US-ASCII");
+     * @param charset the character set, may be {@code null}, in which case the US-ASCII charset is used

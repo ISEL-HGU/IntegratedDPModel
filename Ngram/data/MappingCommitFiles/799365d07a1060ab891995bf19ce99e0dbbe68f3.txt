@@ -1,0 +1,23 @@
+ import org.apache.http.conn.SchemeRegistry;
+    /** The scheme registry. */
+    protected SchemeRegistry schemeRegistry;
+    /**
+     * Creates a new proxy selector route planner.
+     *
+     * @param schreg    the scheme registry
+     * @param prosel    the proxy selector, or
+     *                  <code>null</code> for the system default
+     */
+    public ProxySelectorRoutePlanner(SchemeRegistry schreg,
+                                     ProxySelector prosel) {
+        if (schreg == null) {
+            throw new IllegalArgumentException
+                ("SchemeRegistry must not be null.");
+        }
+        schemeRegistry = schreg;
+        proxySelector  = prosel;
+     * @param prosel    the proxy selector, or
+    public void setProxySelector(ProxySelector prosel) {
+        this.proxySelector = prosel;
+        final Scheme schm =
+            this.schemeRegistry.getScheme(target.getSchemeName());

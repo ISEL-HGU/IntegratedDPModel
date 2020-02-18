@@ -1,0 +1,57 @@
+ import org.apache.http.protocol.ImmutableHttpProcessor;
+    /** The HTTP protocol processor and its immutable copy. */
+    private BasicHttpProcessor mutableProcessor;
+    @GuardedBy("this")
+    private ImmutableHttpProcessor protocolProcessor;
+    
+        if (mutableProcessor == null) {
+            mutableProcessor = createHttpProcessor();
+        return mutableProcessor;
+    private synchronized final HttpProcessor getProtocolProcessor() {
+        if (protocolProcessor == null) {
+            // Get mutable HTTP processor
+            BasicHttpProcessor proc = getHttpProcessor();
+            // and create an immutable copy of it
+            int reqc = proc.getRequestInterceptorCount();
+            HttpRequestInterceptor[] reqinterceptors = new HttpRequestInterceptor[reqc];
+            for (int i = 0; i < reqc; i++) {
+                reqinterceptors[i] = proc.getRequestInterceptor(i);
+            }
+            int resc = proc.getResponseInterceptorCount();
+            HttpResponseInterceptor[] resinterceptors = new HttpResponseInterceptor[resc];
+            for (int i = 0; i < resc; i++) {
+                resinterceptors[i] = proc.getResponseInterceptor(i);
+            }
+            protocolProcessor = new ImmutableHttpProcessor(reqinterceptors, resinterceptors);
+        }
+        return protocolProcessor;
+    public synchronized HttpResponseInterceptor getResponseInterceptor(int index) {
+        return getHttpProcessor().getResponseInterceptor(index);
+    public synchronized void addResponseInterceptor(final HttpResponseInterceptor itcp) {
+        getHttpProcessor().addInterceptor(itcp);
+        protocolProcessor = null;
+    }
+    public synchronized void addResponseInterceptor(final HttpResponseInterceptor itcp, int index) {
+        getHttpProcessor().addInterceptor(itcp, index);
+        protocolProcessor = null;
+    }
+    public synchronized void clearResponseInterceptors() {
+        getHttpProcessor().clearResponseInterceptors();
+        protocolProcessor = null;
+    }
+    public synchronized void removeResponseInterceptorByClass(Class<? extends HttpResponseInterceptor> clazz) {
+        getHttpProcessor().removeResponseInterceptorByClass(clazz);
+        protocolProcessor = null;
+    }
+    
+    public synchronized void addRequestInterceptor(final HttpRequestInterceptor itcp) {
+        getHttpProcessor().addInterceptor(itcp);
+        protocolProcessor = null;
+    }
+    public synchronized void addRequestInterceptor(final HttpRequestInterceptor itcp, int index) {
+        getHttpProcessor().addInterceptor(itcp, index);
+        protocolProcessor = null;
+    }
+        protocolProcessor = null;
+        protocolProcessor = null;
+                    getProtocolProcessor(),

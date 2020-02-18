@@ -1,0 +1,7 @@
+ import org.apache.http.conn.ConnectTimeoutException;
+import java.net.SocketTimeoutException;
+        try {
+            sock.connect(remoteAddress, connTimeout);
+        } catch (SocketTimeoutException ex) {
+            throw new ConnectTimeoutException("Connect to " + remoteAddress + " timed out");
+        }

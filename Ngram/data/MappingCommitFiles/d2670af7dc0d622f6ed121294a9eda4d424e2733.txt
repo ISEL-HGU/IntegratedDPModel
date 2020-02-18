@@ -1,0 +1,1 @@
+                 <classname>BasicCookieStore</classname> is a simple implementation backed by a

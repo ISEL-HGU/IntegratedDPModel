@@ -1,0 +1,7 @@
+                         success = waitingThread.await(timeToWait); //@@@, TimeUnit.MILLISECONDS); or deadline
+                            // "spurious wakeup", or were interrupted by
+                            // an external thread. Regardless, we need to 
+                        // waiting for us, or else we're shutting down.
+                        // Just continue in the loop, both cases are checked.
+            // wake up all waiting threads
+                waiter.wakeup();

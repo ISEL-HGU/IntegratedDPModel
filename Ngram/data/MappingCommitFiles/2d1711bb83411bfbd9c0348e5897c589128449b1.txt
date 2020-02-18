@@ -1,0 +1,53 @@
+ import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+    private static class Flag {
+        public boolean set;
+    }
+    private void setMinimalResponseHeaders(HttpResponse resp) {
+    }
+    
+    private ByteArrayInputStream makeTrackableBody(int nbytes, final Flag closed) {
+        return bais;
+    }
+    
+    private HttpResponse makePartialResponse(int nbytes) {
+        HttpResponse resp = new BasicHttpResponse(HttpVersion.HTTP_1_1, HttpStatus.SC_PARTIAL_CONTENT, "Partial Content");
+        setMinimalResponseHeaders(resp);
+        resp.setHeader("Content-Length","" + nbytes);
+        resp.setHeader("Content-Range","0-127/256");
+        return resp;
+    }
+    
+    @Test
+    public void consumesBodyIfOriginSendsOneInResponseToHEAD() throws Exception {
+        HttpRequest req = new HttpHead("http://foo.example.com/");
+        int nbytes = 128;
+        HttpResponse resp = new BasicHttpResponse(HttpVersion.HTTP_1_1, HttpStatus.SC_OK, "OK");
+        setMinimalResponseHeaders(resp);
+        resp.setHeader("Content-Length","" + nbytes);
+        final Flag closed = new Flag();
+        ByteArrayInputStream bais = makeTrackableBody(nbytes, closed);
+    @Test(expected=ClientProtocolException.class)
+    public void throwsExceptionIfOriginReturnsPartialResponseWhenNotRequested() throws Exception {
+        HttpRequest req = new HttpGet("http://foo.example.com/");
+        int nbytes = 128;
+        HttpResponse resp = makePartialResponse(nbytes);
+        resp.setEntity(HttpTestUtils.makeBody(nbytes));
+        
+        impl.ensureProtocolCompliance(req, resp);
+    }
+    @Test
+    public void consumesPartialContentFromOriginEvenIfNotRequested() throws Exception {
+        HttpRequest req = new HttpGet("http://foo.example.com/");
+        int nbytes = 128;
+        HttpResponse resp = makePartialResponse(nbytes);
+        
+        final Flag closed = new Flag();
+        ByteArrayInputStream bais = makeTrackableBody(nbytes, closed);
+        resp.setEntity(new InputStreamEntity(bais, -1));
+        
+        try {
+            impl.ensureProtocolCompliance(req, resp);
+        } catch (ClientProtocolException expected) {
+        }
+        assertTrue(closed.set || bais.read() == -1);

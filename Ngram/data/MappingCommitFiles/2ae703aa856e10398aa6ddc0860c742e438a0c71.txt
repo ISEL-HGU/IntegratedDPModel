@@ -1,0 +1,25 @@
+ import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+    
+    @Test
+    public void consumesBodyOf100ContinueResponseIfItArrives() throws Exception {
+        HttpEntityEnclosingRequest req = new BasicHttpEntityEnclosingRequest("POST", "/", HttpVersion.HTTP_1_1);
+        int nbytes = 128;
+        req.setHeader("Content-Length","" + nbytes);
+        req.setHeader("Content-Type", "application/octet-stream");
+        HttpEntity postBody = new ByteArrayEntity(HttpTestUtils.getRandomBytes(nbytes));
+        req.setEntity(postBody);
+        
+        HttpResponse resp = new BasicHttpResponse(HttpVersion.HTTP_1_1, HttpStatus.SC_CONTINUE, "Continue");
+        final Flag closed = new Flag();
+        ByteArrayInputStream bais = makeTrackableBody(nbytes, closed);
+        resp.setEntity(new InputStreamEntity(bais, -1));
+        
+        try {
+            impl.ensureProtocolCompliance(req, resp);
+        } catch (ClientProtocolException expected) {
+        }
+        assertTrue(closed.set || bais.read() == -1);
+    }

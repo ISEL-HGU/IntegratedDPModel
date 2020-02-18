@@ -1,0 +1,3 @@
+         if (entity != null) {
+            bae.setContentType(entity.getContentType());
+        }

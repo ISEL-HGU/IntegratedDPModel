@@ -1,0 +1,18 @@
+     public HttpResponse execute(HttpRequest request, HttpRoute route,
+                                HttpContext context)
+        RoutedRequest roureq = new RoutedRequest.Impl(request, route);
+        final HttpRequest orig = request;
+                // In this loop, the RoutedRequest may be replaced by a
+                // followup request and route. The request and route passed
+                // in the method arguments will be replaced. The original
+                // request is still available in 'orig'.
+                route = roureq.getRoute();
+                // Wrap the request to be sent, original or followup.
+                RequestWrapper reqwrap = wrapRequest(roureq.getRequest());
+                reqwrap.setParams(this.params);
+                rewriteRequestURI(reqwrap, route);
+                HttpHost target = (HttpHost) reqwrap.getParams().getParameter(
+                requestExec.preProcess(reqwrap, httpProcessor, context);
+                        reqwrap);
+                    response = requestExec.execute(reqwrap, managedConn, context);
+                    handleResponse(roureq, reqwrap, response, context);

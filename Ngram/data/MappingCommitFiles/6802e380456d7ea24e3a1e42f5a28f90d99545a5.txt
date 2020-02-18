@@ -1,0 +1,34 @@
+                         } else {
+                            waitingThread.interruptedByConnectionPool = false;
+                        if (!waitingThread.interruptedByConnectionPool) {
+                            LOG.debug("Interrupted while waiting for connection", e);
+                            throw new IllegalThreadStateException(
+                                "Interrupted while waiting in ThreadSafeClientConnManager");
+                        }
+                        // Else, do nothing, we were interrupted by the
+                        // connection pool and should now have a connection
+                        // waiting for us. Continue in the loop and get it.
+                        // Or else we are shutting down, which is also
+                        // detected in the loop.
+                        if (!waitingThread.interruptedByConnectionPool) {
+                            // Either we timed out, experienced a
+                            // "spurious wakeup", or were interrupted by an
+                            // external thread.  Regardless we need to 
+                            // cleanup for ourselves in the wait queue.
+                            hostPool.waitingThreads.remove(waitingThread);
+                            connectionPool.waitingThreads.remove(waitingThread);
+                        }
+                        
+                waiter.interruptedByConnectionPool = true;
+                }
+                waitingThread.interruptedByConnectionPool = true;
+        
+        /**
+         * Indicates the source of an interruption.
+         * Set to <code>true</code> inside
+         * {@link ConnectionPool#notifyWaitingThread(HostConnectionPool)}
+         * and {@link ThreadSafeClientConnManager#shutdown shutdown()}
+         * before the thread is interrupted.
+         * If not set, the thread was interrupted from the outside.
+         */
+        public boolean interruptedByConnectionPool = false;

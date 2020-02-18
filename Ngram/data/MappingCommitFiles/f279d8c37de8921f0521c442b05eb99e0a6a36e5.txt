@@ -1,0 +1,4 @@
+         log.debug("Calling the backend");
+        HttpResponse backendResponse = backend.execute(target, request, context);
+        return handleBackendResponse(target, request, requestDate, getCurrentDate(),
+                backendResponse);

@@ -1,0 +1,1 @@
+     private static final List<String> DEFAULT_SCHEME_PRIORITY = Arrays.asList(new String[] {

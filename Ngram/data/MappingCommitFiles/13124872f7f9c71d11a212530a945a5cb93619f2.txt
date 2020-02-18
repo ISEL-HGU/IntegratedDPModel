@@ -1,0 +1,2 @@
+                 request.setParams(this.params);
+                response.setParams(this.params);

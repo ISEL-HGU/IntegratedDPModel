@@ -1,0 +1,8 @@
+ import java.util.Map.Entry;
+        for (Entry<HttpConnection, TimeValues> entry : connectionToTimes.entrySet()) {
+            HttpConnection conn = entry.getKey();
+            TimeValues times = entry.getValue();
+        for (Entry<HttpConnection, TimeValues> entry : connectionToTimes.entrySet()) {
+            HttpConnection conn = entry.getKey();
+            TimeValues times = entry.getValue();
+        }

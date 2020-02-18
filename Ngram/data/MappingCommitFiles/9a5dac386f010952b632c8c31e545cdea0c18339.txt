@@ -1,0 +1,3 @@
+                 } else {
+                    managedConn.setSocketTimeout(HttpConnectionParams.getSoTimeout(params));
+                }

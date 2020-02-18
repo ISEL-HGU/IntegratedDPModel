@@ -1,0 +1,10 @@
+             HttpResponse response = super.execute(request, conn, context);
+            return response;
+        client.setHttpRequestRetryHandler(new HttpRequestRetryHandler() {
+            public boolean retryRequest(
+                    final IOException exception,
+                    int executionCount,
+                    final HttpContext context) {
+                return true;
+            }
+        });

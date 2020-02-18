@@ -1,0 +1,7 @@
+ import org.apache.http.conn.params.HttpRouteParams;
+ * Additionally, it interprets some
+ * {@link org.apache.http.conn.params.ConnRoutePNames parameters},
+        HttpRoute route =
+            HttpRouteParams.getForcedRoute(request.getParams());
+        final InetAddress local =
+            HttpRouteParams.getLocalAddress(request.getParams());

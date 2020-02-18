@@ -1,0 +1,3 @@
+ import org.apache.http.message.BasicHttpResponse;
+        BasicHttpResponse response = new BasicHttpResponse(version, 200, "OK");
+                new CacheEntity(body.getBytes("US-ASCII"), response), 200, "OK");
