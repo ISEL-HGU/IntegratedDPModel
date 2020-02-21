@@ -57,6 +57,8 @@ public class CrossValidation implements Runnable{
 	Evaluation eval_case = null;
 	Instances trainData = null;
 	String testPath = null;
+	String multicollinearity_vif_thres = "empty"; 
+	String approach_name;
 	
 	public CrossValidation(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel) {
 		this.idx = idx;
@@ -70,6 +72,7 @@ public class CrossValidation implements Runnable{
 	
 	@Override
 	public void run(){
+		String isMulticollinearity = "";
 		try {
 			Instances testData = null, temp = null;
 			for(int i = 0; i < filePathList.size(); i++) {
@@ -104,19 +107,73 @@ public class CrossValidation implements Runnable{
 			else if(dataUnbalancingMode.equals("3")) {
 				trainData = smote(trainData);
 			}
+			else {
+				System.out.println("Check your Data unbalancing mode option!");
+			}
 			
+			// For checking multicollinearity using VIF with various threshold values when the case is original dataset
+			if(sourcePath.contains("_PCA")) approach_name = "Default-PCA";
+			else if(sourcePath.contains("_NONSTEPWISE_10")) approach_name = "NSVIF10";
+			else if(sourcePath.contains("_NONSTEPWISE_5")) approach_name = "NSVIF5";
+			else if(sourcePath.contains("_NONSTEPWISE_4")) approach_name = "NSVIF4";
+			else if(sourcePath.contains("_NONSTEPWISE_2_5")) approach_name = "NSVIF2.5";
+			else if(sourcePath.contains("_STEPWISE_10")) approach_name = "SVIF10";
+			else if(sourcePath.contains("_STEPWISE_5")) approach_name = "SVIF5";
+			else if(sourcePath.contains("_STEPWISE_4")) approach_name = "SVIF4";
+			else if(sourcePath.contains("_STEPWISE_2_5")) approach_name = "SVIF4";
+			else { // original dataset
+				approach_name = "None";
+				isMulticollinearity = checkMulticollinearity(trainData, 10.0);
+				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "10.0";
+				isMulticollinearity = checkMulticollinearity(trainData, 5.0);
+				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "5.0";	
+				isMulticollinearity = checkMulticollinearity(trainData, 4.0);
+				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "4.0";	
+				isMulticollinearity = checkMulticollinearity(trainData, 2.5);
+				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "2.5";	
+			}
+			
+
 			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
 			myModel.buildClassifier(trainData);
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);  
-			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath); 
+			showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name, multicollinearity_vif_thres); 
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
+	public String checkMulticollinearity(Instances instances, double VIFThresholdValue) throws Exception {
+		String isMulticollinearity = "";
+		Instances forVIFData = null;
+		Remove rm = new Remove();
+		rm.setAttributeIndices("last");
+		rm.setInputFormat(instances);
+		forVIFData = Filter.useFilter(instances, rm);
+		int n = forVIFData.numAttributes();
+		double[] vifs = new double[n];
+		for (int i = 0; i < vifs.length; i++) {
+			forVIFData.setClassIndex(i);
+			// Using Weka Linear Regression
+			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
+			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
+			regressor.setEliminateColinearAttributes(false);
+			regressor.buildClassifier(forVIFData);
+			double r2 = regressor.getRSquared(forVIFData);
+			vifs[i] = 1d / (1d - r2);
+			if (vifs[i] >= VIFThresholdValue) {
+				isMulticollinearity = "Y"; // Occur multicollinearity
+				break;
+			} else {
+				isMulticollinearity = "N";
+			}
+		}
+		return isMulticollinearity;
+	}
+	
+	public static void showSummary(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name, String multicollinearity_vif_thres) throws Exception {
 		FileWriter writer =  new FileWriter(csvPath, true);
 		if(eval == null) System.out.println("showSummary - eval is null");
 		else
@@ -126,7 +183,7 @@ public class CrossValidation implements Runnable{
 //				System.out.println("Recall " + eval.recall(i));
 //				System.out.println("F-Measure " + eval.fMeasure(i));
 //				System.out.println("AUC " + eval.areaUnderROC(i));
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_thres));
 //				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath));
 			}
 		writer.flush();

@@ -62,6 +62,7 @@ public class CrossValidationFS implements Runnable {
 	Evaluation eval_case = null;
 	Instances trainData = null;
 	String testPath = null;
+	String approach_name;
 
 	public static final int EVAL_DEFAULT = 1;
 	public static final int EVAL_ACCURACY = 2;
@@ -136,7 +137,7 @@ public class CrossValidationFS implements Runnable {
 			// saver.setInstances(testData);
 			// saver.setFile(new File("/Users/eunjiwon/Desktop/arff/arff.csv"));
 			// saver.writeBatch();
-
+			
 			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null);
 			// feature selection -> using only trainData
 			AttributeSelection attsel = new AttributeSelection(); // package weka.attributeSelection!
@@ -194,10 +195,15 @@ public class CrossValidationFS implements Runnable {
 //				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "2.5", fileName);
 //			}
 				
+			
+
+			if(type.equals("2")) approach_name = "CFS-BestFirst";
+			else if(type.equals("3")) approach_name = "WFS-BestFirst";
+			
 			 myModel.buildClassifier(trainData);
 			 eval_case = new Evaluation(trainData);
 			 eval_case.evaluateModel(myModel, testData);
-			 showSummary(eval_case, trainData, mlModel, csvPath, type, testPath,isMulticollinearity);
+			 showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name, isMulticollinearity);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -275,15 +281,15 @@ public class CrossValidationFS implements Runnable {
 			} else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("CFS-BestFirst")) { // type2
 				if (list.get(4).equals("NaN"))
 					continue;
-					else
-						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "CFS-BestFirst"));
-				} else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("WFS-BestFirst")) { // type3
-					if (list.get(4).equals("NaN"))
-						continue;
-					else
-						CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "WFS-BestFirst"));
-				}
+				else
+					CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "CFS-BestFirst"));
+			} else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(8).equals("WFS-BestFirst")) { // type3
+				if (list.get(4).equals("NaN"))
+					continue;
+				else
+					CSVUtils.writeLine(writer, Arrays.asList(modelName, type, srcPath, vif_threshold, String.valueOf(Double.valueOf(list.get(4))), "WFS-BestFirst"));
 			}
+		}
 
 		
 		writer.flush();
@@ -297,7 +303,7 @@ public class CrossValidationFS implements Runnable {
 		writer.close();
 	}
 
-	public static void showSummary(Evaluation eval, Instances instances, String modelName, String csvPath, String type, String srcPath, String isMulticollinearity) throws Exception {
+	public static void showSummary(Evaluation eval, Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name, String isMulticollinearity) throws Exception {
 		FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
@@ -310,8 +316,8 @@ public class CrossValidationFS implements Runnable {
 //				System.out.println("AUC " + eval.areaUnderROC(i));
 //				
 //				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)),
-//						String.valueOf(eval.areaUnderROC(i)), type, srcPath, isMulticollinearity));
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath));
+//						String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, isMulticollinearity)); // for getting multicollinearity ratio
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name));
 			}
 		writer.flush();
 		writer.close();
