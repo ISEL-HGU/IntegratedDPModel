@@ -12,8 +12,8 @@ plugins {
 }
 apply plugin: 'application'
 //mainClassName = "edu.handong.csee.isel.weka.SimpleThreadPool"
-//mainClassName = "edu.handong.csee.isel.weka.SaveCrossValidation"
-mainClassName = "edu.handong.csee.isel.weka.WriteArffFileWithInstances"
+mainClassName = "edu.handong.csee.isel.weka.SaveCrossValidation"
+//mainClassName = "edu.handong.csee.isel.weka.WriteArffFileWithInstances"
 
 dependencies {
 	// https://mvnrepository.com/artifact/commons-cli/commons-cli
