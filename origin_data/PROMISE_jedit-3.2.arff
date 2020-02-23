@@ -20,7 +20,7 @@
 @attribute amc numeric
 @attribute max_cc numeric
 @attribute avg_cc numeric
-@attribute bug {buggy,clean}
+@attribute bug {1,0}
 
 @data
 14,1,0,9,45,61,3,6,11,0.769231,425,1,1,0,0.294872,0,0,29.142857,8,2.4286,0
