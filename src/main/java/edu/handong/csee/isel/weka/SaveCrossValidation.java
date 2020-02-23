@@ -162,7 +162,7 @@ public class SaveCrossValidation {
 				.desc("arff file name")
 				.hasArg()
 				.required()
-				.argName("the number of cross-validation folds")
+				.argName("arff file name")
 				.build());
 
 		options.addOption(Option.builder("h").longOpt("help")

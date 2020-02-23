@@ -83,10 +83,10 @@ public class AppendColumn {
 		            	CSVUtils.writeLine(writer, Arrays.asList(b1List.get(i), b2List.get(i), b3List.get(i), b4List.get(i), b5List.get(i), b6List.get(i), b7List.get(i), b8List.get(i), b9List.get(i), b10List.get(i), b11List.get(i), b12List.get(i)));
 		        		
 	            }
-	            writer.flush();
+	            	writer.flush();
         			writer.close();
-	            System.out.println(filename + " is complete");
-		}
+        			System.out.println(filename + " is complete");
+			}
       
 	}
 	

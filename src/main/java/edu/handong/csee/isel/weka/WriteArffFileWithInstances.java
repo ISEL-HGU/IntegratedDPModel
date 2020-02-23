@@ -50,7 +50,6 @@ public class WriteArffFileWithInstances {
 				printHelp(options);
 				return;
 			}
-			// 이제 여기다가 pca 데이터를 받아와서 그걸 arff로 쓰면 된다.
 			BufferedReader reader = new BufferedReader(new FileReader(sourcePath));
 			Instances trainingData = new Instances(reader);
 			// set label index to last index
@@ -232,7 +231,7 @@ public class WriteArffFileWithInstances {
 				.build());
 		
 		options.addOption(Option.builder("th").longOpt("threshold")
-				.desc("VIF threshold value (type is double). If you select types 1 and 2, you will not use this value, so just write 0.")
+				.desc("VIF threshold value (type is double). If you select types 1 ), you will not use this value, so just write 0.")
 				.hasArg()
 				.required()
 				.argName("vif threshold")
