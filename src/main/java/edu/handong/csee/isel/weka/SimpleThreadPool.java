@@ -33,14 +33,14 @@ public class SimpleThreadPool {
 				printHelp(options);
 				return;
 			}
-	    		String searchDirPath = ""; // the dir path includes experiment data set name list 
-	    		if(type.equals("1")) {
-	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_pca_vif_data";
-	    		}
-	    		else if(type.equals("2") || type.equals("3")) {
-	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
-//	    			searchDirPath = "/Users/eunjiwon/Desktop/Multicollinearity/for_local_test/origin_data"; // for local test
-	    		}
+	    		String searchDirPath = "/home/eunjiwon/Git/EJTool/origin_pca_vif_data"; // the dir path includes experiment data set name list 
+//	    		if(type.equals("1")) {
+//	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_pca_vif_data";
+//	    		}
+//	    		else if(type.equals("2") || type.equals("3")) {
+//	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
+////	    			searchDirPath = "/Users/eunjiwon/Desktop/Multicollinearity/for_local_test/origin_data"; // for local test
+//	    		}
 
 	    		File searchDir = new File(searchDirPath);
 	    		File []fileList = searchDir.listFiles();
