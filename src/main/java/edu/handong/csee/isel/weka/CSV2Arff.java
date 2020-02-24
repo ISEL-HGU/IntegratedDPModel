@@ -57,9 +57,17 @@ public class CSV2Arff {
 	    for(List<String> newLine : allData){
 	        List<String> list = newLine;
 	        for(int i = 0; i < list.size(); i++) {
-	        		if (i < 3) continue;
-	        	     bufWriter.write(list.get(i));
-	        	     if(i != list.size() - 1) bufWriter.write(",");
+	        		if (i < 3) 
+	        			continue;
+	        		if(i == list.size() - 1) { // last
+	        			if(list.get(i).equals("0")) bufWriter.write("0");
+	        			else bufWriter.write("1");
+	        		}
+	        		else {
+	        			bufWriter.write(list.get(i));
+	        			bufWriter.write(",");
+	        		}
+	        		
 	        }
 	        bufWriter.newLine();
 	    	}
