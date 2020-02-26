@@ -79,7 +79,8 @@ public class EJWekaTool {
 				reader.close();
 				
 				Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); //new Logistic();
-//				
+//				Classifier myModel = new Logistic();
+				
 				switch(type){
 				case "1": 
 					// original
