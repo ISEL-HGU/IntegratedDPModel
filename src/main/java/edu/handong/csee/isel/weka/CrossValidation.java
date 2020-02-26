@@ -109,31 +109,36 @@ public class CrossValidation implements Runnable{
 			}
 			else {
 				System.out.println("Check your Data unbalancing mode option!");
+				System.exit(-1);
 			}
 			
-			// For checking multicollinearity using VIF with various threshold values when the case is original dataset
-			if(sourcePath.contains("_PCA")) approach_name = "Default-PCA";
-			else if(sourcePath.contains("_NONSTEPWISE_10")) approach_name = "NSVIF10";
-			else if(sourcePath.contains("_NONSTEPWISE_5")) approach_name = "NSVIF5";
-			else if(sourcePath.contains("_NONSTEPWISE_4")) approach_name = "NSVIF4";
-			else if(sourcePath.contains("_NONSTEPWISE_2_5")) approach_name = "NSVIF2.5";
-			else if(sourcePath.contains("_STEPWISE_10")) approach_name = "SVIF10";
-			else if(sourcePath.contains("_STEPWISE_5")) approach_name = "SVIF5";
-			else if(sourcePath.contains("_STEPWISE_4")) approach_name = "SVIF4";
-			else if(sourcePath.contains("_STEPWISE_2_5")) approach_name = "SVIF4";
-			else { // original dataset
-				approach_name = "None";
-				isMulticollinearity = checkMulticollinearity(trainData, 10.0);
-				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "10.0";
-				isMulticollinearity = checkMulticollinearity(trainData, 5.0);
-				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "5.0";	
-				isMulticollinearity = checkMulticollinearity(trainData, 4.0);
-				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "4.0";	
-				isMulticollinearity = checkMulticollinearity(trainData, 2.5);
-				if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "2.5";	
+			if(type.equals("4")) {
+				approach_name = "VCRR";
+			}
+			else { // type.equals("1")
+				// For checking multicollinearity using VIF with various threshold values when the case is original dataset
+				if(sourcePath.contains("_PCA")) approach_name = "Default-PCA";
+				else if(sourcePath.contains("_NONSTEPWISE_10")) approach_name = "NSVIF10";
+				else if(sourcePath.contains("_NONSTEPWISE_5")) approach_name = "NSVIF5";
+				else if(sourcePath.contains("_NONSTEPWISE_4")) approach_name = "NSVIF4";
+				else if(sourcePath.contains("_NONSTEPWISE_2_5")) approach_name = "NSVIF2.5";
+				else if(sourcePath.contains("_STEPWISE_10")) approach_name = "SVIF10";
+				else if(sourcePath.contains("_STEPWISE_5")) approach_name = "SVIF5";
+				else if(sourcePath.contains("_STEPWISE_4")) approach_name = "SVIF4";
+				else if(sourcePath.contains("_STEPWISE_2_5")) approach_name = "SVIF4";
+				else { // original dataset
+					approach_name = "None";
+					isMulticollinearity = checkMulticollinearity(trainData, 10.0);
+					if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "10.0";
+					isMulticollinearity = checkMulticollinearity(trainData, 5.0);
+					if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "5.0";	
+					isMulticollinearity = checkMulticollinearity(trainData, 4.0);
+					if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "4.0";	
+					isMulticollinearity = checkMulticollinearity(trainData, 2.5);
+					if (isMulticollinearity.equals("Y")) multicollinearity_vif_thres = "2.5";	
+				}
 			}
 			
-
 			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
 			myModel.buildClassifier(trainData);
 			eval_case = new Evaluation(trainData);
