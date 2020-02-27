@@ -1,0 +1,35 @@
+@relation log4j-1.1_deleteColumns
+
+@attribute wmc numeric
+@attribute dit numeric
+@attribute noc numeric
+@attribute cbo numeric
+@attribute rfc numeric
+@attribute lcom numeric
+@attribute ca numeric
+@attribute ce numeric
+@attribute npm numeric
+@attribute lcom3 numeric
+@attribute loc numeric
+@attribute dam numeric
+@attribute moa numeric
+@attribute mfa numeric
+@attribute cam numeric
+@attribute ic numeric
+@attribute cbm numeric
+@attribute amc numeric
+@attribute max_cc numeric
+@attribute avg_cc numeric
+@attribute bug {1,0}
+
+@data
+2,1,0,1,5,1,0,1,2,2,15,0,0,0,0.5,0,0,6.5,1,0.5,0
+10,1,0,34,19,0,34,1,9,0.920635,146,0.714286,0,0,0.333333,0,0,12.9,4,1.9,0
+4,1,0,0,10,4,0,0,3,0.333333,114,0,0,0,0.333333,0,0,27.25,4,1.5,0
+5,2,0,2,17,0,1,1,2,0.607143,120,0.285714,0,0.938462,0.466667,1,1,21.6,3,1.4,0
+8,1,0,7,42,14,0,7,2,0.75,308,0,2,0,0.238095,0,0,37,4,1.5,0
+9,1,0,5,19,10,3,2,7,0.375,120,0,1,0,0.4375,0,0,12.111111,4,1.6667,0
+6,1,0,9,21,0,7,2,5,0.88,286,0.2,0,0,0.466667,0,0,45,6,3,0
+23,1,0,23,65,125,15,10,20,0.873737,530,0.111111,3,0,0.186869,0,0,21.652174,6,1.913,1
+5,1,0,7,31,10,0,7,2,0.875,145,0,0,0,0.3,0,0,27.6,3,1.4,1
+12,1,0,12,41,0,10,2,9,0.666667,275,0,0,0,0.090909,0,0,21.666667,6,2.25,1

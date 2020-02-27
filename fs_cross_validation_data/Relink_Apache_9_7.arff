@@ -1,0 +1,50 @@
+@relation 'Apache2.0_golden-weka.filters.unsupervised.attribute.Remove-R1-2,63-weka.filters.unsupervised.attribute.Remove-R12,15,18-20,23-24,28,35-38,46-47,51,53-54-weka.filters.unsupervised.attribute.Remove-R31-33-weka.filters.unsupervised.attribute.Remove-R9-20,34-35'
+
+@attribute AvgCyclomatic numeric
+@attribute AvgCyclomaticModified numeric
+@attribute AvgCyclomaticStrict numeric
+@attribute AvgEssential numeric
+@attribute AvgLine numeric
+@attribute AvgLineBlank numeric
+@attribute AvgLineCode numeric
+@attribute AvgLineComment numeric
+@attribute CountLine numeric
+@attribute CountLineBlank numeric
+@attribute CountLineCode numeric
+@attribute CountLineCodeDecl numeric
+@attribute CountLineCodeExe numeric
+@attribute CountLineComment numeric
+@attribute CountSemicolon numeric
+@attribute CountStmt numeric
+@attribute CountStmtDecl numeric
+@attribute CountStmtExe numeric
+@attribute MaxCyclomatic numeric
+@attribute MaxCyclomaticModified numeric
+@attribute MaxCyclomaticStrict numeric
+@attribute RatioCommentToCode numeric
+@attribute SumCyclomatic numeric
+@attribute SumCyclomaticModified numeric
+@attribute SumCyclomaticStrict numeric
+@attribute SumEssential numeric
+@attribute isDefective {TRUE,FALSE}
+
+@data
+8,8,9,3,88,8,56,22,789,80,449,77,319,230,255,315,73,242,34,34,41,0.51,64,64,75,29,TRUE
+6,6,7,3,45,5,33,4,1744,232,1116,260,750,234,640,786,200,586,27,27,37,0.21,187,186,232,110,TRUE
+3,3,3,1,19,2,15,1,1519,187,996,269,561,290,494,675,199,476,23,14,23,0.29,187,170,205,106,TRUE
+4,4,4,2,20,1,17,1,601,71,446,120,231,72,191,269,76,193,14,14,21,0.16,92,92,104,53,TRUE
+5,5,5,2,34,2,26,6,566,43,285,70,186,229,129,175,46,129,15,15,17,0.8,46,45,52,29,TRUE
+3,3,3,2,24,2,17,3,963,109,638,217,390,198,317,401,132,269,11,11,11,0.31,85,85,92,71,TRUE
+4,4,5,1,16,1,14,1,199,19,96,18,71,44,44,75,18,57,7,7,8,0.46,31,31,32,11,TRUE
+7,7,8,2,54,3,39,7,610,49,353,44,247,120,175,239,40,199,23,23,27,0.34,64,61,72,19,TRUE
+5,4,6,2,32,5,23,4,2045,365,1326,313,840,320,632,868,200,668,42,31,61,0.24,262,251,315,134,TRUE
+9,9,12,3,85,12,50,20,1876,258,1039,235,771,508,437,593,140,453,59,59,92,0.49,167,165,230,67,TRUE
+0,0,0,0,0,0,0,0,210,1,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,FALSE
+1,1,1,1,4,0,4,0,128,22,44,20,8,25,16,24,16,8,1,1,1,0.57,8,8,8,8,FALSE
+5,5,6,2,37,5,27,5,1159,171,727,137,522,236,397,526,112,414,25,25,30,0.32,134,122,146,63,FALSE
+42,31,50,27,232,36,139,41,5185,845,2683,267,1934,1203,1453,2224,197,2027,318,223,371,0.45,806,586,953,526,FALSE
+2,2,2,1,10,0,9,0,132,17,85,21,46,21,45,58,16,42,4,4,4,0.25,14,14,14,11,FALSE
+1,1,1,1,9,0,9,0,37,3,9,6,1,21,1,2,1,1,1,1,1,2.33,1,1,1,1,FALSE
+21,13,23,16,221,28,96,21,1081,144,374,116,297,139,210,270,41,229,60,35,66,0.37,63,38,69,50,FALSE
+4,4,5,2,28,4,22,2,577,117,356,99,245,84,245,259,71,188,21,21,25,0.24,60,53,66,28,FALSE
+2,2,2,1,39,1,26,11,240,20,137,27,94,81,95,105,21,84,6,6,7,0.59,10,10,11,9,FALSE
