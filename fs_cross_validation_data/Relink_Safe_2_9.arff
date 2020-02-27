@@ -1,0 +1,36 @@
+@relation 'openintents2703_golden-weka.filters.unsupervised.attribute.Remove-R1-2,14,17,26,33-34,39-42,47,54-weka.filters.unsupervised.attribute.Remove-R18-weka.filters.unsupervised.attribute.Remove-R9-20,34-35'
+
+@attribute AvgCyclomatic numeric
+@attribute AvgCyclomaticModified numeric
+@attribute AvgCyclomaticStrict numeric
+@attribute AvgEssential numeric
+@attribute AvgLine numeric
+@attribute AvgLineBlank numeric
+@attribute AvgLineCode numeric
+@attribute AvgLineComment numeric
+@attribute CountLine numeric
+@attribute CountLineBlank numeric
+@attribute CountLineCode numeric
+@attribute CountLineCodeDecl numeric
+@attribute CountLineCodeExe numeric
+@attribute CountLineComment numeric
+@attribute CountSemicolon numeric
+@attribute CountStmt numeric
+@attribute CountStmtDecl numeric
+@attribute CountStmtExe numeric
+@attribute MaxCyclomatic numeric
+@attribute MaxCyclomaticModified numeric
+@attribute MaxCyclomaticStrict numeric
+@attribute RatioCommentToCode numeric
+@attribute SumCyclomatic numeric
+@attribute SumCyclomaticModified numeric
+@attribute SumCyclomaticStrict numeric
+@attribute SumEssential numeric
+@attribute isDefective {TRUE,FALSE}
+
+@data
+6,6,6,2,33,4,27,2,953,119,631,138,402,219,370,473,137,336,18,18,20,0.35,140,139,144,54,TRUE
+3,3,3,1,15,1,12,0,157,27,121,32,67,9,64,97,26,71,5,5,6,0.07,27,27,29,11,TRUE
+0,0,0,0,0,0,0,0,27,5,14,13,0,8,12,13,13,0,0,0,0,0.57,0,0,0,0,FALSE
+1,1,1,1,5,0,5,0,146,3,141,41,64,2,64,106,40,66,6,6,7,0.01,41,41,42,23,FALSE
+1,1,1,1,11,1,9,0,28,6,21,6,11,1,9,12,5,7,2,2,2,0.05,3,3,3,2,FALSE

@@ -1,0 +1,51 @@
+@relation 'Apache2.0_golden-weka.filters.unsupervised.attribute.Remove-R1-2,63-weka.filters.unsupervised.attribute.Remove-R12,15,18-20,23-24,28,35-38,46-47,51,53-54-weka.filters.unsupervised.attribute.Remove-R31-33-weka.filters.unsupervised.attribute.Remove-R9-20,34-35'
+
+@attribute AvgCyclomatic numeric
+@attribute AvgCyclomaticModified numeric
+@attribute AvgCyclomaticStrict numeric
+@attribute AvgEssential numeric
+@attribute AvgLine numeric
+@attribute AvgLineBlank numeric
+@attribute AvgLineCode numeric
+@attribute AvgLineComment numeric
+@attribute CountLine numeric
+@attribute CountLineBlank numeric
+@attribute CountLineCode numeric
+@attribute CountLineCodeDecl numeric
+@attribute CountLineCodeExe numeric
+@attribute CountLineComment numeric
+@attribute CountSemicolon numeric
+@attribute CountStmt numeric
+@attribute CountStmtDecl numeric
+@attribute CountStmtExe numeric
+@attribute MaxCyclomatic numeric
+@attribute MaxCyclomaticModified numeric
+@attribute MaxCyclomaticStrict numeric
+@attribute RatioCommentToCode numeric
+@attribute SumCyclomatic numeric
+@attribute SumCyclomaticModified numeric
+@attribute SumCyclomaticStrict numeric
+@attribute SumEssential numeric
+@attribute isDefective {TRUE,FALSE}
+
+@data
+2,2,3,1,13,2,10,1,140,25,85,26,40,25,45,64,20,44,6,6,7,0.29,19,19,20,15,FALSE
+3,3,4,2,18,1,16,1,449,43,260,61,157,59,136,191,49,142,7,7,10,0.23,53,51,62,35,FALSE
+6,6,7,1,34,3,28,3,567,95,355,77,244,129,252,313,73,240,19,19,25,0.36,66,61,74,21,FALSE
+0,0,0,0,0,0,0,0,194,2,0,0,0,15,0,0,0,0,0,0,0,0,0,0,0,0,FALSE
+3,3,3,1,17,3,14,0,288,52,193,69,123,39,111,136,48,88,6,6,7,0.2,32,32,36,20,FALSE
+2,2,2,1,17,3,14,0,171,30,113,39,60,17,71,84,30,54,3,3,4,0.15,13,13,14,9,FALSE
+3,3,3,2,24,5,19,0,98,21,58,13,34,16,22,31,7,24,4,4,4,0.28,9,9,9,6,FALSE
+3,3,3,1,17,2,14,1,215,32,135,50,92,36,52,69,28,41,10,10,10,0.27,27,27,27,8,FALSE
+17,13,21,8,100,7,83,3,375,34,268,49,205,44,144,196,35,161,46,33,56,0.16,51,38,62,25,FALSE
+2,2,3,1,17,1,16,0,46,4,16,4,10,23,11,13,4,9,2,2,3,1.44,2,2,3,1,FALSE
+0,0,0,0,0,0,0,0,762,3,0,0,0,23,0,0,0,0,0,0,0,0,0,0,0,0,TRUE
+1,1,1,1,11,2,8,0,192,43,91,44,53,51,42,54,26,28,2,2,2,0.56,12,12,12,9,TRUE
+8,8,10,5,65,11,48,7,875,150,566,119,399,127,292,374,78,296,44,44,57,0.22,89,89,110,63,TRUE
+10,10,13,5,89,10,55,22,1888,235,1059,160,707,541,454,635,113,522,57,57,82,0.51,193,191,251,110,TRUE
+26,26,30,1,200,12,173,9,262,19,173,24,130,42,89,114,24,90,26,26,30,0.24,26,26,30,1,TRUE
+5,4,6,1,33,2,26,2,585,60,383,57,279,45,232,308,56,252,42,30,44,0.12,76,62,80,23,TRUE
+6,6,8,4,55,7,34,14,2021,278,1124,190,764,586,449,655,132,523,37,36,45,0.52,206,198,256,158,TRUE
+0,0,0,0,0,0,0,0,1728,1,0,0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,TRUE
+4,4,5,2,23,2,19,2,484,63,358,129,232,62,144,205,71,134,14,14,15,0.17,65,65,77,37,TRUE
+5,5,6,3,42,6,29,7,1573,237,939,173,630,329,497,649,145,504,29,29,35,0.35,160,160,201,106,TRUE

@@ -1,0 +1,50 @@
+@relation 'Apache2.0_golden-weka.filters.unsupervised.attribute.Remove-R1-2,63-weka.filters.unsupervised.attribute.Remove-R12,15,18-20,23-24,28,35-38,46-47,51,53-54-weka.filters.unsupervised.attribute.Remove-R31-33-weka.filters.unsupervised.attribute.Remove-R9-20,34-35'
+
+@attribute AvgCyclomatic numeric
+@attribute AvgCyclomaticModified numeric
+@attribute AvgCyclomaticStrict numeric
+@attribute AvgEssential numeric
+@attribute AvgLine numeric
+@attribute AvgLineBlank numeric
+@attribute AvgLineCode numeric
+@attribute AvgLineComment numeric
+@attribute CountLine numeric
+@attribute CountLineBlank numeric
+@attribute CountLineCode numeric
+@attribute CountLineCodeDecl numeric
+@attribute CountLineCodeExe numeric
+@attribute CountLineComment numeric
+@attribute CountSemicolon numeric
+@attribute CountStmt numeric
+@attribute CountStmtDecl numeric
+@attribute CountStmtExe numeric
+@attribute MaxCyclomatic numeric
+@attribute MaxCyclomaticModified numeric
+@attribute MaxCyclomaticStrict numeric
+@attribute RatioCommentToCode numeric
+@attribute SumCyclomatic numeric
+@attribute SumCyclomaticModified numeric
+@attribute SumCyclomaticStrict numeric
+@attribute SumEssential numeric
+@attribute isDefective {TRUE,FALSE}
+
+@data
+7,7,7,1,50,8,39,4,588,23,78,13,52,62,56,69,13,56,12,12,12,0.79,14,14,14,2,FALSE
+5,5,6,3,47,7,31,9,2130,339,1261,344,854,429,531,712,189,523,26,26,33,0.34,185,180,235,128,FALSE
+10,8,11,6,38,6,30,2,225,54,132,35,78,30,87,125,31,94,23,15,24,0.23,39,31,44,25,FALSE
+0,0,0,0,0,0,0,0,48,5,21,21,16,19,7,7,7,0,0,0,0,0.9,0,0,0,0,FALSE
+7,7,7,3,53,4,48,1,101,8,48,8,33,33,32,39,7,32,7,7,7,0.69,7,7,7,3,FALSE
+1,1,1,1,13,1,9,0,70,6,27,18,3,26,4,7,4,3,1,1,1,0.96,3,3,3,3,FALSE
+2,2,2,1,21,1,9,3,166,15,55,13,26,40,20,30,10,20,4,5,4,0.73,9,10,9,10,FALSE
+22,22,26,1,94,10,84,0,148,19,84,3,68,40,46,65,4,61,22,22,26,0.48,22,22,26,1,FALSE
+2,2,2,1,17,3,14,0,171,30,113,39,60,17,71,84,30,54,3,3,4,0.15,13,13,14,9,FALSE
+6,5,7,3,26,3,21,2,303,52,166,85,119,129,60,90,20,70,18,13,18,0.78,31,26,33,17,FALSE
+5,4,5,2,33,4,24,3,1130,81,305,72,196,73,134,190,57,133,10,9,10,0.24,55,49,59,30,TRUE
+6,6,8,3,47,6,34,5,1235,154,709,166,477,143,382,483,116,367,26,26,37,0.2,115,115,153,65,TRUE
+3,3,3,1,13,1,11,1,108,16,67,16,35,21,33,48,16,32,4,4,4,0.31,16,15,17,11,TRUE
+6,6,7,2,56,5,36,15,1006,102,608,123,427,293,279,359,69,290,50,50,70,0.48,90,90,114,35,TRUE
+4,4,5,3,29,4,22,4,454,65,282,85,185,108,118,162,48,114,13,13,14,0.38,47,47,52,33,TRUE
+4,4,5,2,27,3,21,3,1181,151,856,246,603,160,414,545,142,403,22,21,36,0.19,151,150,200,102,TRUE
+3,3,3,2,43,3,18,4,593,54,222,50,128,67,85,123,30,93,9,9,10,0.3,37,39,39,29,TRUE
+5,4,6,2,32,5,23,4,2045,365,1326,313,840,320,632,868,200,668,42,31,61,0.24,262,251,315,134,TRUE
+8,8,10,1,32,2,28,1,687,64,538,110,368,73,296,428,94,334,53,53,63,0.14,138,138,180,22,TRUE
