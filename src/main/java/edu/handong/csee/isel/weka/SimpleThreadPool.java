@@ -41,6 +41,13 @@ public class SimpleThreadPool {
 	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
 //	    			searchDirPath = "/Users/eunjiwon/Desktop/Multicollinearity/for_local_test/origin_data"; // for local test
 	    		}
+	    		else if(type.equals("4")) {
+	    			searchDirPath = "/home/eunjiwon/Git/EJTool/VC_RR_data";
+	    		}
+	    		else {
+	    			System.out.println("Wrong type! Check your -t option.");
+	    			System.exit(-1);
+	    		}
 
 	    		File searchDir = new File(searchDirPath);
 	    		File []fileList = searchDir.listFiles();
@@ -83,7 +90,7 @@ public class SimpleThreadPool {
 				.build());
 	
 		options.addOption(Option.builder("t").longOpt("type")
-				.desc("1 is a original dataset or applying PCA or VIF to remove multicollinearity or 2 is applying Correlation-based feature selection or 3 is applying Wrapper-based feature selection.")
+				.desc("1 is a original dataset or applying PCA or VIF to remove multicollinearity or 2 is applying Correlation-based feature selection or 3 is applying Wrapper-based feature selection or 4 is applying Variable clustering and removing redundant metrics.")
 				.hasArg()
 				.required()
 				.argName("attribute value")
