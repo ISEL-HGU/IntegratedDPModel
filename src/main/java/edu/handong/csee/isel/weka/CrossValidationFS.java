@@ -95,10 +95,10 @@ public class CrossValidationFS implements Runnable {
 	@Override
 	public void run() {
 		String isMulticollinearity = "";
-		String multicollinearity_vif_10 = "thres: 10, not issue";
-		String multicollinearity_vif_5 = "thres: 5, not issue";
-		String multicollinearity_vif_4 = "thres: 4, not issue";
-		String multicollinearity_vif_2_5 = "thres: 2.5, not issue";
+		String multicollinearity_vif_10 = "thres: 10/ not issue";
+		String multicollinearity_vif_5 = "thres: 5/ not issue";
+		String multicollinearity_vif_4 = "thres: 4/ not issue";
+		String multicollinearity_vif_2_5 = "thres: 2.5/ not issue";
 		
 		try {
 			Instances testData = null, temp = null;

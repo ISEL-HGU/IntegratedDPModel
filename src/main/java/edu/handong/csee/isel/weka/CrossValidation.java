@@ -72,10 +72,10 @@ public class CrossValidation implements Runnable{
 	@Override
 	public void run(){
 		String isMulticollinearity = "";
-		String multicollinearity_vif_10 = "thres: 10, not issue";
-		String multicollinearity_vif_5 = "thres: 5, not issue";
-		String multicollinearity_vif_4 = "thres: 4, not issue";
-		String multicollinearity_vif_2_5 = "thres: 2.5, not issue";
+		String multicollinearity_vif_10 = "thres: 10/ not issue";
+		String multicollinearity_vif_5 = "thres: 5/ not issue";
+		String multicollinearity_vif_4 = "thres: 4/ not issue";
+		String multicollinearity_vif_2_5 = "thres: 2.5/ not issue";
 		try {
 			Instances testData = null, temp = null;
 			for(int i = 0; i < filePathList.size(); i++) {
@@ -159,7 +159,7 @@ public class CrossValidation implements Runnable{
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
 				}
 				else if(sourcePath.contains("_STEPWISE_2_5")) {
-					approach_name = "SVIF4";
+					approach_name = "SVIF2.5";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
 				}
 				else { // original dataset

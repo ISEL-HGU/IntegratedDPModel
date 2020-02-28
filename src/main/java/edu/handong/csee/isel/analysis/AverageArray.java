@@ -14,12 +14,13 @@ import java.util.List;
 import edu.handong.csee.isel.weka.CSVUtils;
 
 public class AverageArray {
-	int numberOfApproaches = 12;
-	static String path = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";
+	int numberOfApproaches = 13;
+	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0228_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
-//			"LR_total_results",
-			"MCC_DT_total_result",
+			"DT_total_results",			
+			"LR_total_results",
+//			"MCC_DT_total_result",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
@@ -33,8 +34,8 @@ public class AverageArray {
 		AverageArray myAverageArray = new AverageArray();
 		for(String filename : filenameArray) {
 			myAverageArray.run(filename);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
+			myAverageArray.saveRankingCSV(filename);
+			myAverageArray.saveRankingAverageCSV(filename);
 		}
 		
 		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset)
@@ -150,7 +151,7 @@ public class AverageArray {
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
 		ArrayList<Double> b12List = new ArrayList<Double>();
-//		ArrayList<Double> b13List = new ArrayList<Double>();
+		ArrayList<Double> b13List = new ArrayList<Double>();
         BufferedWriter bufWriter = null;
 
         try{
@@ -173,7 +174,7 @@ public class AverageArray {
                 		if(i == 10) b10List.add(Double.valueOf(list.get(i))); 
                 		if(i == 11) b11List.add(Double.valueOf(list.get(i)));
                 		if(i == 12) b12List.add(Double.valueOf(list.get(i)));
-//                		if(i == 13) b13List.add(Double.valueOf(list.get(i)));
+                		if(i == 13) b13List.add(Double.valueOf(list.get(i)));
                 }
             }
             
@@ -209,7 +210,7 @@ public class AverageArray {
 	        		if(i == 10) bufWriter.write(String.valueOf(averageArray(b10List))); 
 	        		if(i == 11) bufWriter.write(String.valueOf(averageArray(b11List)));
 	        		if(i == 12) bufWriter.write(String.valueOf(averageArray(b12List))); 
-//	        		if(i == 13) bufWriter.write(String.valueOf(averageArray(b13List)));
+	        		if(i == 13) bufWriter.write(String.valueOf(averageArray(b13List)));
 	    			bufWriter.write(",");
 	        }
 	        
@@ -296,20 +297,21 @@ public class AverageArray {
     		ArrayList<Double> b10List = new ArrayList<Double>();
     		ArrayList<Double> b11List = new ArrayList<Double>();
     		ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
-//    		ArrayList<Double> b13List = new ArrayList<Double>(); 
-    		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
-    		// f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1), baselineType is a column 8 (type2, 3).
-    		// precision, recall, and f-measure
-//    		int precision_col = 1;
-//    		int recall_col = 2;
-//    		int fmeasure_col = 3;
-//    		int dataname_col = 6;
-//    		int approachname_col = 7; // WFS와 CFS에서는 multicollinearity col 때문에 8로 해야함 
+    		ArrayList<Double> b13List = new ArrayList<Double>(); // VC and RR
+    		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
+//    		String[] dataset = {"AEEEM_EQ"};	// for debugging
+    		// f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1, 2, 3, and 4).
+    		int precision_col = 1;
+    		int recall_col = 2;
+    		int fmeasure_col = 3;
+    		int auc_col = 4;
+    		int dataname_col = 6;
+    		int approachname_col = 7; 
     		// mcc
-    		int mcc_col = 1; 
-     	int dataname_col = 3;
-    		int approachname_col = 4;
-    		int evaluation_measure = mcc_col; //
+//    		int mcc_col = 1; 
+//     		int dataname_col = 3;
+//    		int approachname_col = 4;
+    		int evaluation_measure = auc_col; //
     		
         List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
     		
@@ -364,11 +366,14 @@ public class AverageArray {
                 			if(list.get(evaluation_measure).equals("NaN")) continue;
                 			else b12List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-                    
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("VCRR")) { // type4
+                			if(list.get(evaluation_measure).equals("NaN")) continue;
+                			else b13List.add(Double.valueOf(list.get(evaluation_measure)));
+                    }
                     
             }
             try {
-            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List), averageArray(b12List));
+            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List), averageArray(b12List), averageArray(b13List));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -379,7 +384,7 @@ public class AverageArray {
  
     }
     
-	public static void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b11Average, Double b12Average) throws Exception {
+	public static void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b11Average, Double b12Average, Double b13Average) throws Exception {
 		FileWriter writer =  new FileWriter(path + baselinePath + "_average.csv", true);
 	    // Add header for R studio when the first data set 
 		if(dataset.equals("AEEEM_EQ")) {
@@ -397,18 +402,19 @@ public class AverageArray {
 			baselineList.add("SVIF2.5");
 			baselineList.add("CFS-BestFirst");
 			baselineList.add("WFS-BestFirst");
+			baselineList.add("VCRR");
 			CSVUtils.writeLine(writer, baselineList);
 		}
-		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average), String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b11Average), String.valueOf(b12Average)));
+		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average), String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b11Average), String.valueOf(b12Average), String.valueOf(b13Average)));
 		writer.flush();
 		writer.close();
 	}
 	
 	public double averageArray(ArrayList<Double> list) {
-//		if(list.size() == 0) {
-//			System.out.println("Can not average list because list size is 0, check your list!");
+		if(list.size() == 0) {
+			System.out.println("Can not average list because list size is 0, check your list!");
 //			System.exit(-1);
-//		}
+		}
 		double sum = 0;
 		double average = 0;
 		for(int i = 0; i < list.size(); i++) {
