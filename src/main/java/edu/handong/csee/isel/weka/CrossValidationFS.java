@@ -95,6 +95,10 @@ public class CrossValidationFS implements Runnable {
 	@Override
 	public void run() {
 		String isMulticollinearity = "";
+		String multicollinearity_vif_10 = "thres: 10, not issue";
+		String multicollinearity_vif_5 = "thres: 5, not issue";
+		String multicollinearity_vif_4 = "thres: 4, not issue";
+		String multicollinearity_vif_2_5 = "thres: 2.5, not issue";
 		
 		try {
 			Instances testData = null, temp = null;
@@ -195,7 +199,14 @@ public class CrossValidationFS implements Runnable {
 //				saveMulticollinearityWFSCompareTheOtherApporoachesResults(mlModel, csvPath, type, testPath, "2.5", fileName);
 //			}
 				
-			
+			isMulticollinearity = checkMulticollinearity(trainData, 10.0);
+			if (isMulticollinearity.equals("Y")) multicollinearity_vif_10 = "10.0";
+			isMulticollinearity = checkMulticollinearity(trainData, 5.0);
+			if (isMulticollinearity.equals("Y")) multicollinearity_vif_5 = "5.0";	
+			isMulticollinearity = checkMulticollinearity(trainData, 4.0);
+			if (isMulticollinearity.equals("Y")) multicollinearity_vif_4 = "4.0";	
+			isMulticollinearity = checkMulticollinearity(trainData, 2.5);
+			if (isMulticollinearity.equals("Y")) multicollinearity_vif_2_5 = "2.5";	
 
 			if(type.equals("2")) approach_name = "CFS-BestFirst";
 			else if(type.equals("3")) approach_name = "WFS-BestFirst";
@@ -203,7 +214,7 @@ public class CrossValidationFS implements Runnable {
 			 myModel.buildClassifier(trainData);
 			 eval_case = new Evaluation(trainData);
 			 eval_case.evaluateModel(myModel, testData);
-			 showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name, isMulticollinearity);
+			 showSummary(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5 );
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -303,7 +314,7 @@ public class CrossValidationFS implements Runnable {
 		writer.close();
 	}
 
-	public static void showSummary(Evaluation eval, Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name, String isMulticollinearity) throws Exception {
+	public static void showSummary(Evaluation eval, Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name, String multicollinearity_vif_10, String multicollinearity_vif_5, String multicollinearity_vif_4, String multicollinearity_vif_2_5) throws Exception {
 		FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
@@ -314,10 +325,8 @@ public class CrossValidationFS implements Runnable {
 //				System.out.println("Recall " + eval.recall(i));
 //				System.out.println("F-Measure " + eval.fMeasure(i));
 //				System.out.println("AUC " + eval.areaUnderROC(i));
-//				
-//				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)),
-//						String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, isMulticollinearity)); // for getting multicollinearity ratio
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name));
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5)); 
+//				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name));
 			}
 		writer.flush();
 		writer.close();
