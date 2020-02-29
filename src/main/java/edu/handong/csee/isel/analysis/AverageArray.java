@@ -15,7 +15,7 @@ import edu.handong.csee.isel.weka.CSVUtils;
 
 public class AverageArray {
 	int numberOfApproaches = 13;
-	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0228_exp_results/";
+	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 			"DT_total_results",			
@@ -29,7 +29,6 @@ public class AverageArray {
 //			"RandomForest_spread_total_result"	
 	};
 	
-
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
 		for(String filename : filenameArray) {
@@ -285,21 +284,9 @@ public class AverageArray {
 	}
 	
     public void run(String baselinePath) {
-    		ArrayList<Double> b1List = new ArrayList<Double>();
-    		ArrayList<Double> b2List = new ArrayList<Double>();
-    		ArrayList<Double> b3List = new ArrayList<Double>();
-    		ArrayList<Double> b4List = new ArrayList<Double>();
-    		ArrayList<Double> b5List = new ArrayList<Double>();
-    		ArrayList<Double> b6List = new ArrayList<Double>();
-    		ArrayList<Double> b7List = new ArrayList<Double>();
-    		ArrayList<Double> b8List = new ArrayList<Double>();
-    		ArrayList<Double> b9List = new ArrayList<Double>();
-    		ArrayList<Double> b10List = new ArrayList<Double>();
-    		ArrayList<Double> b11List = new ArrayList<Double>();
-    		ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
-    		ArrayList<Double> b13List = new ArrayList<Double>(); // VC and RR
-    		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
-//    		String[] dataset = {"AEEEM_EQ"};	// for debugging
+ 
+    		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
+//    		String[] dataset = {"JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
     		// f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1, 2, 3, and 4).
     		int precision_col = 1;
     		int recall_col = 2;
@@ -316,6 +303,19 @@ public class AverageArray {
         List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
     		
     		for(String datasetName : dataset) {
+        		ArrayList<Double> b1List = new ArrayList<Double>();
+        		ArrayList<Double> b2List = new ArrayList<Double>();
+        		ArrayList<Double> b3List = new ArrayList<Double>();
+        		ArrayList<Double> b4List = new ArrayList<Double>();
+        		ArrayList<Double> b5List = new ArrayList<Double>();
+        		ArrayList<Double> b6List = new ArrayList<Double>();
+        		ArrayList<Double> b7List = new ArrayList<Double>();
+        		ArrayList<Double> b8List = new ArrayList<Double>();
+        		ArrayList<Double> b9List = new ArrayList<Double>();
+        		ArrayList<Double> b10List = new ArrayList<Double>();
+        		ArrayList<Double> b11List = new ArrayList<Double>();
+        		ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
+        		ArrayList<Double> b13List = new ArrayList<Double>(); // VC and RR
             for(List<String> newLine : allData) {
                 List<String> list = newLine;
                     if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("None")) {
@@ -373,6 +373,7 @@ public class AverageArray {
                     
             }
             try {
+            		System.out.println(datasetName + "size of None list : " + b1List.size());
             		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List), averageArray(b12List), averageArray(b13List));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

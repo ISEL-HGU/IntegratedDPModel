@@ -15,11 +15,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class SortingRankingAverage {
-	static String rootPath = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";
+	static String rootPath = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result_ranking_average",
-//			"LR_total_results_ranking_average",
-			"RF_total_results_ranking_average",
+			"DT_total_results_ranking_average",
+			"LR_total_results_ranking_average",
 //			"Logistic_noHandling_total_result_ranking_average",
 //			"Add_Logistic_smote_total_result_ranking_average",
 //			"Logistic_spread_total_result_ranking_average",
@@ -34,10 +34,11 @@ public class SortingRankingAverage {
 			 //출력 스트림 생성
 	        BufferedWriter bufWriter = null;
 	        try{
-	            bufWriter = Files.newBufferedWriter(Paths.get("/Users/eunjiwon/Desktop/exp_results/0726_exp_analysis/" + filename + "_sorting.txt"));
+	            bufWriter = Files.newBufferedWriter(Paths.get("/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_analysis/" + filename + "_sorting.txt"));
 	            List<List<String>> allData = readCSV(rootPath + filename + ".csv");
-	            // 16째 줄에 ranking average가 있음 
-	            List<String> lastRow = allData.get(15);
+	            // 46 line shows the value of ranking average due to a header in csv file
+	            int num_of_dataset = 45;
+	            List<String> lastRow = allData.get(num_of_dataset+1);
 	            for(int i = 0; i < lastRow.size(); i++) {
 	            		if(lastRow.get(i).equals("")) continue;
 	            		else {
@@ -50,10 +51,10 @@ public class SortingRankingAverage {
 		    		while(iteratorKey.hasNext()) {
 		    			Double key = iteratorKey.next();
 //		    			System.out.println(key + " : " + tm.get(key));
-	                bufWriter.write(String.valueOf(key));
-	                bufWriter.write(" : ");
-	                bufWriter.write(tm.get(key));
-	                bufWriter.newLine();
+		    			bufWriter.write(tm.get(key));
+		    			bufWriter.write(" : ");
+		    			bufWriter.write(String.valueOf(key));
+		    			bufWriter.newLine();
 		    		}
 		    	
 	        }catch(FileNotFoundException e){
