@@ -13,8 +13,8 @@ public class CompareApproachesBasedOnMulticollinearity {
 	public static void main(String[] args) throws IOException {
 		CompareApproachesBasedOnMulticollinearity myCABOM = new CompareApproachesBasedOnMulticollinearity();
 		String inputPath = "/home/eunjiwon/Git/EJTool/checkedMulticollinearity_DT.csv";
-		String outputPath = "/home/eunjiwon/Git/EJTool/multi_results/compare_DT.csv";
-		String approachName = "None";
+		String outputPath = "/home/eunjiwon/Git/EJTool/multi_results/compare_CFS_DT.csv";
+		String approachName = "CFS-BestFirst";
 		// 
 		String thresholdVIF = "10.0";
 		ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);

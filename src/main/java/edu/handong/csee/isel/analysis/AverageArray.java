@@ -31,17 +31,17 @@ public class AverageArray {
 	
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
-		for(String filename : filenameArray) {
-			myAverageArray.run(filename);
-			myAverageArray.saveRankingCSV(filename);
-			myAverageArray.saveRankingAverageCSV(filename);
-		}
+//		for(String filename : filenameArray) {
+//			myAverageArray.run(filename);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
+//		}
 		
 		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset)
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "10.0");
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "5.0");
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "4.0");
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "DT_compare.csv", "2.5");
+		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_DT.csv", "10.0");
+		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_DT.csv", "5.0");
+		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_DT.csv", "4.0");
+		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_DT.csv", "2.5");
 	}
 	
 	public void calculateMeanAUCOfEachApproaches(String csv_path, String threshold) throws IOException {
@@ -57,62 +57,66 @@ public class AverageArray {
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
 		ArrayList<Double> b12List = new ArrayList<Double>(); 
+		ArrayList<Double> b13List = new ArrayList<Double>(); 
 		
 		List<List<String>> allData = readCSV(csv_path);
-
 		for(List<String> newLine : allData) {
             List<String> list = newLine;
-                if(list.get(5).equals("None") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b1List.add(Double.valueOf(list.get(4)));
+                if(list.get(3).equals("None") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b1List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("Default-PCA") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b2List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("Default-PCA") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b2List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("NSVIF10") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b3List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("NSVIF10") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b3List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("NSVIF5") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b4List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("NSVIF5") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b4List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("NSVIF4") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b5List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("NSVIF4") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b5List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("NSVIF2.5") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b6List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("NSVIF2.5") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b6List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("SVIF10") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b7List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("SVIF10") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b7List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("SVIF5") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b8List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("SVIF5") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b8List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("SVIF4") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b9List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("SVIF4") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b9List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("SVIF2.5") && list.get(3).equals(threshold)) {
-                		if(list.get(4).equals("NaN")) continue;
-                		else b10List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("SVIF2.5") && list.get(1).equals(threshold)) {
+                		if(list.get(2).equals("NaN")) continue;
+                		else b10List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("CFS-BestFirst") && list.get(3).equals(threshold)) { 
-                		if(list.get(4).equals("NaN")) continue;
-                		else b11List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("CFS-BestFirst") && list.get(1).equals(threshold)) { 
+                		if(list.get(2).equals("NaN")) continue;
+                		else b11List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(5).equals("WFS-BestFirst") && list.get(3).equals(threshold)) {
-            			if(list.get(4).equals("NaN")) continue;
-            			else b12List.add(Double.valueOf(list.get(4)));
+                else if(list.get(3).equals("WFS-BestFirst") && list.get(1).equals(threshold)) {
+            			if(list.get(2).equals("NaN")) continue;
+            			else b12List.add(Double.valueOf(list.get(2)));
                 }
+                else if(list.get(3).equals("VCRR") && list.get(1).equals(threshold)) {
+         			if(list.get(2).equals("NaN")) continue;
+         			else b13List.add(Double.valueOf(list.get(2)));
+                 }
 		}
 
-		FileWriter writer =  new FileWriter(path + "DT_compare_average.csv", true);
+		FileWriter writer =  new FileWriter(path + "compare_average_DT.csv", true);
 		// Only when threshold is 10
 		if (threshold.equals("10.0")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
@@ -129,13 +133,15 @@ public class AverageArray {
 			baselineList.add("SVIF2.5");
 			baselineList.add("CFS-BestFirst");
 			baselineList.add("WFS-BestFirst");
+			baselineList.add("VCRR");
 			CSVUtils.writeLine(writer, baselineList);
 		}
-		CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List)), String.valueOf(averageArray(b12List))));
+		CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List)), String.valueOf(averageArray(b12List)), String.valueOf(averageArray(b13List))));
 		writer.flush();
 		writer.close();
 		
 	}
+	
 	
 	public void saveRankingAverageCSV(String baselinePath) {
 		ArrayList<Double> b1List = new ArrayList<Double>();
