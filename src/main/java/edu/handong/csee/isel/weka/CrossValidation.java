@@ -120,7 +120,10 @@ public class CrossValidation implements Runnable{
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);
 			
-			if(type.equals("4")) {
+			if(type.equals("5")) {
+				showSummaryForLSTM(eval_case, trainData, mlModel, csvPath, type, testPath);
+			}
+			else if(type.equals("4")) {
 				approach_name = "VCRR";
 				showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
 			}
@@ -209,6 +212,21 @@ public class CrossValidation implements Runnable{
 			}
 		}
 		return isMulticollinearity;
+	}
+	public static void showSummaryForLSTM(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
+		FileWriter writer =  new FileWriter(csvPath, true);
+		if(eval == null) System.out.println("showSummary - eval is null");
+		else
+			for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
+//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
+//				System.out.println("Precision " + eval.precision(i));
+//				System.out.println("Recall " + eval.recall(i));
+//				System.out.println("F-Measure " + eval.fMeasure(i));
+//				System.out.println("AUC " + eval.areaUnderROC(i));
+				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+			}
+		writer.flush();
+		writer.close();
 	}
 	
 	public static void showSummaryForPCAVIFVC(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name) throws Exception {

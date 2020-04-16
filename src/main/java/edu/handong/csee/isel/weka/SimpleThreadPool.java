@@ -44,6 +44,9 @@ public class SimpleThreadPool {
 	    		else if(type.equals("4")) {
 	    			searchDirPath = "/home/eunjiwon/Git/EJTool/VC_RR_data";
 	    		}
+	    		else if(type.equals("5")) { // for LSTM
+	    			searchDirPath = "/home/eunjiwon/Git/EJTool/LSTM_origin_data_epoch_20_batchsize_32";
+	    		}
 	    		else {
 	    			System.out.println("Wrong type! Check your -t option.");
 	    			System.exit(-1);

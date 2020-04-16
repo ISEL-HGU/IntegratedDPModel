@@ -87,7 +87,7 @@ public class EJToolMultithread{
 					path = sourcePath + "_" + i + "_" + n + ".arff";
 					filePathList.add(path);							
 				}
-				if(type.equals("1") || type.equals("4")) { // unsupervised (1 is original, pac, and vif. 4 is vc and rr)
+				if(type.equals("1") || type.equals("4") || type.equals("5")) { // unsupervised (1 is original, pac, and vif. 4 is vc and rr)
 					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
 			    		    Runnable CV = new CrossValidation(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel);
 					    executor.execute(CV);
