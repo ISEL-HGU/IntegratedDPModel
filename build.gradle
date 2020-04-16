@@ -12,9 +12,9 @@ plugins {
 }
 apply plugin: 'application'
 //mainClassName = "edu.handong.csee.isel.weka.SimpleThreadPool"
-//mainClassName = "edu.handong.csee.isel.weka.SaveCrossValidation"
+mainClassName = "edu.handong.csee.isel.weka.SaveCrossValidation"
 //mainClassName = "edu.handong.csee.isel.weka.WriteArffFileWithInstances"
-mainClassName = "edu.handong.csee.isel.analysis.CompareApproachesBasedOnMulticollinearity"
+//mainClassName = "edu.handong.csee.isel.analysis.CompareApproachesBasedOnMulticollinearity"
 
 dependencies {
 	// https://mvnrepository.com/artifact/commons-cli/commons-cli

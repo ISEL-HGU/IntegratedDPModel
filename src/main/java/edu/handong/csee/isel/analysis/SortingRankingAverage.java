@@ -18,8 +18,11 @@ public class SortingRankingAverage {
 	static String rootPath = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result_ranking_average",
-			"DT_total_results_ranking_average",
-			"LR_total_results_ranking_average",
+			"DT_total_results_average_meanAUC",
+			"LR_total_results_average_meanAUC",
+			"RF_total_results_average_meanAUC",
+//			"DT_total_results_ranking_average",
+//			"LR_total_results_ranking_average",
 //			"Logistic_noHandling_total_result_ranking_average",
 //			"Add_Logistic_smote_total_result_ranking_average",
 //			"Logistic_spread_total_result_ranking_average",
@@ -38,7 +41,7 @@ public class SortingRankingAverage {
 	            List<List<String>> allData = readCSV(rootPath + filename + ".csv");
 	            // 46 line shows the value of ranking average due to a header in csv file
 	            int num_of_dataset = 45;
-	            List<String> lastRow = allData.get(num_of_dataset+1);
+	            List<String> lastRow = allData.get(num_of_dataset+1); 
 	            for(int i = 0; i < lastRow.size(); i++) {
 	            		if(lastRow.get(i).equals("")) continue;
 	            		else {

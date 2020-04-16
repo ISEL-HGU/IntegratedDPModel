@@ -52,10 +52,8 @@ public class EJWekaTool {
 	boolean help = false;
 
 	public static void main(String[] args) {
-
 		EJWekaTool myRunner = new EJWekaTool();
 		myRunner.run(args);
-
 	}
 	
 	private void run(String[] args) {

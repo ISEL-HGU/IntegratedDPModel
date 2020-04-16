@@ -15,11 +15,11 @@ import edu.handong.csee.isel.weka.CSVUtils;
 
 
 public class AppendColumn {
-	static String path = "/Users/eunjiwon/Desktop/exp_results/0726_exp_results/";
+	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 //			"LR_total_results",
-			"DT_compare",
+			"compare_CFS_DT",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
 //			"Logistic_spread_total_result",
@@ -32,7 +32,7 @@ public class AppendColumn {
 		for (String filename : filenameArray) {
 			 //출력 스트림 생성
 	        
-	        		FileWriter writer =  new FileWriter(path + filename + "_2_5.csv", true);    
+	        		FileWriter writer =  new FileWriter(path + filename + "_10.csv", true);    
 	            //csv파일 읽기
 	            List<List<String>> allData = readCSV(path + filename + ".csv");
 		        	ArrayList<String> b1List = new ArrayList<String>();
@@ -47,22 +47,25 @@ public class AppendColumn {
 		    		ArrayList<String> b10List = new ArrayList<String>();
 		    		ArrayList<String> b11List = new ArrayList<String>();
 		    		ArrayList<String> b12List = new ArrayList<String>();
+		    		ArrayList<String> b13List = new ArrayList<String>();
 		    		for(List<String> newLine : allData){
 		    			List<String> list = newLine;
-		    			if(list.get(3).equals("2.5")) {
-		    				if(list.get(5).equals("None")) b1List.add(list.get(4));
-			    			else if(list.get(5).equals("Default-PCA")) b2List.add( list.get(4));
-			    			else if(list.get(5).equals("NSVIF10")) b3List.add( list.get(4));
-			    			else if(list.get(5).equals("NSVIF5")) b4List.add( list.get(4));
-			    			else if(list.get(5).equals("NSVIF4")) b5List.add( list.get(4));
-			    			else if(list.get(5).equals("NSVIF2.5")) b6List.add( list.get(4));
-			    			else if(list.get(5).equals("SVIF10")) b7List.add( list.get(4));
-			    			else if(list.get(5).equals("SVIF5")) b8List.add( list.get(4));
-			    			else if(list.get(5).equals("SVIF4")) b9List.add( list.get(4));
-			    			else if(list.get(5).equals("SVIF2.5")) b10List.add( list.get(4));
-			    			else if(list.get(5).equals("CFS-BestFirst")) b11List.add( list.get(4));
-			    			else if(list.get(5).equals("WFS-BestFirst")) b12List.add( list.get(4));
+		    			if(list.get(1).equals("10.0")) {
+		    				if(list.get(3).equals("None")) b1List.add(list.get(2));
+			    			else if(list.get(3).equals("Default-PCA")) b2List.add( list.get(2));
+			    			else if(list.get(3).equals("NSVIF10")) b3List.add( list.get(2));
+			    			else if(list.get(3).equals("NSVIF5")) b4List.add( list.get(2));
+			    			else if(list.get(3).equals("NSVIF4")) b5List.add( list.get(2));
+			    			else if(list.get(3).equals("NSVIF2.5")) b6List.add( list.get(2));
+			    			else if(list.get(3).equals("SVIF10")) b7List.add( list.get(2));
+			    			else if(list.get(3).equals("SVIF5")) b8List.add( list.get(2));
+			    			else if(list.get(3).equals("SVIF4")) b9List.add( list.get(2));
+			    			else if(list.get(3).equals("SVIF2.5")) b10List.add( list.get(2));
+			    			else if(list.get(3).equals("CFS-BestFirst")) b11List.add( list.get(2));
+			    			else if(list.get(3).equals("WFS-BestFirst")) b12List.add( list.get(2));
+			    			else if(list.get(3).equals("VCRR")) b13List.add( list.get(2));
 		    			}
+		    			
 		    			
 		    		}
 		    		ArrayList<String> baselineList = new ArrayList<String>();
@@ -78,9 +81,10 @@ public class AppendColumn {
 	    			baselineList.add("SVIF2.5");
 	    			baselineList.add("CFS-BestFirst");
 	    			baselineList.add("WFS-BestFirst");
+	    			baselineList.add("VCRR");
 	    			CSVUtils.writeLine(writer, baselineList);
 	            for(int i = 0; i < b1List.size(); i++) {
-		            	CSVUtils.writeLine(writer, Arrays.asList(b1List.get(i), b2List.get(i), b3List.get(i), b4List.get(i), b5List.get(i), b6List.get(i), b7List.get(i), b8List.get(i), b9List.get(i), b10List.get(i), b11List.get(i), b12List.get(i)));
+		            	CSVUtils.writeLine(writer, Arrays.asList(b1List.get(i), b2List.get(i), b3List.get(i), b4List.get(i), b5List.get(i), b6List.get(i), b7List.get(i), b8List.get(i), b9List.get(i), b10List.get(i), b11List.get(i), b12List.get(i), b13List.get(i)));
 		        		
 	            }
 	            	writer.flush();

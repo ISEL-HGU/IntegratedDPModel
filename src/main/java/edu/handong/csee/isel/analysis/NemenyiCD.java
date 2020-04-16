@@ -14,18 +14,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-
+// after statistical method using R!
 public class NemenyiCD {
 	static String rootPath = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_analysis/nemenyi/";
 	static String[] filenameArray = {
+			"RF.csv",
 			"LR.csv",
 			"DT.csv",
+
 	};
 	
 	public static void main(String[] args) throws IOException {
 		for(String filename : filenameArray) {
-			ArrayList<Integer> connectedLineList[] = new ArrayList[14]; // number of approach (13) + 1
-			for(int i = 0; i < 14; i++) {
+			ArrayList<Integer> connectedLineList[] = new ArrayList[12]; // number of approach (11) + 1
+			for(int i = 0; i < 12; i++) { // // number of approach (11) + 1
 				connectedLineList[i] = new ArrayList<Integer>();
 			}
 			List<List<String>> allData = readText(rootPath + filename);
@@ -57,7 +59,7 @@ public class NemenyiCD {
 			bufWriter.write(filename);
 			bufWriter.newLine();
 			bufWriter.write("Connect a line with the number in the list\n");
-			for (int i = 1; i < 14; i++) {
+			for (int i = 1; i < 12; i++) { // number of approach (11) + 1
 				System.out.println(i + " -> " + connectedLineList[i]);
 				bufWriter.write(i + " -> " + connectedLineList[i]);
 				bufWriter.newLine();

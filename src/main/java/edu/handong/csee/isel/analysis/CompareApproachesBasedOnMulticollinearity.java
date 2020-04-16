@@ -18,19 +18,19 @@ public class CompareApproachesBasedOnMulticollinearity {
 		// 
 		String thresholdVIF = "10.0";
 		ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF);
+//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF);
 		//
 		thresholdVIF = "5.0";
 		ArrayList<String> listOfMulticollinearityData_5 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_5, thresholdVIF);
+//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_5, thresholdVIF);
 		//
 		thresholdVIF = "4.0";
 		ArrayList<String> listOfMulticollinearityData_4 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_4, thresholdVIF);
+//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_4, thresholdVIF);
 		//
 		thresholdVIF = "2.5";
 		ArrayList<String> listOfMulticollinearityData_2_5 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_2_5, thresholdVIF);
+//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_2_5, thresholdVIF);
 	}
 	
 	// savedDataHavingMulticollinearity(inputPath, "10.0", "None")
