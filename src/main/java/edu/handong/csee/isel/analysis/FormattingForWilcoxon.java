@@ -14,20 +14,119 @@ import edu.handong.csee.isel.weka.CSVUtils;
 
 public class FormattingForWilcoxon {
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/master_model_2019_06_30_NGLPBugPatchCollector_Results/";
+	static String path = "/Users/eunjiwon/Desktop/LSTM_Results/";
+	static String[] filenameArray = { "nglp_LR_result.csv" };
 //	static String[] filenameArray = { "nglp_RF_result.csv", "nglp_DT_result.csv", "nglp_LR_result.csv", "nglp_NB_result.csv" };
 	// for statistical test based on project
-	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/Based_on_project_statistical_test/";
-	static String[] filenameArray = { "MasterNGLPvsBaseline_result.csv" };
-	
-	static String MasterNGLPPath = path + "MasterNGLPvsBaseline_result.csv";
-	static String SingleNGLPPath = path + "SingleNGLPvsBaseline_result.csv";
+//	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/Based_on_project_statistical_test/";
+//	static String[] filenameArray = { "MasterNGLPvsBaseline_result.csv" };
+//	
+//	static String MasterNGLPPath = path + "MasterNGLPvsBaseline_result.csv";
+//	static String SingleNGLPPath = path + "SingleNGLPvsBaseline_result.csv";
 	
 	public static void main(String[] args) throws IOException {
 		FormattingForWilcoxon myFormattingForWilcoxon = new FormattingForWilcoxon();
-		myFormattingForWilcoxon.compareBetweenMasterAndSingle(MasterNGLPPath, SingleNGLPPath);
-//		for (String filename : filenameArray) {
-//			myFormattingForWilcoxon.run(filename);
-//		}
+		for (String filename : filenameArray) {
+//			myFormattingForWilcoxon.run_LSTM(filename);
+			myFormattingForWilcoxon.run(filename);
+		}
+	}
+	public void run_LSTM(String baselinePath) {
+
+		String[] dataset = { "camel", "eagle", "groovy", "jena", "juddi", "metamodel", "nutch" };
+//		String[] dataset = { "camel", "eagle", "flink", "groovy", "jena", "juddi", "metamodel", "nutch" };
+		int precision_col = 1;
+		int recall_col = 2;
+		int fmeasure_col = 3;
+		int auc_col = 4;
+		int type_col = 5;
+		int dataname_col = 6;
+
+		List<List<String>> allData = readCSV(path + baselinePath);
+
+		for (String datasetName : dataset) {
+			ArrayList<Double> LSTMList_AUC = new ArrayList<Double>();
+			ArrayList<Double> LSTMList_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> LSTMList_Precision = new ArrayList<Double>();
+			ArrayList<Double> LSTMList_Recall = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_AUC = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_Precision = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_Recall = new ArrayList<Double>();
+			for (List<String> newLine : allData) {
+				List<String> list = newLine;
+				String dataset_name = list.get(dataname_col);
+				String type_name = list.get(type_col);
+				if (dataset_name.contains(datasetName)){
+					if (dataset_name.contains("NGLP")) {
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else NGLPList_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else NGLPList_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else NGLPList_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else NGLPList_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+					else if(type_name.equals("5")){ // LSTM dataset
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else LSTMList_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else LSTMList_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else LSTMList_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else LSTMList_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+				
+				}
+						
+			}
+			try {
+				// for statistical test based on average value
+				saveAverageCSV_LSTM(baselinePath, datasetName, averageArray(LSTMList_AUC), averageArray(LSTMList_Precision), averageArray(LSTMList_Recall), averageArray(LSTMList_FMeasure), averageArray(NGLPList_AUC), averageArray(NGLPList_Precision), averageArray(NGLPList_Recall), averageArray(NGLPList_FMeasure));
+				// for statistical test based on each project 
+//				saveEachProjectCSV(baselinePath, datasetName, NGLPList_AUC, LSTMList_AUC); // baselinePath is "SingleNGLPvsBaseline_result.csv"
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Error writing average to csv");
+			}
+
+		}
+
+	}
+	public static void saveAverageCSV_LSTM(String baselinePath, String dataset, Double LSTMList_AUC_Average, Double LSTMList_Precision_Average, Double LSTMList_Recall_Average, Double LSTMList_FMeasure_Average, Double NGLPList_AUC_Average, Double NGLPList_Precision_Average, Double NGLPList_Recall_Average,
+			Double NGLPList_FMeasure_Average) throws Exception {
+		FileWriter writer = new FileWriter(path + baselinePath + "_average.csv", true);
+		// Add header for R studio when the first data set
+		if (dataset.equals("camel")) {
+			ArrayList<String> baselineList = new ArrayList<String>();
+			baselineList.add("");
+			baselineList.add("LSTM_AUC");
+			baselineList.add("LSTM_Precision");
+			baselineList.add("LSTM_Recall");
+			baselineList.add("LSTM_FMeasure");
+			baselineList.add("NGLPList_AUC");
+			baselineList.add("NGLPList_Precision");
+			baselineList.add("NGLPList_Recall");
+			baselineList.add("NGLPList_FMeasure");
+			CSVUtils.writeLine(writer, baselineList);
+		}
+		CSVUtils.writeLine(writer,
+				Arrays.asList(dataset, String.valueOf(LSTMList_AUC_Average), String.valueOf(LSTMList_Precision_Average), String.valueOf(LSTMList_Recall_Average), String.valueOf(LSTMList_FMeasure_Average), String.valueOf(NGLPList_AUC_Average), String.valueOf(NGLPList_Precision_Average),
+						String.valueOf(NGLPList_Recall_Average), String.valueOf(NGLPList_FMeasure_Average)));
+		writer.flush();
+		writer.close();
 	}
 
 	public void compareBetweenMasterAndSingle(String masterNGLPPath, String singleNGLPPath) {
@@ -81,24 +180,27 @@ public class FormattingForWilcoxon {
 	}
 	
 	public void run(String baselinePath) {
-		ArrayList<Double> OriginList_AUC = new ArrayList<Double>();
-		ArrayList<Double> OriginList_FMeasure = new ArrayList<Double>();
-		ArrayList<Double> OriginList_Precision = new ArrayList<Double>();
-		ArrayList<Double> OriginList_Recall = new ArrayList<Double>();
-		ArrayList<Double> NGLPList_AUC = new ArrayList<Double>();
-		ArrayList<Double> NGLPList_FMeasure = new ArrayList<Double>();
-		ArrayList<Double> NGLPList_Precision = new ArrayList<Double>();
-		ArrayList<Double> NGLPList_Recall = new ArrayList<Double>();
-		String[] dataset = { "camel", "eagle", "flink", "groovy", "jena", "juddi", "metamodel", "nutch" };
+
+		String[] dataset = { "camel", "eagle", "groovy", "jena", "juddi", "metamodel", "nutch" };
+//		String[] dataset = { "camel", "eagle", "flink", "groovy", "jena", "juddi", "metamodel", "nutch" };
 		int precision_col = 1;
 		int recall_col = 2;
 		int fmeasure_col = 3;
 		int auc_col = 4;
+		int type_col = 5;
 		int dataname_col = 6;
 
 		List<List<String>> allData = readCSV(path + baselinePath); // baselinePath is "SingleNGLPvsBaseline_result.csv"
 
 		for (String datasetName : dataset) {
+			ArrayList<Double> OriginList_AUC = new ArrayList<Double>();
+			ArrayList<Double> OriginList_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> OriginList_Precision = new ArrayList<Double>();
+			ArrayList<Double> OriginList_Recall = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_AUC = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_Precision = new ArrayList<Double>();
+			ArrayList<Double> NGLPList_Recall = new ArrayList<Double>();
 			for (List<String> newLine : allData) {
 				List<String> list = newLine;
 				String dataset_name = list.get(dataname_col);
@@ -137,9 +239,9 @@ public class FormattingForWilcoxon {
 			}
 			try {
 				// for statistical test based on average value
-				// saveAverageCSV(baselinePath, datasetName, averageArray(OriginList_AUC), averageArray(OriginList_Precision), averageArray(OriginList_Recall), averageArray(OriginList_FMeasure), averageArray(NGLPList_AUC), averageArray(NGLPList_Precision), averageArray(NGLPList_Recall), averageArray(NGLPList_FMeasure));
+				 saveAverageCSV(baselinePath, datasetName, averageArray(OriginList_AUC), averageArray(OriginList_Precision), averageArray(OriginList_Recall), averageArray(OriginList_FMeasure), averageArray(NGLPList_AUC), averageArray(NGLPList_Precision), averageArray(NGLPList_Recall), averageArray(NGLPList_FMeasure));
 				// for statistical test based on each project 
-				saveEachProjectCSV(baselinePath, datasetName, NGLPList_AUC, OriginList_AUC); // baselinePath is "SingleNGLPvsBaseline_result.csv"
+//				saveEachProjectCSV(baselinePath, datasetName, NGLPList_AUC, OriginList_AUC); // baselinePath is "SingleNGLPvsBaseline_result.csv"
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -176,7 +278,7 @@ public class FormattingForWilcoxon {
 			Double NGLPList_FMeasure_Average) throws Exception {
 		FileWriter writer = new FileWriter(path + baselinePath + "_average.csv", true);
 		// Add header for R studio when the first data set
-		if (dataset.equals("nutch")) {
+		if (dataset.equals("camel")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
 			baselineList.add("");
 			baselineList.add("Origin_AUC");
