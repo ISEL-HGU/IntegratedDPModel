@@ -26,7 +26,7 @@ if __name__ == '__main__':
             # print(row[0])
             row.append('NGLP')
             all.append(row)
-h           eader_flag = 0
+            header_flag = 0
             for row in reader:
                 if header_flag == 0: 
                     header_flag = 1
