@@ -15,7 +15,7 @@ import edu.handong.csee.isel.weka.CSVUtils;
 public class FormattingForWilcoxon {
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/master_model_2019_06_30_NGLPBugPatchCollector_Results/";
 	static String path = "/Users/eunjiwon/Desktop/LSTM_Results/";
-	static String[] filenameArray = { "nglp_LR_result.csv" };
+	static String[] filenameArray = { "LSTMvsSNGLP.csv" };
 //	static String[] filenameArray = { "nglp_RF_result.csv", "nglp_DT_result.csv", "nglp_LR_result.csv", "nglp_NB_result.csv" };
 	// for statistical test based on project
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/Based_on_project_statistical_test/";
@@ -27,8 +27,8 @@ public class FormattingForWilcoxon {
 	public static void main(String[] args) throws IOException {
 		FormattingForWilcoxon myFormattingForWilcoxon = new FormattingForWilcoxon();
 		for (String filename : filenameArray) {
-//			myFormattingForWilcoxon.run_LSTM(filename);
-			myFormattingForWilcoxon.run(filename);
+			myFormattingForWilcoxon.run_LSTM(filename);
+//			myFormattingForWilcoxon.run(filename);
 		}
 	}
 	public void run_LSTM(String baselinePath) {
