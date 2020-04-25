@@ -1,0 +1,35 @@
+@relation mydataframe
+
+@attribute AvgEssential numeric
+@attribute AvgLine numeric
+@attribute AvgLineBlank numeric
+@attribute AvgLineCode numeric
+@attribute AvgLineComment numeric
+@attribute CountLineCodeDecl numeric
+@attribute CountLineComment numeric
+@attribute CountSemicolon numeric
+@attribute MaxCyclomaticModified numeric
+@attribute RatioCommentToCode numeric
+@attribute SumCyclomaticStrict numeric
+@attribute bug {1,0}
+
+@data
+1,9,0,9,0,6,19,1,1,2.11,1,0
+1,50,8,39,4,13,62,56,12,0.79,14,0
+9,71,11,56,4,36,82,80,17,0.44,53,0
+1,10,1,9,0,19,15,18,2,0.35,6,0
+6,38,6,30,2,35,30,87,15,0.23,44,0
+2,37,5,27,5,137,236,397,25,0.32,146,0
+0,0,0,0,0,0,16,0,0,0,0,0
+1,6,0,5,0,15,18,7,2,0.69,4,0
+2,30,4,21,5,47,51,65,16,0.34,38,0
+4,50,5,34,7,428,580,679,36,0.4,340,0
+2,19,2,16,1,124,146,196,19,0.36,83,1
+0,0,0,0,0,0,16,0,0,0,0,1
+2,39,4,30,3,273,291,744,23,0.21,230,1
+0,0,0,0,0,0,16,0,0,0,0,1
+4,55,7,34,14,190,586,449,36,0.52,256,1
+5,65,10,43,13,473,1080,1310,48,0.36,645,1
+2,47,5,31,8,128,263,388,27,0.36,139,1
+2,36,3,22,5,113,148,212,21,0.29,100,1
+1,11,2,8,0,44,51,42,2,0.56,12,1

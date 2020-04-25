@@ -1,0 +1,33 @@
+@relation mydataframe
+
+@attribute dit numeric
+@attribute noc numeric
+@attribute cbo numeric
+@attribute rfc numeric
+@attribute lcom numeric
+@attribute ce numeric
+@attribute npm numeric
+@attribute lcom3 numeric
+@attribute dam numeric
+@attribute ic numeric
+@attribute cbm numeric
+@attribute amc numeric
+@attribute max_cc numeric
+@attribute avg_cc numeric
+@attribute bug {1,0}
+
+@data
+2,0,3,8,15,3,6,1,0,1,1,4.333333,2,0.8333,0
+4,0,6,20,0,5,4,1.066667,0,2,4,17,3,1.5,0
+1,0,5,1,0,1,1,2,0,0,0,0,1,1,0
+4,0,3,11,4,2,2,0.666667,0,2,2,6.75,1,0.5,0
+1,0,9,10,0,1,1,0,0,0,0,14.333333,1,0.6667,0
+1,0,6,22,11,6,3,0.666667,0,0,0,13.857143,2,0.8571,0
+1,0,4,32,17,4,2,0.666667,0,0,0,20.857143,2,1,0
+3,0,3,18,4,3,3,0.5,0,1,7,14,4,1.2,0
+2,0,6,12,13,3,6,0.8,0,0,0,7.833333,1,0.8333,0
+1,0,2,8,1,2,2,0.75,0,0,0,12.333333,1,0.3333,0
+2,0,10,35,24,10,11,0.994135,0.064516,2,4,40.666667,23,5.0833,1
+1,0,3,27,5,3,2,0.566667,0,0,0,26.285714,4,1.7143,1
+1,0,22,9,36,4,9,2,0,0,0,0,1,1,1
+1,0,4,38,24,4,2,0.714286,0,0,0,39,2,1,1
