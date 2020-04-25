@@ -23,7 +23,7 @@ if __name__ == '__main__':
         #output_csv_metric_file ./data/test/${projectname}_Line_Single_LSTM_Metric.csv
         # /Git/SoftwareDefectPredictionMetricUsingDeepLearning/data/test/${projectname}_Single_NGLP_Metric.csv
         #test_file /home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/TrainData/Commit/${projectname}/
-        with open("/home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/Output/DP/label_DP" + project_name + "_developer.csv",'r') as csvinput:
+        with open("/home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/Output/DP/label_DP/" + project_name + "_developer.csv",'r') as csvinput:
             with open("/Git/SoftwareDefectPredictionMetricUsingDeepLearning/data/test/" + project_name + "_Single_NGLP_Metric.csv", 'w') as csvoutput:
                 writer = csv.writer(csvoutput, lineterminator='\n')
                 reader = csv.reader(csvinput)
