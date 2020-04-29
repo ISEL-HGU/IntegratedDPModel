@@ -1,0 +1,30 @@
+@relation mydataframe
+
+@attribute noc numeric
+@attribute lcom numeric
+@attribute ca numeric
+@attribute ce numeric
+@attribute npm numeric
+@attribute lcom3 numeric
+@attribute loc numeric
+@attribute moa numeric
+@attribute mfa numeric
+@attribute cam numeric
+@attribute ic numeric
+@attribute cbm numeric
+@attribute amc numeric
+@attribute max_cc numeric
+@attribute bug {1,0}
+
+@data
+0,9,1,2,6,0.866667,44,0,0,0.458333,0,0,5.833333,2,0
+0,1,1,0,3,0.5,28,0,0.944444,0.555556,1,1,8,3,0
+0,8,0,0,1,0.833333,479,0,0,0.3125,0,0,94.2,7,0
+0,0,0,0,2,0.208333,268,0,0,0.333333,0,0,51.4,4,0
+0,66,17,4,12,2,12,0,0,0.236111,0,0,0,1,0
+0,23,0,2,7,0.833333,301,1,0.884058,0.2,0,0,28.1,4,0
+0,17,0,4,2,0.666667,155,1,0,0.277778,0,0,20.857143,2,0
+0,1,0,7,2,2,15,0,0,0.666667,0,0,6.5,1,1
+0,239,0,10,22,0.938034,565,2,0.418605,0.240741,2,3,19.259259,10,1
+0,81,0,8,17,1,517,1,0.545455,0.259259,2,4,26,22,1
+0,8,0,4,2,0.697917,516,4,0,0.15,0,0,38.076923,7,1

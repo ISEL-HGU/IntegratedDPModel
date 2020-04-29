@@ -1,0 +1,39 @@
+@relation bigtop_Line_Single_LSTM_Metric_last_label
+
+@attribute 'Modify Lines' numeric
+@attribute 'Add Lines' numeric
+@attribute 'Delete Lines' numeric
+@attribute 'Distribution modified Lines' numeric
+@attribute numOfBIC numeric
+@attribute fileAge numeric
+@attribute SumOfSourceRevision numeric
+@attribute SumOfDeveloper numeric
+@attribute CommitHour numeric
+@attribute AGE numeric
+@attribute numOfSubsystems numeric
+@attribute numOfDirectories numeric
+@attribute numOfFiles numeric
+@attribute NUC numeric
+@attribute developerExperience numeric
+@attribute REXP numeric
+@attribute LT numeric
+@attribute 'LSTM C.E.' numeric
+@attribute isBuggy {clean}
+
+@data
+8,0.050633,0.050633,1,0,0,2,1,9,0,1,3,4,0.25,2,2,79,0.465923,clean
+8,0.029197,0.029197,2,0,0,3,1,9,0,1,3,4,0.25,3,3,137,3.252429,clean
+6,0.016043,0.016043,1,0,0,1,1,19,0,1,1,2,0.5,1,1,187,1.41474,clean
+20,0.126582,0.126582,1,0,0,3,1,9,0,1,3,4,0.25,3,3,79,3.252429,clean
+18,0.02268,0.014433,0,0,0,2,1,9,0,1,3,4,0.25,2,2,485,0.465923,clean
+173,0.635036,0.627737,0,0,0,4,1,9,0,1,3,4,0.25,4,4,137,2.301357,clean
+158,0.652893,0.652893,0,0,0,4,1,9,0,1,3,4,0.25,4,4,121,2.301356,clean
+21,0.126984,0.039683,0,0,0,1,1,16,0,1,1,1,1,1,1,126,1.108433,clean
+2,0.012048,0.012048,0,0,0,1,1,19,0,1,1,2,0.5,1,1,83,1.41474,clean
+19,0.006024,0.032129,1,0,1,2,1,16,1,1,1,1,1,2,2,498,3.106689,clean
+82,0.518987,0.518987,0,0,0,4,1,9,0,1,3,4,0.25,4,4,79,2.301357,clean
+8,0.001984,0.013889,1,0,0,1,1,16,0,1,1,1,1,1,1,504,0.496282,clean
+802,0.822086,0.817996,0,0,0,4,1,9,0,1,3,4,0.25,4,4,489,2.301357,clean
+2,0.008264,0.008264,0,0,0,3,1,9,0,1,3,4,0.25,3,3,121,3.252429,clean
+8,0.033058,0.033058,1,0,0,2,1,9,0,1,3,4,0.25,2,2,121,0.465923,clean
+8,0.029197,0.029197,1,0,0,2,1,9,0,1,3,4,0.25,2,2,137,0.465923,clean

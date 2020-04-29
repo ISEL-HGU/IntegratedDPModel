@@ -1,0 +1,21 @@
+@relation mydataframe
+
+@attribute AvgCyclomaticStrict numeric
+@attribute AvgEssential numeric
+@attribute AvgLineBlank numeric
+@attribute AvgLineCode numeric
+@attribute AvgLineComment numeric
+@attribute CountLineCodeDecl numeric
+@attribute CountLineComment numeric
+@attribute MaxCyclomatic numeric
+@attribute RatioCommentToCode numeric
+@attribute SumEssential numeric
+@attribute bug {1,0}
+
+@data
+4,2,1,13,4,39,37,25,0.31,17,0
+1,1,1,6,1,6,4,2,0.24,2,0
+0,0,0,0,0,2,2,0,0.67,0,0
+3,1,1,17,1,233,74,29,0.1,52,1
+1,1,0,3,0,22,0,1,0,1,1
+6,1,2,21,3,91,80,14,0.2,28,1

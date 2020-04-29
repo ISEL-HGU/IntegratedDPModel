@@ -1,0 +1,25 @@
+@relation Add_LSTM_metric-weka.filters.unsupervised.attribute.Remove-R1
+
+@attribute 'Modify Lines' numeric
+@attribute 'Add Lines' numeric
+@attribute 'Delete Lines' numeric
+@attribute 'Distribution modified Lines' numeric
+@attribute 'Modify Files' numeric
+@attribute Directories numeric
+@attribute SumOfSourceRevision numeric
+@attribute SumOfDeveloper numeric
+@attribute 'LSTM C.E.' numeric
+@attribute bug {1,0}
+
+@data
+12,8,4,2,1,1,5,1,5.085658,0
+154,150,4,5,5,4,5,5,22.427679,0
+24,13,11,3,1,1,1,1,5.918351,0
+350,325,25,5,6,3,9,8,22.395624,0
+77,45,32,1,2,2,6,2,11.887115,0
+3,2,1,0,1,1,1,1,4.541089,0
+86,86,0,1,1,1,1,1,20.819128,0
+3,1,2,0,2,2,7,5,4.332159,0
+8,8,0,0,2,2,8,4,5.32021,0
+219,168,51,22,12,6,19,18,23.866222,0
+108,67,41,0,5,5,10,6,16.124912,0
