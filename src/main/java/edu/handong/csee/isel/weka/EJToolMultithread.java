@@ -56,8 +56,10 @@ public class EJToolMultithread{
 	String poolSize;
 	String iter;
 	String fold;
+	String classAttributeName;
+	String indexOfLabel;
 
-	public EJToolMultithread(String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String iter, String fold, String poolSize) {
+	public EJToolMultithread(String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String iter, String fold, String poolSize, String classAttributeName, String indexOfLabel) {
 		this.sourcePath = sourcePath;
 		this.dataUnbalancingMode = dataUnbalancingMode;
 		this.type = type;
@@ -66,6 +68,8 @@ public class EJToolMultithread{
 		this.iter = iter;
 		this.fold = fold;
 		this.poolSize = poolSize;
+		this.classAttributeName = classAttributeName;
+		this.indexOfLabel = indexOfLabel;
 	}
 	
 	public void run() {
@@ -89,13 +93,13 @@ public class EJToolMultithread{
 				}
 				if(type.equals("1") || type.equals("4") || type.equals("5")) { // unsupervised (1 is original, pac, and vif. 4 is vc and rr)
 					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-			    		    Runnable CV = new CrossValidation(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel);
+			    		    Runnable CV = new CrossValidation(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel, classAttributeName, indexOfLabel);
 					    executor.execute(CV);
 					}
 				}
 				else if(type.equals("2") || type.equals("3")) { // supervised (2 is CFS, 3 is WFS)
 					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-						Runnable CVFS = new CrossValidationFS(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel);
+						Runnable CVFS = new CrossValidationFS(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel, classAttributeName, indexOfLabel);
 		    		    		executor.execute(CVFS);
 					}
 				}

@@ -14,8 +14,8 @@ import edu.handong.csee.isel.weka.CSVUtils;
 
 public class FormattingForWilcoxon {
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/master_model_2019_06_30_NGLPBugPatchCollector_Results/";
-	static String path = "/Users/eunjiwon/Desktop/LSTM_Results/";
-	static String[] filenameArray = { "LSTMvsSNGLP.csv" };
+	static String path = "/Users/eunjiwon/Desktop/";
+	static String[] filenameArray = { "Origin_SLSTMConcat_SLSTMLine_SNGLP_MNGLP_LR_result.csv" };
 //	static String[] filenameArray = { "nglp_RF_result.csv", "nglp_DT_result.csv", "nglp_LR_result.csv", "nglp_NB_result.csv" };
 	// for statistical test based on project
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/Based_on_project_statistical_test/";
@@ -33,7 +33,7 @@ public class FormattingForWilcoxon {
 	}
 	public void run_LSTM(String baselinePath) {
 
-		String[] dataset = { "camel", "eagle", "groovy", "jena", "juddi", "metamodel", "nutch" };
+		String[] dataset = {"ace","ant-ivy","bigtop","bval","camel","cayenne","cordova-android","creadur-rat","crunch","deltaspike","gora","groovy","guacamole-client","incubator-hivemall"};
 //		String[] dataset = { "camel", "eagle", "flink", "groovy", "jena", "juddi", "metamodel", "nutch" };
 		int precision_col = 1;
 		int recall_col = 2;
@@ -58,7 +58,7 @@ public class FormattingForWilcoxon {
 				String dataset_name = list.get(dataname_col);
 				String type_name = list.get(type_col);
 				if (dataset_name.contains(datasetName)){
-					if (dataset_name.contains("NGLP")) {
+					if (dataset_name.contains("developer")) {
 						// AUC
 						if (list.get(auc_col).equals("NaN")) continue;
 						else NGLPList_AUC.add(Double.valueOf(list.get(auc_col)));
@@ -72,7 +72,7 @@ public class FormattingForWilcoxon {
 						if (list.get(fmeasure_col).equals("NaN")) continue;
 						else NGLPList_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
 					}
-					else if(type_name.equals("5")){ // LSTM dataset
+					else if(dataset_name.contains("Line_Single_LSTM_Metric")){ // LSTM dataset 
 						// AUC
 						if (list.get(auc_col).equals("NaN")) continue;
 						else LSTMList_AUC.add(Double.valueOf(list.get(auc_col)));
@@ -107,19 +107,19 @@ public class FormattingForWilcoxon {
 	}
 	public static void saveAverageCSV_LSTM(String baselinePath, String dataset, Double LSTMList_AUC_Average, Double LSTMList_Precision_Average, Double LSTMList_Recall_Average, Double LSTMList_FMeasure_Average, Double NGLPList_AUC_Average, Double NGLPList_Precision_Average, Double NGLPList_Recall_Average,
 			Double NGLPList_FMeasure_Average) throws Exception {
-		FileWriter writer = new FileWriter(path + baselinePath + "_average.csv", true);
+		FileWriter writer = new FileWriter(path + "Line_Single_LSTM_Metric_vs_Origin" + "_average.csv", true);
 		// Add header for R studio when the first data set
-		if (dataset.equals("camel")) {
+		if (dataset.equals("ace")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
 			baselineList.add("");
-			baselineList.add("LSTM_AUC");
-			baselineList.add("LSTM_Precision");
-			baselineList.add("LSTM_Recall");
-			baselineList.add("LSTM_FMeasure");
-			baselineList.add("NGLPList_AUC");
-			baselineList.add("NGLPList_Precision");
-			baselineList.add("NGLPList_Recall");
-			baselineList.add("NGLPList_FMeasure");
+			baselineList.add("Line_Single_LSTM_Metric_AUC");
+			baselineList.add("Line_Single_LSTM_Metric_Precision");
+			baselineList.add("Line_Single_LSTM_Metric_Recall");
+			baselineList.add("Line_Single_LSTM_Metric_FMeasure");
+			baselineList.add("Origin_AUC");
+			baselineList.add("Origin_Precision");
+			baselineList.add("Origin_Recall");
+			baselineList.add("Origin_FMeasure");
 			CSVUtils.writeLine(writer, baselineList);
 		}
 		CSVUtils.writeLine(writer,

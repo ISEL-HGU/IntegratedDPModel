@@ -59,6 +59,8 @@ public class CrossValidationFS implements Runnable {
 	String type;
 	String csvPath;
 	String mlModel;
+	String classAttributeName;
+	static int indexOfLabel;
 	Evaluation eval_case = null;
 	Instances trainData = null;
 	String testPath = null;
@@ -82,7 +84,7 @@ public class CrossValidationFS implements Runnable {
 			new Tag(EVAL_AUPRC, "AUPRC (area under the precision-recall curve - discrete class only)") 
 	};
 
-	public CrossValidationFS(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel) {
+	public CrossValidationFS(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String classAttributeName, String indexOfLabel) {
 		this.idx = idx;
 		this.filePathList = filePathList;
 		this.sourcePath = sourcePath;
@@ -90,6 +92,8 @@ public class CrossValidationFS implements Runnable {
 		this.type = type;
 		this.csvPath = csvPath;
 		this.mlModel = mlModel;
+		this.classAttributeName = classAttributeName;
+		this.indexOfLabel = Integer.parseInt(indexOfLabel);
 	}
 
 	@Override
@@ -318,16 +322,11 @@ public class CrossValidationFS implements Runnable {
 		FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
-		else
-			for (int i = 0; i < instances.classAttribute().numValues() - 1; i++) {
-//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-//				System.out.println("Precision " + eval.precision(i));
-//				System.out.println("Recall " + eval.recall(i));
-//				System.out.println("F-Measure " + eval.fMeasure(i));
-//				System.out.println("AUC " + eval.areaUnderROC(i));
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5)); 
-//				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name));
-			}
+		else {
+			int i = indexOfLabel;
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5)); 
+			// CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name));
+		}
 		writer.flush();
 		writer.close();
 	}

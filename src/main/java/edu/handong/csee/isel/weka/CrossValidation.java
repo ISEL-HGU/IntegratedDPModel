@@ -54,12 +54,15 @@ public class CrossValidation implements Runnable{
 	String type;
 	String csvPath;
 	String mlModel;
+	String classAttributeName;
+	static int indexOfLabel;
 	Evaluation eval_case = null;
 	Instances trainData = null;
 	String testPath = null;
 	String approach_name;
-	
-	public CrossValidation(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel) {
+
+	public CrossValidation(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode,
+			String type, String csvPath, String mlModel, String classAttributeName, String indexOfLabel) {
 		this.idx = idx;
 		this.filePathList = filePathList;
 		this.sourcePath = sourcePath;
@@ -67,10 +70,12 @@ public class CrossValidation implements Runnable{
 		this.type = type;
 		this.csvPath = csvPath;
 		this.mlModel = mlModel;
+		this.classAttributeName = classAttributeName;
+		this.indexOfLabel = Integer.parseInt(indexOfLabel);
 	}
-	
+
 	@Override
-	public void run(){
+	public void run() {
 		String isMulticollinearity = "";
 		String multicollinearity_vif_10 = "thres: 10/ not issue";
 		String multicollinearity_vif_5 = "thres: 5/ not issue";
@@ -78,114 +83,106 @@ public class CrossValidation implements Runnable{
 		String multicollinearity_vif_2_5 = "thres: 2.5/ not issue";
 		try {
 			Instances testData = null, temp = null;
-			for(int i = 0; i < filePathList.size(); i++) {
-				if(i == idx) {
-			    		BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
-			    		testData = new Instances(reader);
+			for (int i = 0; i < filePathList.size(); i++) {
+				if (i == idx) {
+					BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+					testData = new Instances(reader);
 					reader.close();
 					testPath = filePathList.get(i);
 					continue;
 				}
 				BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
-		    		temp = new Instances(reader);
+				temp = new Instances(reader);
 				reader.close();
-				if(trainData == null) {
+				if (trainData == null) {
 					trainData = temp;
-				}
-				else {
+				} else {
 					trainData.addAll(temp);
 				}
 			}
 
-			// training and prediction part
-			trainData.setClassIndex(trainData.numAttributes()-1);
-			testData.setClassIndex(testData.numAttributes()-1);
-			
+			// before get l and v parameter
+			// trainData.setClassIndex(trainData.numAttributes()-1);
+			// testData.setClassIndex(testData.numAttributes()-1);
+			trainData.setClassIndex(trainData.attribute(classAttributeName).index());
+			testData.setClassIndex(testData.attribute(classAttributeName).index());
+
 			if (dataUnbalancingMode.equals("1")) {
 				// no handling unbalancing data problem
-			}
-			else if(dataUnbalancingMode.equals("2")) { 
+			} else if (dataUnbalancingMode.equals("2")) {
 				trainData = spreadSubsampling(trainData);
-			}
-			else if(dataUnbalancingMode.equals("3")) {
+			} else if (dataUnbalancingMode.equals("3")) {
 				trainData = smote(trainData);
-			}
-			else {
+			} else {
 				System.out.println("Check your Data unbalancing mode option!");
 				System.exit(-1);
 			}
-			
-			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null); 
+
+			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null);
 			myModel.buildClassifier(trainData);
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);
-			
-			if(type.equals("5")) {
+
+			if (type.equals("5")) {
 				showSummaryForLSTM(eval_case, trainData, mlModel, csvPath, type, testPath);
-			}
-			else if(type.equals("4")) {
+			} else if (type.equals("4")) {
 				approach_name = "VCRR";
 				showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-			}
-			else { // type.equals("1")
-				// For checking multicollinearity using VIF with various threshold values when the case is original dataset
-				if(sourcePath.contains("_PCA")) {
+			} else { // type.equals("1")
+				// For checking multicollinearity using VIF with various threshold values when
+				// the case is original dataset
+				if (sourcePath.contains("_PCA")) {
 					approach_name = "Default-PCA";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_NONSTEPWISE_10")) {
+				} else if (sourcePath.contains("_NONSTEPWISE_10")) {
 					approach_name = "NSVIF10";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_NONSTEPWISE_5")) {
+				} else if (sourcePath.contains("_NONSTEPWISE_5")) {
 					approach_name = "NSVIF5";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_NONSTEPWISE_4")) {
+				} else if (sourcePath.contains("_NONSTEPWISE_4")) {
 					approach_name = "NSVIF4";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_NONSTEPWISE_2_5")) {
+				} else if (sourcePath.contains("_NONSTEPWISE_2_5")) {
 					approach_name = "NSVIF2.5";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_STEPWISE_10")) {
+				} else if (sourcePath.contains("_STEPWISE_10")) {
 					approach_name = "SVIF10";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_STEPWISE_5")) {
+				} else if (sourcePath.contains("_STEPWISE_5")) {
 					approach_name = "SVIF5";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_STEPWISE_4")) {
+				} else if (sourcePath.contains("_STEPWISE_4")) {
 					approach_name = "SVIF4";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else if(sourcePath.contains("_STEPWISE_2_5")) {
+				} else if (sourcePath.contains("_STEPWISE_2_5")) {
 					approach_name = "SVIF2.5";
 					showSummaryForPCAVIFVC(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name);
-				}
-				else { // original dataset
+				} else { // original dataset
 					approach_name = "None";
 					isMulticollinearity = checkMulticollinearity(trainData, 10.0);
-					if (isMulticollinearity.equals("Y")) multicollinearity_vif_10 = "10.0";
+					if (isMulticollinearity.equals("Y"))
+						multicollinearity_vif_10 = "10.0";
 					isMulticollinearity = checkMulticollinearity(trainData, 5.0);
-					if (isMulticollinearity.equals("Y")) multicollinearity_vif_5 = "5.0";	
+					if (isMulticollinearity.equals("Y"))
+						multicollinearity_vif_5 = "5.0";
 					isMulticollinearity = checkMulticollinearity(trainData, 4.0);
-					if (isMulticollinearity.equals("Y")) multicollinearity_vif_4 = "4.0";	
+					if (isMulticollinearity.equals("Y"))
+						multicollinearity_vif_4 = "4.0";
 					isMulticollinearity = checkMulticollinearity(trainData, 2.5);
-					if (isMulticollinearity.equals("Y")) multicollinearity_vif_2_5 = "2.5";	
-					showSummaryForOrigin(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5 );
+					if (isMulticollinearity.equals("Y"))
+						multicollinearity_vif_2_5 = "2.5";
+					showSummaryForOrigin(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name,
+							multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5);
 
 				}
 			}
-			
-		}
-		catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String checkMulticollinearity(Instances instances, double VIFThresholdValue) throws Exception {
 		String isMulticollinearity = "";
 		Instances forVIFData = null;
@@ -213,18 +210,16 @@ public class CrossValidation implements Runnable{
 		}
 		return isMulticollinearity;
 	}
-	public static void showSummaryForLSTM(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath) throws Exception {
-		FileWriter writer =  new FileWriter(csvPath, true);
-		if(eval == null) System.out.println("showSummary - eval is null");
-		else
-			for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
-//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-//				System.out.println("Precision " + eval.precision(i));
-//				System.out.println("Recall " + eval.recall(i));
-//				System.out.println("F-Measure " + eval.fMeasure(i));
-//				System.out.println("AUC " + eval.areaUnderROC(i));
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
-			}
+
+	public static void showSummaryForLSTM(Evaluation eval, Instances instances, String modelName, String csvPath,
+			String type, String srcPath) throws Exception {
+		FileWriter writer = new FileWriter(csvPath, true);
+		if (eval == null)
+			System.out.println("showSummary - eval is null");
+		else {
+			int i = indexOfLabel;
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+		}
 		writer.flush();
 		writer.close();
 	}
@@ -232,15 +227,10 @@ public class CrossValidation implements Runnable{
 	public static void showSummaryForPCAVIFVC(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name) throws Exception {
 		FileWriter writer =  new FileWriter(csvPath, true);
 		if(eval == null) System.out.println("showSummary - eval is null");
-		else
-			for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
-//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-//				System.out.println("Precision " + eval.precision(i));
-//				System.out.println("Recall " + eval.recall(i));
-//				System.out.println("F-Measure " + eval.fMeasure(i));
-//				System.out.println("AUC " + eval.areaUnderROC(i));
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name));
-			}
+		else {
+			int i = indexOfLabel;
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name));
+		}
 		writer.flush();
 		writer.close();
 	}
@@ -249,16 +239,11 @@ public class CrossValidation implements Runnable{
 		FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
-		else
-			for (int i = 0; i < instances.classAttribute().numValues() - 1; i++) {
-//				System.out.println("\n*** Summary of Class " + instances.classAttribute().value(i));
-//				System.out.println("Precision " + eval.precision(i));
-//				System.out.println("Recall " + eval.recall(i));
-//				System.out.println("F-Measure " + eval.fMeasure(i));
-//				System.out.println("AUC " + eval.areaUnderROC(i));
-				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5)); 
-//				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name));
-			}
+		else {
+			int i = indexOfLabel;
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
+			// CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name)); 
+		}
 		writer.flush();
 		writer.close();
 	}

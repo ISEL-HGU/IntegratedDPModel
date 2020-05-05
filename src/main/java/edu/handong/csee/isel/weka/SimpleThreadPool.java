@@ -23,6 +23,8 @@ public class SimpleThreadPool {
 	static String iter;
 	static String fold;
 	static String poolSize;
+	static String classAttributeName;
+	static String indexOfLabel; 
 	static boolean help = false;
 	
     public static void main(String[] args) throws Exception {
@@ -59,7 +61,7 @@ public class SimpleThreadPool {
 	    		  if(tempFile.isFile()) {
 	    		    String tempFileName = tempFile.getName();
 	    		    sourcePath = sourcePath + tempFileName;
-	    		    EJToolMultithread EJTool = new EJToolMultithread(sourcePath, dataUnbalancingMode, type, csvPath, mlModel, iter, fold, poolSize);
+	    		    EJToolMultithread EJTool = new EJToolMultithread(sourcePath, dataUnbalancingMode, type, csvPath, mlModel, iter, fold, poolSize, classAttributeName, indexOfLabel);
 	    		    EJTool.run();
 	    		    sourcePath = copySourcePath;
 
@@ -133,6 +135,20 @@ public class SimpleThreadPool {
 				.required()
 				.argName("thread pool size")
 				.build());
+
+		options.addOption(Option.builder("l").longOpt("labelname")
+				.desc("class attribute name in arff file")
+				.hasArg()
+				.required()
+				.argName("class attribute name")
+				.build());
+
+		options.addOption(Option.builder("v").longOpt("indexoflabel")
+				.desc("0 indicates buggy,clean and 1 indicates clean,buggy")
+				.hasArg()
+				.required()
+				.argName("index of label")
+				.build());
 	
 		return options;
 	}
@@ -154,7 +170,9 @@ public class SimpleThreadPool {
 			iter = cmd.getOptionValue("i");
 			fold = cmd.getOptionValue("f");
 			poolSize = cmd.getOptionValue("p");
-	
+			classAttributeName = cmd.getOptionValue("l");
+			indexOfLabel = cmd.getOptionValue("v");
+
 	
 		} catch (Exception e) {
 			printHelp(options);
