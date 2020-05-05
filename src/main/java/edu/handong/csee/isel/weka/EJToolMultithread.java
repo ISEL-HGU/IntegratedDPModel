@@ -57,9 +57,9 @@ public class EJToolMultithread{
 	String iter;
 	String fold;
 	String classAttributeName;
-	String indexOfLabel;
+	String buggyName;
 
-	public EJToolMultithread(String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String iter, String fold, String poolSize, String classAttributeName, String indexOfLabel) {
+	public EJToolMultithread(String sourcePath, String dataUnbalancingMode, String type, String csvPath, String mlModel, String iter, String fold, String poolSize, String classAttributeName, String buggyName) {
 		this.sourcePath = sourcePath;
 		this.dataUnbalancingMode = dataUnbalancingMode;
 		this.type = type;
@@ -69,7 +69,7 @@ public class EJToolMultithread{
 		this.fold = fold;
 		this.poolSize = poolSize;
 		this.classAttributeName = classAttributeName;
-		this.indexOfLabel = indexOfLabel;
+		this.buggyName = buggyName;
 	}
 	
 	public void run() {
@@ -93,13 +93,13 @@ public class EJToolMultithread{
 				}
 				if(type.equals("1") || type.equals("4") || type.equals("5")) { // unsupervised (1 is original, pac, and vif. 4 is vc and rr)
 					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-			    		    Runnable CV = new CrossValidation(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel, classAttributeName, indexOfLabel);
+			    		    Runnable CV = new CrossValidation(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel, classAttributeName, buggyName);
 					    executor.execute(CV);
 					}
 				}
 				else if(type.equals("2") || type.equals("3")) { // supervised (2 is CFS, 3 is WFS)
 					for(int idx = 0; idx < Integer.parseInt(fold); idx++) {
-						Runnable CVFS = new CrossValidationFS(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel, classAttributeName, indexOfLabel);
+						Runnable CVFS = new CrossValidationFS(idx, filePathList, sourcePath, dataUnbalancingMode, type, csvPath, mlModel, classAttributeName, buggyName);
 		    		    		executor.execute(CVFS);
 					}
 				}

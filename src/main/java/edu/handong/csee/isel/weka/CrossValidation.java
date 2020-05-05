@@ -56,13 +56,14 @@ public class CrossValidation implements Runnable{
 	String mlModel;
 	String classAttributeName;
 	static int indexOfLabel;
+	String buggyName;
 	Evaluation eval_case = null;
 	Instances trainData = null;
 	String testPath = null;
 	String approach_name;
 
-	public CrossValidation(int idx, ArrayList<String> filePathList, String sourcePath, String dataUnbalancingMode,
-			String type, String csvPath, String mlModel, String classAttributeName, String indexOfLabel) {
+	public CrossValidation(final int idx, final ArrayList<String> filePathList, final String sourcePath, final String dataUnbalancingMode,
+			final String type, final String csvPath, final String mlModel, final String classAttributeName, final String buggyName) {
 		this.idx = idx;
 		this.filePathList = filePathList;
 		this.sourcePath = sourcePath;
@@ -71,7 +72,17 @@ public class CrossValidation implements Runnable{
 		this.csvPath = csvPath;
 		this.mlModel = mlModel;
 		this.classAttributeName = classAttributeName;
-		this.indexOfLabel = Integer.parseInt(indexOfLabel);
+		this.buggyName = buggyName;
+	}
+
+	public int getIndexOfLabel(final Instances instances, final String classAttributeName) {
+		int returnValue = 0;
+		if(instances.attribute(classAttributeName).numValues()==2){
+			int posIndex = instances.attribute(classAttributeName).indexOfValue(buggyName);
+			if(posIndex == 0) returnValue = 0; // means buggy, clean
+			else returnValue = 1; // means clean, buggy
+		}
+		return returnValue;
 	}
 
 	@Override
@@ -85,13 +96,13 @@ public class CrossValidation implements Runnable{
 			Instances testData = null, temp = null;
 			for (int i = 0; i < filePathList.size(); i++) {
 				if (i == idx) {
-					BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+					final BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
 					testData = new Instances(reader);
 					reader.close();
 					testPath = filePathList.get(i);
 					continue;
 				}
-				BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
+				final BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
 				temp = new Instances(reader);
 				reader.close();
 				if (trainData == null) {
@@ -106,7 +117,9 @@ public class CrossValidation implements Runnable{
 			// testData.setClassIndex(testData.numAttributes()-1);
 			trainData.setClassIndex(trainData.attribute(classAttributeName).index());
 			testData.setClassIndex(testData.attribute(classAttributeName).index());
-
+			
+			indexOfLabel = getIndexOfLabel(trainData, classAttributeName);
+			
 			if (dataUnbalancingMode.equals("1")) {
 				// no handling unbalancing data problem
 			} else if (dataUnbalancingMode.equals("2")) {
@@ -118,7 +131,7 @@ public class CrossValidation implements Runnable{
 				System.exit(-1);
 			}
 
-			Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null);
+			final Classifier myModel = (Classifier) weka.core.Utils.forName(Classifier.class, mlModel, null);
 			myModel.buildClassifier(trainData);
 			eval_case = new Evaluation(trainData);
 			eval_case.evaluateModel(myModel, testData);
@@ -178,28 +191,28 @@ public class CrossValidation implements Runnable{
 				}
 			}
 
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String checkMulticollinearity(Instances instances, double VIFThresholdValue) throws Exception {
+	public String checkMulticollinearity(final Instances instances, final double VIFThresholdValue) throws Exception {
 		String isMulticollinearity = "";
 		Instances forVIFData = null;
-		Remove rm = new Remove();
+		final Remove rm = new Remove();
 		rm.setAttributeIndices("last");
 		rm.setInputFormat(instances);
 		forVIFData = Filter.useFilter(instances, rm);
-		int n = forVIFData.numAttributes();
-		double[] vifs = new double[n];
+		final int n = forVIFData.numAttributes();
+		final double[] vifs = new double[n];
 		for (int i = 0; i < vifs.length; i++) {
 			forVIFData.setClassIndex(i);
 			// Using Weka Linear Regression
-			AccessibleLinearRegression regressor = new AccessibleLinearRegression();
+			final AccessibleLinearRegression regressor = new AccessibleLinearRegression();
 			regressor.setAttributeSelectionMethod(new SelectedTag(1, LinearRegression.TAGS_SELECTION));
 			regressor.setEliminateColinearAttributes(false);
 			regressor.buildClassifier(forVIFData);
-			double r2 = regressor.getRSquared(forVIFData);
+			final double r2 = regressor.getRSquared(forVIFData);
 			vifs[i] = 1d / (1d - r2);
 			if (vifs[i] >= VIFThresholdValue) {
 				isMulticollinearity = "Y"; // Occur multicollinearity
@@ -211,36 +224,36 @@ public class CrossValidation implements Runnable{
 		return isMulticollinearity;
 	}
 
-	public static void showSummaryForLSTM(Evaluation eval, Instances instances, String modelName, String csvPath,
-			String type, String srcPath) throws Exception {
-		FileWriter writer = new FileWriter(csvPath, true);
+	public static void showSummaryForLSTM(final Evaluation eval, final Instances instances, final String modelName, final String csvPath,
+			final String type, final String srcPath) throws Exception {
+		final FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
 		else {
-			int i = indexOfLabel;
+			final int i = indexOfLabel;
 			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
 		}
 		writer.flush();
 		writer.close();
 	}
 	
-	public static void showSummaryForPCAVIFVC(Evaluation eval,Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name) throws Exception {
-		FileWriter writer =  new FileWriter(csvPath, true);
+	public static void showSummaryForPCAVIFVC(final Evaluation eval,final Instances instances, final String modelName, final String csvPath, final String type, final String srcPath, final String approach_name) throws Exception {
+		final FileWriter writer =  new FileWriter(csvPath, true);
 		if(eval == null) System.out.println("showSummary - eval is null");
 		else {
-			int i = indexOfLabel;
+			final int i = indexOfLabel;
 			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name));
 		}
 		writer.flush();
 		writer.close();
 	}
 	
-	public static void showSummaryForOrigin(Evaluation eval, Instances instances, String modelName, String csvPath, String type, String srcPath, String approach_name, String multicollinearity_vif_10, String multicollinearity_vif_5, String multicollinearity_vif_4, String multicollinearity_vif_2_5) throws Exception {
-		FileWriter writer = new FileWriter(csvPath, true);
+	public static void showSummaryForOrigin(final Evaluation eval, final Instances instances, final String modelName, final String csvPath, final String type, final String srcPath, final String approach_name, final String multicollinearity_vif_10, final String multicollinearity_vif_5, final String multicollinearity_vif_4, final String multicollinearity_vif_2_5) throws Exception {
+		final FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
 		else {
-			int i = indexOfLabel;
+			final int i = indexOfLabel;
 			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
 			// CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name)); 
 		}
@@ -251,7 +264,7 @@ public class CrossValidation implements Runnable{
 	
 	public static Instances spreadSubsampling(Instances trainData) throws Exception {
 		// training data undersampling
-		SpreadSubsample spreadsubsample = new SpreadSubsample();
+		final SpreadSubsample spreadsubsample = new SpreadSubsample();
 		spreadsubsample.setInputFormat(trainData);
 		spreadsubsample.setDistributionSpread(1.0);
 		trainData = Filter.useFilter(trainData, spreadsubsample);
@@ -260,7 +273,7 @@ public class CrossValidation implements Runnable{
 	
 	public static Instances smote(Instances trainData) throws Exception {
 		// smote 
-		SMOTE smote = new SMOTE();
+		final SMOTE smote = new SMOTE();
 		smote.setInputFormat(trainData);
 		smote.setNearestNeighbors(1);
 		trainData = Filter.useFilter(trainData, smote);

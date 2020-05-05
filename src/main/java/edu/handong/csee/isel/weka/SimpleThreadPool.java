@@ -24,7 +24,7 @@ public class SimpleThreadPool {
 	static String fold;
 	static String poolSize;
 	static String classAttributeName;
-	static String indexOfLabel; 
+	static String buggyName;
 	static boolean help = false;
 	
     public static void main(String[] args) throws Exception {
@@ -61,7 +61,7 @@ public class SimpleThreadPool {
 	    		  if(tempFile.isFile()) {
 	    		    String tempFileName = tempFile.getName();
 	    		    sourcePath = sourcePath + tempFileName;
-	    		    EJToolMultithread EJTool = new EJToolMultithread(sourcePath, dataUnbalancingMode, type, csvPath, mlModel, iter, fold, poolSize, classAttributeName, indexOfLabel);
+	    		    EJToolMultithread EJTool = new EJToolMultithread(sourcePath, dataUnbalancingMode, type, csvPath, mlModel, iter, fold, poolSize, classAttributeName, buggyName);
 	    		    EJTool.run();
 	    		    sourcePath = copySourcePath;
 
@@ -143,11 +143,11 @@ public class SimpleThreadPool {
 				.argName("class attribute name")
 				.build());
 
-		options.addOption(Option.builder("v").longOpt("indexoflabel")
-				.desc("0 indicates buggy,clean and 1 indicates clean,buggy")
+		options.addOption(Option.builder("b").longOpt("buggyname")
+				.desc("buggy name e.g., buggy, 1, isdefect, and etc...")
 				.hasArg()
 				.required()
-				.argName("index of label")
+				.argName("buggy name")
 				.build());
 	
 		return options;
@@ -171,7 +171,7 @@ public class SimpleThreadPool {
 			fold = cmd.getOptionValue("f");
 			poolSize = cmd.getOptionValue("p");
 			classAttributeName = cmd.getOptionValue("l");
-			indexOfLabel = cmd.getOptionValue("v");
+			buggyName = cmd.getOptionValue("b");
 
 	
 		} catch (Exception e) {
