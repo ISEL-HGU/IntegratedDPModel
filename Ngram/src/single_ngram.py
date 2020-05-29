@@ -37,7 +37,8 @@ if __name__ == '__main__':
                     if header_flag == 0: 
                         header_flag = 1
                         continue # skip header row
-                    commit_hash_key = row[20].split('-')[0]
+                    # commit_hash_key = row[20].split('-')[0]
+                    commit_hash_key = row[20]
                     testcommit_name = "/home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/TrainData/Commit/" + project_name + "/" + commit_hash_key + ".txt"
                     if os.path.exists(testcommit_name):
                         # print(testcommit_name)

@@ -15,7 +15,7 @@ import edu.handong.csee.isel.weka.CSVUtils;
 public class FormattingForWilcoxon {
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/master_model_2019_06_30_NGLPBugPatchCollector_Results/";
 	static String path = "/Users/eunjiwon/Desktop/";
-	static String[] filenameArray = { "Origin_SLSTMConcat_SLSTMLine_SNGLP_MNGLP_LR_result.csv" };
+	static String[] filenameArray = { "7_baselines_DT_result.csv" };
 //	static String[] filenameArray = { "nglp_RF_result.csv", "nglp_DT_result.csv", "nglp_LR_result.csv", "nglp_NB_result.csv" };
 	// for statistical test based on project
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/Based_on_project_statistical_test/";
@@ -31,9 +31,10 @@ public class FormattingForWilcoxon {
 //			myFormattingForWilcoxon.run(filename);
 		}
 	}
+	
 	public void run_LSTM(String baselinePath) {
 
-		String[] dataset = {"ace","ant-ivy","bigtop","bval","camel","cayenne","cordova-android","creadur-rat","crunch","deltaspike","gora","groovy","guacamole-client","incubator-hivemall"};
+		String[] dataset = {"ant-ivy","bval","camel","cayenne","deltaspike","gora","guacamole-client","incubator-hivemall"};
 //		String[] dataset = { "camel", "eagle", "flink", "groovy", "jena", "juddi", "metamodel", "nutch" };
 		int precision_col = 1;
 		int recall_col = 2;
@@ -45,14 +46,41 @@ public class FormattingForWilcoxon {
 		List<List<String>> allData = readCSV(path + baselinePath);
 
 		for (String datasetName : dataset) {
-			ArrayList<Double> LSTMList_AUC = new ArrayList<Double>();
-			ArrayList<Double> LSTMList_FMeasure = new ArrayList<Double>();
-			ArrayList<Double> LSTMList_Precision = new ArrayList<Double>();
-			ArrayList<Double> LSTMList_Recall = new ArrayList<Double>();
-			ArrayList<Double> NGLPList_AUC = new ArrayList<Double>();
-			ArrayList<Double> NGLPList_FMeasure = new ArrayList<Double>();
-			ArrayList<Double> NGLPList_Precision = new ArrayList<Double>();
-			ArrayList<Double> NGLPList_Recall = new ArrayList<Double>();
+			ArrayList<Double> Origin_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Origin_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Origin_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Origin_List_Recall = new ArrayList<Double>();
+
+			ArrayList<Double> Concat_Single_LSTM_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Concat_Single_LSTM_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Concat_Single_LSTM_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Concat_Single_LSTM_List_Recall = new ArrayList<Double>();
+
+			ArrayList<Double> Line_Single_LSTM_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Line_Single_LSTM_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Line_Single_LSTM_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Line_Single_LSTM_List_Recall = new ArrayList<Double>();
+
+			ArrayList<Double> Concat_Master_LSTM_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Concat_Master_LSTM_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Concat_Master_LSTM_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Concat_Master_LSTM_List_Recall = new ArrayList<Double>();
+
+			ArrayList<Double> Line_Master_LSTM_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Line_Master_LSTM_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Line_Master_LSTM_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Line_Master_LSTM_List_Recall = new ArrayList<Double>();
+
+			ArrayList<Double> Master_NGLP_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Master_NGLP_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Master_NGLP_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Master_NGLP_List_Recall = new ArrayList<Double>();
+
+			ArrayList<Double> Single_NGLP_List_AUC = new ArrayList<Double>();
+			ArrayList<Double> Single_NGLP_List_FMeasure = new ArrayList<Double>();
+			ArrayList<Double> Single_NGLP_List_Precision = new ArrayList<Double>();
+			ArrayList<Double> Single_NGLP_List_Recall = new ArrayList<Double>();
+
 			for (List<String> newLine : allData) {
 				List<String> list = newLine;
 				String dataset_name = list.get(dataname_col);
@@ -61,30 +89,100 @@ public class FormattingForWilcoxon {
 					if (dataset_name.contains("developer")) {
 						// AUC
 						if (list.get(auc_col).equals("NaN")) continue;
-						else NGLPList_AUC.add(Double.valueOf(list.get(auc_col)));
+						else Origin_List_AUC.add(Double.valueOf(list.get(auc_col)));
 						// Precision
 						if (list.get(precision_col).equals("NaN")) continue;
-						else NGLPList_Precision.add(Double.valueOf(list.get(precision_col)));
+						else Origin_List_Precision.add(Double.valueOf(list.get(precision_col)));
 						// Recall
 						if (list.get(recall_col).equals("NaN")) continue;
-						else NGLPList_Recall.add(Double.valueOf(list.get(recall_col)));
+						else Origin_List_Recall.add(Double.valueOf(list.get(recall_col)));
 						// F-Measure
 						if (list.get(fmeasure_col).equals("NaN")) continue;
-						else NGLPList_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+						else Origin_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
 					}
-					else if(dataset_name.contains("Line_Single_LSTM_Metric")){ // LSTM dataset 
+					else if(dataset_name.contains("Concat_Single_LSTM_Metric")){ 
 						// AUC
 						if (list.get(auc_col).equals("NaN")) continue;
-						else LSTMList_AUC.add(Double.valueOf(list.get(auc_col)));
+						else Concat_Single_LSTM_List_AUC.add(Double.valueOf(list.get(auc_col)));
 						// Precision
 						if (list.get(precision_col).equals("NaN")) continue;
-						else LSTMList_Precision.add(Double.valueOf(list.get(precision_col)));
+						else Concat_Single_LSTM_List_Precision.add(Double.valueOf(list.get(precision_col)));
 						// Recall
 						if (list.get(recall_col).equals("NaN")) continue;
-						else LSTMList_Recall.add(Double.valueOf(list.get(recall_col)));
+						else Concat_Single_LSTM_List_Recall.add(Double.valueOf(list.get(recall_col)));
 						// F-Measure
 						if (list.get(fmeasure_col).equals("NaN")) continue;
-						else LSTMList_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+						else Concat_Single_LSTM_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+					else if(dataset_name.contains("Line_Single_LSTM_Metric")){  
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else Line_Single_LSTM_List_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else Line_Single_LSTM_List_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else Line_Single_LSTM_List_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else Line_Single_LSTM_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+					else if(dataset_name.contains("Concat_Master_LSTM_Metric")){ 
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else Concat_Master_LSTM_List_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else Concat_Master_LSTM_List_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else Concat_Master_LSTM_List_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else Concat_Master_LSTM_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+					else if(dataset_name.contains("Line_Master_LSTM_Metric")){ 
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else Line_Master_LSTM_List_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else Line_Master_LSTM_List_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else Line_Master_LSTM_List_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else Line_Master_LSTM_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+					else if(dataset_name.contains("Master_NGLP_Metric")){ 
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else Master_NGLP_List_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else Master_NGLP_List_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else Master_NGLP_List_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else Master_NGLP_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
+					}
+					else if(dataset_name.contains("Single_NGLP_Metric")){  
+						// AUC
+						if (list.get(auc_col).equals("NaN")) continue;
+						else Single_NGLP_List_AUC.add(Double.valueOf(list.get(auc_col)));
+						// Precision
+						if (list.get(precision_col).equals("NaN")) continue;
+						else Single_NGLP_List_Precision.add(Double.valueOf(list.get(precision_col)));
+						// Recall
+						if (list.get(recall_col).equals("NaN")) continue;
+						else Single_NGLP_List_Recall.add(Double.valueOf(list.get(recall_col)));
+						// F-Measure
+						if (list.get(fmeasure_col).equals("NaN")) continue;
+						else Single_NGLP_List_FMeasure.add(Double.valueOf(list.get(fmeasure_col)));
 					}
 				
 				}
@@ -92,7 +190,7 @@ public class FormattingForWilcoxon {
 			}
 			try {
 				// for statistical test based on average value
-				saveAverageCSV_LSTM(baselinePath, datasetName, averageArray(LSTMList_AUC), averageArray(LSTMList_Precision), averageArray(LSTMList_Recall), averageArray(LSTMList_FMeasure), averageArray(NGLPList_AUC), averageArray(NGLPList_Precision), averageArray(NGLPList_Recall), averageArray(NGLPList_FMeasure));
+				saveAverageCSV_LSTM(baselinePath, datasetName, averageArray(Origin_List_AUC), averageArray(Origin_List_FMeasure), averageArray(Origin_List_Precision), averageArray(Origin_List_Recall), averageArray(Concat_Single_LSTM_List_AUC), averageArray(Concat_Single_LSTM_List_FMeasure), averageArray(Concat_Single_LSTM_List_Precision), averageArray(Concat_Single_LSTM_List_Recall), averageArray(Line_Single_LSTM_List_AUC), averageArray(Line_Single_LSTM_List_FMeasure), averageArray(Line_Single_LSTM_List_Precision), averageArray(Line_Single_LSTM_List_Recall), averageArray(Concat_Master_LSTM_List_AUC), averageArray(Concat_Master_LSTM_List_FMeasure), averageArray(Concat_Master_LSTM_List_Precision), averageArray(Concat_Master_LSTM_List_Recall), averageArray(Line_Master_LSTM_List_AUC), averageArray(Line_Master_LSTM_List_FMeasure), averageArray(Line_Master_LSTM_List_Precision), averageArray(Line_Master_LSTM_List_Recall), averageArray(Master_NGLP_List_AUC), averageArray(Master_NGLP_List_FMeasure), averageArray(Master_NGLP_List_Precision), averageArray(Master_NGLP_List_Recall), averageArray(Single_NGLP_List_AUC), averageArray(Single_NGLP_List_FMeasure), averageArray(Single_NGLP_List_Precision), averageArray(Single_NGLP_List_Recall));
 				// for statistical test based on each project 
 //				saveEachProjectCSV(baselinePath, datasetName, NGLPList_AUC, LSTMList_AUC); // baselinePath is "SingleNGLPvsBaseline_result.csv"
 				
@@ -105,26 +203,52 @@ public class FormattingForWilcoxon {
 		}
 
 	}
-	public static void saveAverageCSV_LSTM(String baselinePath, String dataset, Double LSTMList_AUC_Average, Double LSTMList_Precision_Average, Double LSTMList_Recall_Average, Double LSTMList_FMeasure_Average, Double NGLPList_AUC_Average, Double NGLPList_Precision_Average, Double NGLPList_Recall_Average,
-			Double NGLPList_FMeasure_Average) throws Exception {
-		FileWriter writer = new FileWriter(path + "Line_Single_LSTM_Metric_vs_Origin" + "_average.csv", true);
+	
+	public static void saveAverageCSV_LSTM(String baselinePath, String dataset, Double Origin_List_AUC_Average, Double Origin_List_FMeasure_Average, Double Origin_List_Precision, Double Origin_List_Recall, Double Concat_Single_LSTM_List_AUC_Average, Double Concat_Single_LSTM_List_FMeasure_Average, Double Concat_Single_LSTM_List_Precision_Average, Double Concat_Single_LSTM_List_Recall_Average, Double Line_Single_LSTM_List_AUC_Average, Double Line_Single_LSTM_List_FMeasure_Average, Double Line_Single_LSTM_List_Precision_Average, Double Line_Single_LSTM_List_Recall_Average, Double Concat_Master_LSTM_List_AUC_Average, Double Concat_Master_LSTM_List_FMeasure_Average, Double Concat_Master_LSTM_List_Precision_Average, Double Concat_Master_LSTM_List_Recall_Average, Double Line_Master_LSTM_List_AUC_Average, Double Line_Master_LSTM_List_FMeasure_Average, Double Line_Master_LSTM_List_Precision_Average, Double Line_Master_LSTM_List_Recall_Average, Double Master_NGLP_List_AUC_Average, Double Master_NGLP_List_FMeasure_Average, Double Master_NGLP_List_Precision_Average, Double Master_NGLP_List_Recall_Average, Double Single_NGLP_List_AUC_Average, Double Single_NGLP_List_FMeasure_Average, Double Single_NGLP_List_Precision_Average, Double Single_NGLP_List_Recall_Average) throws Exception {
+		FileWriter writer = new FileWriter(path + "7_baselines_DT_result" + "_average.csv", true);
 		// Add header for R studio when the first data set
-		if (dataset.equals("ace")) {
+		if (dataset.equals("ant-ivy")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
 			baselineList.add("");
-			baselineList.add("Line_Single_LSTM_Metric_AUC");
-			baselineList.add("Line_Single_LSTM_Metric_Precision");
-			baselineList.add("Line_Single_LSTM_Metric_Recall");
-			baselineList.add("Line_Single_LSTM_Metric_FMeasure");
+
 			baselineList.add("Origin_AUC");
 			baselineList.add("Origin_Precision");
 			baselineList.add("Origin_Recall");
 			baselineList.add("Origin_FMeasure");
+
+			baselineList.add("Concat_Single_LSTM_AUC");
+			baselineList.add("Concat_Single_LSTM_Precision");
+			baselineList.add("Concat_Single_LSTM_Recall");
+			baselineList.add("Concat_Single_LSTM_FMeasure");
+
+			baselineList.add("Line_Single_LSTM_AUC");
+			baselineList.add("Line_Single_LSTM_Precision");
+			baselineList.add("Line_Single_LSTM_Recall");
+			baselineList.add("Line_Single_LSTM_FMeasure");
+
+			baselineList.add("Concat_Master_LSTM_AUC");
+			baselineList.add("Concat_Master_LSTM_Precision");
+			baselineList.add("Concat_Master_LSTM_Recall");
+			baselineList.add("Concat_Master_LSTM_FMeasure");
+
+			baselineList.add("Line_Master_LSTM_AUC");
+			baselineList.add("Line_Master_LSTM_Precision");
+			baselineList.add("Line_Master_LSTM_Recall");
+			baselineList.add("Line_Master_LSTM_FMeasure");
+
+			baselineList.add("Master_NGLP_AUC");
+			baselineList.add("Master_NGLP_Precision");
+			baselineList.add("Master_NGLP_Recall");
+			baselineList.add("Master_NGLP_FMeasure");
+
+			baselineList.add("Single_NGLP_AUC");
+			baselineList.add("Single_NGLP_Precision");
+			baselineList.add("Single_NGLP_Recall");
+			baselineList.add("Single_NGLP_FMeasure");
 			CSVUtils.writeLine(writer, baselineList);
 		}
-		CSVUtils.writeLine(writer,
-				Arrays.asList(dataset, String.valueOf(LSTMList_AUC_Average), String.valueOf(LSTMList_Precision_Average), String.valueOf(LSTMList_Recall_Average), String.valueOf(LSTMList_FMeasure_Average), String.valueOf(NGLPList_AUC_Average), String.valueOf(NGLPList_Precision_Average),
-						String.valueOf(NGLPList_Recall_Average), String.valueOf(NGLPList_FMeasure_Average)));
+		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(Origin_List_AUC_Average), String.valueOf(Origin_List_FMeasure_Average), String.valueOf(Origin_List_Precision), String.valueOf(Origin_List_Recall), String.valueOf(Concat_Single_LSTM_List_AUC_Average), String.valueOf(Concat_Single_LSTM_List_FMeasure_Average), String.valueOf(Concat_Single_LSTM_List_Precision_Average), String.valueOf(Concat_Single_LSTM_List_Recall_Average), String.valueOf(Line_Single_LSTM_List_AUC_Average), String.valueOf(Line_Single_LSTM_List_FMeasure_Average), String.valueOf(Line_Single_LSTM_List_Precision_Average), String.valueOf(Line_Single_LSTM_List_Recall_Average), String.valueOf(Concat_Master_LSTM_List_AUC_Average), String.valueOf(Concat_Master_LSTM_List_FMeasure_Average), String.valueOf(Concat_Master_LSTM_List_Precision_Average), String.valueOf(Concat_Master_LSTM_List_Recall_Average), String.valueOf(Line_Master_LSTM_List_AUC_Average), String.valueOf(Line_Master_LSTM_List_FMeasure_Average), String.valueOf(Line_Master_LSTM_List_Precision_Average), String.valueOf(Line_Master_LSTM_List_Recall_Average), String.valueOf(Master_NGLP_List_AUC_Average), String.valueOf(Master_NGLP_List_FMeasure_Average), String.valueOf(Master_NGLP_List_Precision_Average), String.valueOf(Master_NGLP_List_Recall_Average), String.valueOf(Single_NGLP_List_AUC_Average), String.valueOf(Single_NGLP_List_FMeasure_Average), String.valueOf(Single_NGLP_List_Precision_Average), String.valueOf(Single_NGLP_List_Recall_Average)));
+		
 		writer.flush();
 		writer.close();
 	}

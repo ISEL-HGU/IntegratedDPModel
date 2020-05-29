@@ -1,4 +1,5 @@
 package edu.handong.csee.isel.weka;
+
 import weka.attributeSelection.BestFirst;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.PrincipalComponents;
@@ -84,13 +85,14 @@ public class EJWekaTool {
 					// original
 					// (2) no pre-processing(ready for input data to model)
 					myModel.buildClassifier(trainingData);
+					int indexOfLabel = getIndexOfLabel(trainingData, "isBuggy");
 					// (4) test set and apply and prediction
 					Evaluation eval_case1 = new Evaluation(trainingData);
 					eval_case1.crossValidateModel(myModel, trainingData, 10, new Random(1));
 					// (5) show result
 					System.out.println("--------------------------");
 					System.out.println(trainingArffPath);
-					showSummary(eval_case1, trainingData, mlModel, trainingArffPath, csvPath, "Original", vifThreshold); 
+					showSummary_test(eval_case1, trainingData, mlModel, trainingArffPath, csvPath, "Original", indexOfLabel); 
 					break;
 				case "2":
 					// applying PCA
@@ -357,6 +359,9 @@ public class EJWekaTool {
 	}
 
 	public static void showSummary(Evaluation eval,Instances instances, String modelName, String targetFile, String csvPath, String type, String threshold) throws Exception {
+		
+		
+		
 		String csvFile = csvPath + "/result.csv";
 		FileWriter writer =  new FileWriter(csvFile, true);
 		for(int i=0; i<instances.classAttribute().numValues()-1;i++) {
@@ -371,6 +376,30 @@ public class EJWekaTool {
 		}
 		writer.flush();
 		writer.close();
+	}
+	
+	public static void showSummary_test(Evaluation eval,Instances instances, String modelName, String targetFile, String csvPath, String type, int indexOfLabel) throws Exception {
+		
+		String csvFile = csvPath + "/result.csv";
+		FileWriter writer =  new FileWriter(csvFile, true);
+		if (eval == null)
+			System.out.println("showSummary - eval is null");
+		else {
+			final int i = indexOfLabel;
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type));
+		}
+		writer.flush();
+		writer.close();
+	}
+	
+	public int getIndexOfLabel(final Instances instances, final String classAttributeName) {
+		int returnValue = 0;
+		if(instances.attribute(classAttributeName).numValues()==2){
+			int posIndex = instances.attribute(classAttributeName).indexOfValue("buggy"); /////
+			if(posIndex == 0) returnValue = 0; // means "buggy, clean"
+			else returnValue = 1; // means "clean, buggy"
+		}
+		return returnValue;
 	}
 	
 	Options createOptions(){

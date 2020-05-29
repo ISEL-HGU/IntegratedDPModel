@@ -6,7 +6,7 @@ import csv
 import os.path   
 
 if __name__ == '__main__':
-    project_list = ["ace", "ant-ivy", "bigtop", "bval", "camel", "cayenne", "cordova-android", "creadur-rat", "crunch", "deltaspike", "gora", "groovy", "guacamole-client", "incubator-dolphinscheduler", "incubator-hivemall"]
+    project_list = ["ant-ivy", "bval", "camel", "cayenne", "deltaspike", "gora", "guacamole-client", "incubator-hivemall"]
     for project_name in project_list:
 
         train_filename = '/home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/TrainData/Master_AllCommitsAddedLines.txt'
@@ -37,7 +37,8 @@ if __name__ == '__main__':
                     if header_flag == 0: 
                         header_flag = 1
                         continue # skip header row
-                    commit_hash_key = row[20].split('-')[0]
+                    # commit_hash_key = row[20].split('-')[0]
+                    commit_hash_key = row[20]
                     testcommit_name = "/home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/TrainData/Commit/" + project_name + "/" + commit_hash_key + ".txt"
                     if os.path.exists(testcommit_name):
                         # print(testcommit_name)
