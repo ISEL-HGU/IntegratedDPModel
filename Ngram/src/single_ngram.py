@@ -6,7 +6,7 @@ import csv
 import os.path   
 
 if __name__ == '__main__':
-    project_list = ["ace", "ant-ivy", "bigtop", "bval", "camel", "cayenne", "cordova-android", "creadur-rat", "crunch", "deltaspike", "gora", "groovy", "guacamole-client", "incubator-dolphinscheduler", "incubator-hivemall"]
+    project_list = ["ant-ivy", "bval", "camel", "cayenne", "deltaspike", "gora", "guacamole-client", "incubator-hivemall"]
     for project_name in project_list:
 
         train_filename = '/home/eunjiwon/Git/Collect-Data-with-BugPatchCollector/TrainData/' + project_name+ '_AllCommitsAddedLines.txt'
