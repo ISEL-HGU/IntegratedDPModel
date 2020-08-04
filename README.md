@@ -1,5 +1,4 @@
 # EJTool
-# EJTool
 
 EJTool is a tool which build a defect prediction model using WEKA. The input is arff files, and output is a csv file that shows the performance of the model measured by various measurements such as precision, recall, f-measure, AUC. In addition, EJTool provides N-gram Log Probability (NGLP) metric values.
 
