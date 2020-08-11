@@ -187,7 +187,6 @@ public class CrossValidation implements Runnable{
 						multicollinearity_vif_2_5 = "2.5";
 					showSummaryForOrigin(eval_case, trainData, mlModel, csvPath, type, testPath, approach_name,
 							multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5);
-
 				}
 			}
 
@@ -242,7 +241,8 @@ public class CrossValidation implements Runnable{
 		if(eval == null) System.out.println("showSummary - eval is null");
 		else {
 			final int i = indexOfLabel;
-			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name));
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name));
+//			String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i))
 		}
 		writer.flush();
 		writer.close();
@@ -254,7 +254,8 @@ public class CrossValidation implements Runnable{
 			System.out.println("showSummary - eval is null");
 		else {
 			final int i = indexOfLabel;
-			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
+//			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
+			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
 			// CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name)); 
 		}
 		writer.flush();

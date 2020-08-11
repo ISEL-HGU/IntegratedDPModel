@@ -15,7 +15,8 @@ import edu.handong.csee.isel.weka.CSVUtils;
 public class FormattingForWilcoxon {
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/master_model_2019_06_30_NGLPBugPatchCollector_Results/";
 	static String path = "/Users/eunjiwon/Desktop/";
-	static String[] filenameArray = { "7_baselines_DT_result.csv" };
+	static String nameOfFile = "7_baselines_RF_d1_result";
+	static String[] filenameArray = { nameOfFile + ".csv" };
 //	static String[] filenameArray = { "nglp_RF_result.csv", "nglp_DT_result.csv", "nglp_LR_result.csv", "nglp_NB_result.csv" };
 	// for statistical test based on project
 //	static String path = "/Users/eunjiwon/Desktop/NGLP_Results/Based_on_project_statistical_test/";
@@ -34,7 +35,7 @@ public class FormattingForWilcoxon {
 	
 	public void run_LSTM(String baselinePath) {
 
-		String[] dataset = {"ant-ivy","bval","camel","cayenne","deltaspike","gora","guacamole-client","incubator-hivemall"};
+		String[] dataset = {"ant-ivy","bval","cayenne","deltaspike","gora", "guacamole-client", "incubator-hivemall"};
 //		String[] dataset = { "camel", "eagle", "flink", "groovy", "jena", "juddi", "metamodel", "nutch" };
 		int precision_col = 1;
 		int recall_col = 2;
@@ -205,7 +206,8 @@ public class FormattingForWilcoxon {
 	}
 	
 	public static void saveAverageCSV_LSTM(String baselinePath, String dataset, Double Origin_List_AUC_Average, Double Origin_List_FMeasure_Average, Double Origin_List_Precision, Double Origin_List_Recall, Double Concat_Single_LSTM_List_AUC_Average, Double Concat_Single_LSTM_List_FMeasure_Average, Double Concat_Single_LSTM_List_Precision_Average, Double Concat_Single_LSTM_List_Recall_Average, Double Line_Single_LSTM_List_AUC_Average, Double Line_Single_LSTM_List_FMeasure_Average, Double Line_Single_LSTM_List_Precision_Average, Double Line_Single_LSTM_List_Recall_Average, Double Concat_Master_LSTM_List_AUC_Average, Double Concat_Master_LSTM_List_FMeasure_Average, Double Concat_Master_LSTM_List_Precision_Average, Double Concat_Master_LSTM_List_Recall_Average, Double Line_Master_LSTM_List_AUC_Average, Double Line_Master_LSTM_List_FMeasure_Average, Double Line_Master_LSTM_List_Precision_Average, Double Line_Master_LSTM_List_Recall_Average, Double Master_NGLP_List_AUC_Average, Double Master_NGLP_List_FMeasure_Average, Double Master_NGLP_List_Precision_Average, Double Master_NGLP_List_Recall_Average, Double Single_NGLP_List_AUC_Average, Double Single_NGLP_List_FMeasure_Average, Double Single_NGLP_List_Precision_Average, Double Single_NGLP_List_Recall_Average) throws Exception {
-		FileWriter writer = new FileWriter(path + "7_baselines_DT_result" + "_average.csv", true);
+		FileWriter writer = new FileWriter(path + nameOfFile + "_average.csv", true);
+		
 		// Add header for R studio when the first data set
 		if (dataset.equals("ant-ivy")) {
 			ArrayList<String> baselineList = new ArrayList<String>();

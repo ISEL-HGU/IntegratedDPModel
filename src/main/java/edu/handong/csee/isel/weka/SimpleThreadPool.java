@@ -25,6 +25,7 @@ public class SimpleThreadPool {
 	static String poolSize;
 	static String classAttributeName;
 	static String buggyName;
+	static String beforeCrossValidationDataPath;
 	static boolean help = false;
 	
     public static void main(String[] args) throws Exception {
@@ -35,26 +36,26 @@ public class SimpleThreadPool {
 				printHelp(options);
 				return;
 			}
-	    		String searchDirPath = ""; // the dir path includes experiment data set name list 
-	    		if(type.equals("1")) {
-	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_pca_vif_data";
-	    		}
-	    		else if(type.equals("2") || type.equals("3")) {
-	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
-//	    			searchDirPath = "/Users/eunjiwon/Desktop/Multicollinearity/for_local_test/origin_data"; // for local test
-	    		}
-	    		else if(type.equals("4")) {
-	    			searchDirPath = "/home/eunjiwon/Git/EJTool/VC_RR_data";
-	    		}
-	    		else if(type.equals("5")) { // for LSTM
-	    			searchDirPath = "/home/eunjiwon/Git/EJTool/LSTM_origin_data_epoch_20_batchsize_32";
-	    		}
-	    		else {
-	    			System.out.println("Wrong type! Check your -t option.");
-	    			System.exit(-1);
-	    		}
+//	    		String searchDirPath = ""; // the dir path includes experiment data set name list 
+//	    		if(type.equals("1")) {
+//	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_pca_vif_data";
+//	    		}
+//	    		else if(type.equals("2") || type.equals("3")) {
+//	    			searchDirPath = "/home/eunjiwon/Git/EJTool/origin_data";
+////	    			searchDirPath = "/Users/eunjiwon/Desktop/Multicollinearity/for_local_test/origin_data"; // for local test
+//	    		}
+//	    		else if(type.equals("4")) {
+//	    			searchDirPath = "/home/eunjiwon/Git/EJTool/VC_RR_data";
+//	    		}
+//	    		else if(type.equals("5")) { // for LSTM
+//	    			searchDirPath = "/home/eunjiwon/Git/EJTool/LSTM_origin_data_epoch_20_batchsize_32";
+//	    		}
+//	    		else {
+//	    			System.out.println("Wrong type! Check your -t option.");
+//	    			System.exit(-1);
+//	    		}
 
-	    		File searchDir = new File(searchDirPath);
+	    		File searchDir = new File(beforeCrossValidationDataPath);
 	    		File []fileList = searchDir.listFiles();
 	    		String copySourcePath = sourcePath;
 	    		for(File tempFile : fileList) {
@@ -149,6 +150,13 @@ public class SimpleThreadPool {
 				.required()
 				.argName("buggy name")
 				.build());
+		
+		options.addOption(Option.builder("o").longOpt("originaldata")
+				.desc("path to original data before creating cross-validation data")
+				.hasArg()
+				.required()
+				.argName("path")
+				.build());
 	
 		return options;
 	}
@@ -172,6 +180,7 @@ public class SimpleThreadPool {
 			poolSize = cmd.getOptionValue("p");
 			classAttributeName = cmd.getOptionValue("l");
 			buggyName = cmd.getOptionValue("b");
+			beforeCrossValidationDataPath = cmd.getOptionValue("o");
 
 	
 		} catch (Exception e) {
