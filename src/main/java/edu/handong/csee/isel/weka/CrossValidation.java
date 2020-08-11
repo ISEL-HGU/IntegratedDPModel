@@ -55,7 +55,7 @@ public class CrossValidation implements Runnable{
 	String csvPath;
 	String mlModel;
 	String classAttributeName;
-	static int indexOfLabel;
+//	static int indexOfLabel;
 	String buggyName;
 	Evaluation eval_case = null;
 	Instances trainData = null;
@@ -75,15 +75,15 @@ public class CrossValidation implements Runnable{
 		this.buggyName = buggyName;
 	}
 
-	public int getIndexOfLabel(final Instances instances, final String classAttributeName) {
-		int returnValue = 0;
-		if(instances.attribute(classAttributeName).numValues()==2){
-			int posIndex = instances.attribute(classAttributeName).indexOfValue(buggyName);
-			if(posIndex == 0) returnValue = 0; // means buggy, clean
-			else returnValue = 1; // means clean, buggy
-		}
-		return returnValue;
-	}
+//	public int getIndexOfLabel(final Instances instances, final String classAttributeName) {
+//		int returnValue = 0;
+//		if(instances.attribute(classAttributeName).numValues()==2){
+//			int posIndex = instances.attribute(classAttributeName).indexOfValue(buggyName);
+//			if(posIndex == 0) returnValue = 0; // means buggy, clean
+//			else returnValue = 1; // means clean, buggy
+//		}
+//		return returnValue;
+//	}
 
 	@Override
 	public void run() {
@@ -118,7 +118,7 @@ public class CrossValidation implements Runnable{
 			trainData.setClassIndex(trainData.attribute(classAttributeName).index());
 			testData.setClassIndex(testData.attribute(classAttributeName).index());
 			
-			indexOfLabel = getIndexOfLabel(trainData, classAttributeName);
+//			indexOfLabel = getIndexOfLabel(trainData, classAttributeName);
 			
 			if (dataUnbalancingMode.equals("1")) {
 				// no handling unbalancing data problem
@@ -228,22 +228,32 @@ public class CrossValidation implements Runnable{
 		final FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
-		else {
-			final int i = indexOfLabel;
-			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
-		}
+		else
+ 			for (int i = 0; i < instances.classAttribute().numValues() - 1; i++) {
+ 				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+ 			}
+//		else {
+//			final int i = indexOfLabel;
+//			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath));
+//		}
 		writer.flush();
 		writer.close();
 	}
 	
+	
+	
 	public static void showSummaryForPCAVIFVC(final Evaluation eval,final Instances instances, final String modelName, final String csvPath, final String type, final String srcPath, final String approach_name) throws Exception {
 		final FileWriter writer =  new FileWriter(csvPath, true);
 		if(eval == null) System.out.println("showSummary - eval is null");
-		else {
-			final int i = indexOfLabel;
-			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name));
-//			String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i))
-		}
+		else
+ 			for (int i = 0; i < instances.classAttribute().numValues() - 1; i++) {
+ 				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name));
+ 			}
+//		else {
+//			final int i = indexOfLabel;
+//			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name));
+////			String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i))
+//		}
 		writer.flush();
 		writer.close();
 	}
@@ -252,12 +262,16 @@ public class CrossValidation implements Runnable{
 		final FileWriter writer = new FileWriter(csvPath, true);
 		if (eval == null)
 			System.out.println("showSummary - eval is null");
-		else {
-			final int i = indexOfLabel;
-//			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
-			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
-			// CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name)); 
-		}
+		else
+ 			for (int i = 0; i < instances.classAttribute().numValues() - 1; i++) {
+ 				CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
+ 			}
+//		else {
+//			final int i = indexOfLabel;
+////			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
+//			CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.precision(i)), String.valueOf(eval.recall(i)), String.valueOf(eval.fMeasure(i)), String.valueOf(eval.areaUnderROC(i)), String.valueOf(eval.matthewsCorrelationCoefficient(i)), String.valueOf(eval.areaUnderPRC(i)), String.valueOf(eval.falseNegativeRate(i)), String.valueOf(eval.falsePositiveRate(i)), String.valueOf(eval.numFalseNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numFalsePositives(i)), String.valueOf(eval.numTrueNegatives(i)), String.valueOf(eval.numTruePositives(i)), String.valueOf(eval.trueNegativeRate(i)), String.valueOf(eval.truePositiveRate(i)), type, srcPath, approach_name, multicollinearity_vif_10, multicollinearity_vif_5, multicollinearity_vif_4, multicollinearity_vif_2_5));
+//			// CSVUtils.writeLine(writer, Arrays.asList(modelName, String.valueOf(eval.matthewsCorrelationCoefficient(i)), type, srcPath, approach_name)); 
+//		}
 		writer.flush();
 		writer.close();
 	}
