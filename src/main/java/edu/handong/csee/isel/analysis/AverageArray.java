@@ -19,9 +19,11 @@ public class AverageArray {
 	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/ICSE21_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
+			
 			"DT_total_results",			
 //			"LR_total_results",
 //			"RF_total_results",
+			
 //			"MCC_DT_total_result",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
@@ -34,17 +36,18 @@ public class AverageArray {
 	
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
-		int auc_col = 4;
-		int precision_col = 1;
-		int recall_col = 2;
-		int fmeasure_col = 3;
-		int mcc_col = 5; 
-		
-		for(String filename : filenameArray) {
-			myAverageArray.run(filename, auc_col);
-			myAverageArray.saveRankingCSV(filename);
-			myAverageArray.saveRankingAverageCSV(filename);
-		}
+//		int auc_col = 4;
+//		int precision_col = 1;
+//		int recall_col = 2;
+//		int fmeasure_col = 3;
+//		int mcc_col = 5; 
+//		
+//		for(String filename : filenameArray) {
+//			myAverageArray.run(filename, auc_col);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
+//			myAverageArray.saveProjectAverageCSV(filename);
+//		}
 //		for(String filename : filenameArray) {
 //			myAverageArray.run(filename, precision_col);
 //			myAverageArray.saveRankingCSV(filename);
@@ -66,15 +69,16 @@ public class AverageArray {
 //			myAverageArray.saveRankingAverageCSV(filename);
 //		}
 		
-//		for(String filename : filenameArray) {
-//			for(int i = 1; i <= 5; i++) {
-//				myAverageArray.run(filename, i);
-//				myAverageArray.saveRankingCSV(filename);
-//				myAverageArray.saveRankingAverageCSV(filename);
-//			}
-//		}
+		for(String filename : filenameArray) {
+			for(int i = 1; i <= 5; i++) {
+				myAverageArray.run(filename, i);
+				myAverageArray.saveRankingCSV(filename);
+				myAverageArray.saveRankingAverageCSV(filename);
+				myAverageArray.saveProjectAverageCSV(filename);
+			}
+		}
 		
-		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset) -> For Discussion section "5.3 Does applying a widely used feature selection have positive impact on prediction performance?"
+		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset) 맨 마지막
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "10.0");
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "5.0");
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "4.0");
@@ -101,7 +105,7 @@ public class AverageArray {
             List<String> list = newLine;
                 if(list.get(3).equals("None") && list.get(1).equals(threshold)) {
                 		if(list.get(2).equals("NaN")) continue;
-                		else b1List.add(Double.valueOf(list.get(2)));
+                		else b1List.add(Double.valueOf(list.get(2))); // 각 메저마다 달라져야 한다.인자로 받아야 할 듯 
                 }
                 else if(list.get(3).equals("Default-PCA") && list.get(1).equals(threshold)) {
                 		if(list.get(2).equals("NaN")) continue;
@@ -153,7 +157,7 @@ public class AverageArray {
                  }
 		}
 
-		FileWriter writer =  new FileWriter(path + "compare_CFS_average_DT.csv", true);
+		FileWriter writer =  new FileWriter(path + "compare_CFS_average_DT.csv", true); // 표가 저장되는 
 		// Only when threshold is 10
 		if (threshold.equals("10.0")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
@@ -179,6 +183,95 @@ public class AverageArray {
 		
 	}
 	
+	public void saveProjectAverageCSV(String baselinePath) {
+		ArrayList<Double> b1List = new ArrayList<Double>();
+		ArrayList<Double> b2List = new ArrayList<Double>();
+		ArrayList<Double> b3List = new ArrayList<Double>();
+		ArrayList<Double> b4List = new ArrayList<Double>();
+		ArrayList<Double> b5List = new ArrayList<Double>();
+		ArrayList<Double> b6List = new ArrayList<Double>();
+		ArrayList<Double> b7List = new ArrayList<Double>();
+		ArrayList<Double> b8List = new ArrayList<Double>();
+		ArrayList<Double> b9List = new ArrayList<Double>();
+		ArrayList<Double> b10List = new ArrayList<Double>();
+		ArrayList<Double> b11List = new ArrayList<Double>();
+        BufferedWriter bufWriter = null;
+
+        try{
+            bufWriter = Files.newBufferedWriter(Paths.get(path + baselinePath + measurementName + "_4_project_average.csv"));
+
+            List<List<String>> allData = readCSV(path + baselinePath + measurementName + "_1_average.csv");
+            boolean headerRowFlag = true;
+            for(List<String> newLine : allData){
+				if(headerRowFlag == true) {
+					headerRowFlag = false;
+        				continue;
+            		}
+                List<String> list = newLine;
+                for(int i = 1; i < list.size(); i++) {
+                		if(i == 1) b1List.add(Double.valueOf(list.get(i)));
+                		if(i == 2) b2List.add(Double.valueOf(list.get(i))); 
+                		if(i == 3) b3List.add(Double.valueOf(list.get(i)));
+                		if(i == 4) b4List.add(Double.valueOf(list.get(i)));
+                		if(i == 5) b5List.add(Double.valueOf(list.get(i)));
+                		if(i == 6) b6List.add(Double.valueOf(list.get(i))); 
+                		if(i == 7) b7List.add(Double.valueOf(list.get(i)));
+                		if(i == 8) b8List.add(Double.valueOf(list.get(i))); 
+                		if(i == 9) b9List.add(Double.valueOf(list.get(i)));
+                		if(i == 10) b10List.add(Double.valueOf(list.get(i))); 
+                		if(i == 11) b11List.add(Double.valueOf(list.get(i)));
+                }
+            }
+            
+//            for(int i = 0; i < numberOfApproaches + 1; i++) {
+//            		if(i == 0) {
+//            			bufWriter.write(",");
+//            		}
+//            		else {
+//            			bufWriter.write("baseline" + i);
+//                		bufWriter.write(",");
+//            		}
+//            }
+//            bufWriter.newLine();
+            
+            for(List<String> NewLine : allData){
+	        		for(String List : NewLine) {
+	        			bufWriter.write(List);
+	        			bufWriter.write(",");
+	        		}
+	        		bufWriter.newLine();
+	        }
+            
+	        for(int i = 0; i < numberOfApproaches + 1; i++) {
+	        		if(i == 1) bufWriter.write(String.valueOf(averageArray(b1List)));
+	        		if(i == 2) bufWriter.write(String.valueOf(averageArray(b2List)));
+	        		if(i == 3) bufWriter.write(String.valueOf(averageArray(b3List)));
+	        		if(i == 4) bufWriter.write(String.valueOf(averageArray(b4List)));
+	        		if(i == 5) bufWriter.write(String.valueOf(averageArray(b5List)));
+	        		if(i == 6) bufWriter.write(String.valueOf(averageArray(b6List)));
+	        		if(i == 7) bufWriter.write(String.valueOf(averageArray(b7List)));
+	        		if(i == 8) bufWriter.write(String.valueOf(averageArray(b8List)));
+	        		if(i == 9) bufWriter.write(String.valueOf(averageArray(b9List)));
+	        		if(i == 10) bufWriter.write(String.valueOf(averageArray(b10List))); 
+	        		if(i == 11) bufWriter.write(String.valueOf(averageArray(b11List)));
+	    			bufWriter.write(",");
+	        }
+	        
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally{
+            try{
+                if(bufWriter != null){
+                    bufWriter.close();
+                }
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+	}
+
 	public void saveRankingAverageCSV(String baselinePath) {
 		ArrayList<Double> b1List = new ArrayList<Double>();
 		ArrayList<Double> b2List = new ArrayList<Double>();

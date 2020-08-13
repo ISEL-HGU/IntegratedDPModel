@@ -7,39 +7,69 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import edu.handong.csee.isel.weka.CSVUtils;
-
+// at server
 public class CompareApproachesBasedOnMulticollinearity {
-
+	int dataname_col = 18;
+	int approachname_col = 19; 
+	static String measurementName = "";
+	static String[] MLmodels = {
+			"DT",			
+			"LR",
+			"RF",
+			"NB",
+			"LMT",
+			"BN"
+	};
+	
+	
 	public static void main(String[] args) throws IOException {
 		CompareApproachesBasedOnMulticollinearity myCABOM = new CompareApproachesBasedOnMulticollinearity();
-		String inputPath = "/home/eunjiwon/Git/EJTool/checkedMulticollinearity_DT.csv";
-		String outputPath = "/home/eunjiwon/Git/EJTool/multi_results/compare_CFS_DT.csv";
-		String approachName = "CFS-BestFirst";
-		// 
-		String thresholdVIF = "10.0";
-		ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF);
-		//
-		thresholdVIF = "5.0";
-		ArrayList<String> listOfMulticollinearityData_5 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_5, thresholdVIF);
-		//
-		thresholdVIF = "4.0";
-		ArrayList<String> listOfMulticollinearityData_4 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_4, thresholdVIF);
-		//
-		thresholdVIF = "2.5";
-		ArrayList<String> listOfMulticollinearityData_2_5 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-//		myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_2_5, thresholdVIF);
+		
+		for(String ML : MLmodels) {
+			String inputPath = "/home/eunjiwon/Git/EJTool/multi_results/" + ML + "_total_results.csv"; // DT_total_results.csv로 바꿔야 
+			String outputPath = "/home/eunjiwon/Git/EJTool/multi_results/" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
+			String approachName = "None";
+	 
+			String thresholdVIF = "10.0";
+			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+			for(int i = 1; i <= 5; i++) {
+				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
+			}
+			
+			thresholdVIF = "5.0";
+			ArrayList<String> listOfMulticollinearityData_5 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+			for(int i = 1; i <= 5; i++) {
+				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_5, thresholdVIF, i);
+			}
+		
+			thresholdVIF = "4.0";
+			ArrayList<String> listOfMulticollinearityData_4 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+			for(int i = 1; i <= 5; i++) {
+				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_4, thresholdVIF, i);
+			}
+			
+			thresholdVIF = "2.5";
+			ArrayList<String> listOfMulticollinearityData_2_5 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+			for(int i = 1; i <= 5; i++) {
+				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_2_5, thresholdVIF, i);
+			}
+
+
+		}
+		
+		
+		
+		
 	}
 	
 	// savedDataHavingMulticollinearity(inputPath, "10.0", "None")
 	public ArrayList<String> savedDataHavingMulticollinearity(String inputPath, String thres, String targetApproachName){
 		int idx = 0;
-		if (thres.equals("10.0")) idx = 8;
-		else if (thres.equals("5.0")) idx = 9;
-		else if (thres.equals("4.0")) idx = 10;
-		else if (thres.equals("2.5")) idx = 11;
+
+		if (thres.equals("10.0")) idx = 20;
+		else if (thres.equals("5.0")) idx = 21;
+		else if (thres.equals("4.0")) idx = 22;
+		else if (thres.equals("2.5")) idx = 23;
 		else {
 			System.out.println("Wrong threshold of VIF");
 			System.exit(-1);
@@ -49,8 +79,8 @@ public class CompareApproachesBasedOnMulticollinearity {
 		List<List<String>> allData = CSVUtils.readCSV(inputPath);  
 		for(List<String> newLine : allData){
             List<String> list = newLine;
-            if(list.get(7).equals(targetApproachName) && list.get(idx).equals(thres)) {
-            		listOfMulticollinearityData.add(list.get(6));
+            if(list.get(approachname_col).equals(targetApproachName) && list.get(idx).equals(thres)) {
+            		listOfMulticollinearityData.add(list.get(dataname_col));
             }
 		}
 		Double numberOfMulticollinearity = Double.valueOf(listOfMulticollinearityData.size());
@@ -58,9 +88,18 @@ public class CompareApproachesBasedOnMulticollinearity {
 		return listOfMulticollinearityData;
 	}
 	
-	public void savedPerformanceOfApproaches(String inputPath, String outputPath, ArrayList<String> listOfMulticollinearityData, String thresholdVIF) throws IOException {
+	public void savedPerformanceOfApproaches(String inputPath, String outputPath, ArrayList<String> listOfMulticollinearityData, String thresholdVIF, int positionMeasurementColumn) throws IOException {
+		int evaluation_measure = positionMeasurementColumn; 
+		
+		if(positionMeasurementColumn == 4) measurementName = "_1_AUC";
+		else if(positionMeasurementColumn == 1) measurementName = "_2_Precision";
+		else if(positionMeasurementColumn == 2) measurementName = "_3_Recall";
+		else if(positionMeasurementColumn == 3) measurementName = "_4_Fmeasure";
+		else if(positionMeasurementColumn == 5) measurementName = "_5_MCC";
+		
 		List<List<String>> allData = CSVUtils.readCSV(inputPath);  
-		FileWriter writer = new FileWriter(outputPath, true);
+		
+		FileWriter writer = new FileWriter(outputPath + measurementName + "_5_multicollinearity_with_None.csv", true);
 		
 		for(String AbsoluteSourcePath : listOfMulticollinearityData) {
 			// extract detail information
@@ -77,83 +116,71 @@ public class CompareApproachesBasedOnMulticollinearity {
 			// search the dataset in the inputPath
 			for (List<String> newLine : allData) {
 				List<String> list = newLine;
-				if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(7).equals("None")) {
-					if (list.get(4).equals("NaN")) 
+				if (list.get(dataname_col).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("None")) {
+					if (list.get(evaluation_measure).equals("NaN")) 
 						continue;
 					else 
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "None"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "None"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_PCA_" + iter + "_" + fold + ".arff") && list.get(7).equals("Default-PCA")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_PCA_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("Default-PCA")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "Default-PCA"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "Default-PCA"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF10")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("NSVIF10")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "NSVIF10"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "NSVIF10"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF5")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("NSVIF5")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "NSVIF5"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "NSVIF5"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF4")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("NSVIF4")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "NSVIF4"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "NSVIF4"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("NSVIF2.5")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_NONSTEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("NSVIF2.5")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "NSVIF2.5"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "NSVIF2.5"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF10")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_STEPWISE_10_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("SVIF10")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "SVIF10"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "SVIF10"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF5")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_STEPWISE_5_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("SVIF5")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "SVIF5"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "SVIF5"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF4")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_STEPWISE_4_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("SVIF4")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "SVIF4"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "SVIF4"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_VIF_STEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(7).equals("SVIF2.5")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_VIF_STEPWISE_2_5_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("SVIF2.5")) {
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "SVIF2.5"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "SVIF2.5"));
 				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(7).equals("CFS-BestFirst")) {
-					if (list.get(4).equals("NaN"))
+				else if (list.get(dataname_col).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(approachname_col).equals("VCRR")) { 
+					if (list.get(evaluation_measure).equals("NaN"))
 						continue;
 					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "CFS-BestFirst"));
-				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(7).equals("WFS-BestFirst")) { 
-					if (list.get(4).equals("NaN"))
-						continue;
-					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "WFS-BestFirst"));
-				} 
-				else if (list.get(6).contains(project + "_" + dataset + "_" + iter + "_" + fold + ".arff") && list.get(7).equals("VCRR")) { 
-					if (list.get(4).equals("NaN"))
-						continue;
-					else
-						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(4))), "VCRR"));
+						CSVUtils.writeLine(writer, Arrays.asList(multicollinearity_sourcepath, thresholdVIF, String.valueOf(Double.valueOf(list.get(evaluation_measure))), "VCRR"));
 				}
 			}
 
