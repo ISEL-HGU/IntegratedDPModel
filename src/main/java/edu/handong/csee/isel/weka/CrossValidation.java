@@ -96,9 +96,6 @@ public class CrossValidation implements Runnable{
 			Instances testData = null, temp = null;
 			for (int i = 0; i < filePathList.size(); i++) {
 				if (i == idx) {
-					// For test
-					System.out.println("Test path is " + filePathList.get(i));
-					//
 					final BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
 					testData = new Instances(reader);
 					reader.close();
@@ -116,10 +113,10 @@ public class CrossValidation implements Runnable{
 			}
 
 			// before get l and v parameter
-			// trainData.setClassIndex(trainData.numAttributes()-1);
-			// testData.setClassIndex(testData.numAttributes()-1);
-			trainData.setClassIndex(trainData.attribute(classAttributeName).index());
-			testData.setClassIndex(testData.attribute(classAttributeName).index());
+			trainData.setClassIndex(trainData.numAttributes()-1);
+			testData.setClassIndex(testData.numAttributes()-1);
+//			trainData.setClassIndex(trainData.attribute(classAttributeName).index());
+//			testData.setClassIndex(testData.attribute(classAttributeName).index());
 			
 //			indexOfLabel = getIndexOfLabel(trainData, classAttributeName);
 			

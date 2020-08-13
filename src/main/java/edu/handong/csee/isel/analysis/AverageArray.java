@@ -15,11 +15,13 @@ import edu.handong.csee.isel.weka.CSVUtils;
 
 public class AverageArray {
 	int numberOfApproaches = 11;
-	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/0229_exp_results/";
+	static String measurementName = "";
+	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/ICSE21_exp_results/";
 	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 			"DT_total_results",			
-			"LR_total_results",
+//			"LR_total_results",
+//			"RF_total_results",
 //			"MCC_DT_total_result",
 //			"Logistic_noHandling_total_result",
 //			"Add_Logistic_smote_total_result",
@@ -32,13 +34,47 @@ public class AverageArray {
 	
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
+		int auc_col = 4;
+		int precision_col = 1;
+		int recall_col = 2;
+		int fmeasure_col = 3;
+		int mcc_col = 5; 
+		
 		for(String filename : filenameArray) {
-			myAverageArray.run(filename);
+			myAverageArray.run(filename, auc_col);
 			myAverageArray.saveRankingCSV(filename);
 			myAverageArray.saveRankingAverageCSV(filename);
 		}
+//		for(String filename : filenameArray) {
+//			myAverageArray.run(filename, precision_col);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
+//		}
+//		for(String filename : filenameArray) {
+//			myAverageArray.run(filename, recall_col);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
+//		}
+//		for(String filename : filenameArray) {
+//			myAverageArray.run(filename, fmeasure_col);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
+//		}
+//		for(String filename : filenameArray) {
+//			myAverageArray.run(filename, mcc_col);
+//			myAverageArray.saveRankingCSV(filename);
+//			myAverageArray.saveRankingAverageCSV(filename);
+//		}
 		
-		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset)
+//		for(String filename : filenameArray) {
+//			for(int i = 1; i <= 5; i++) {
+//				myAverageArray.run(filename, i);
+//				myAverageArray.saveRankingCSV(filename);
+//				myAverageArray.saveRankingAverageCSV(filename);
+//			}
+//		}
+		
+		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset) -> For Discussion section "5.3 Does applying a widely used feature selection have positive impact on prediction performance?"
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "10.0");
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "5.0");
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "4.0");
@@ -160,9 +196,9 @@ public class AverageArray {
         BufferedWriter bufWriter = null;
 
         try{
-            bufWriter = Files.newBufferedWriter(Paths.get(path + baselinePath + "_ranking_average.csv"));
+            bufWriter = Files.newBufferedWriter(Paths.get(path + baselinePath + measurementName + "_3_ranking_average.csv"));
 
-            List<List<String>> allData = readCSV(path + baselinePath + "_ranking.csv");
+            List<List<String>> allData = readCSV(path + baselinePath + measurementName + "_2_ranking.csv");
             
             for(List<String> newLine : allData){
                 List<String> list = newLine;
@@ -239,9 +275,9 @@ public class AverageArray {
         BufferedWriter bufWriter = null;
         ArrayList<Double> datasetAverageList = new ArrayList<Double>();
         try{
-            bufWriter = Files.newBufferedWriter(Paths.get(path + baselinePath + "_ranking.csv"));
+            bufWriter = Files.newBufferedWriter(Paths.get(path + baselinePath + measurementName + "_2_ranking.csv"));
             //csv파일 읽기
-            List<List<String>> allData = readCSV(path + baselinePath + "_average.csv");
+            List<List<String>> allData = readCSV(path + baselinePath + measurementName + "_1_average.csv");
             
             for(List<String> newLine : allData){
             		if(newLine.contains("None")) continue; // average 파일에 헤더 추가해서 
@@ -289,24 +325,27 @@ public class AverageArray {
 		return ranking;
 	}
 	
-    public void run(String baselinePath) {
+    public void run(String baselinePath, int positionMeasurementColumn) {
  
     		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
 //    		String[] dataset = {"JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
     		// f-measure is a column 3, AUC is a column 4, targetPath is a column 6, baselineType is a column 7 (type1, 2, 3, and 4).
-    		int precision_col = 1;
-    		int recall_col = 2;
-    		int fmeasure_col = 3;
-    		int auc_col = 4;
-    		int dataname_col = 6;
-    		int approachname_col = 7; 
-    		// mcc
-//    		int mcc_col = 1; 
-//     		int dataname_col = 3;
-//    		int approachname_col = 4;
-    		int evaluation_measure = auc_col; //
+
+    		int dataname_col = 18;
+    		int approachname_col = 19; 
+
+    		int evaluation_measure = positionMeasurementColumn; 
+    
+    		if(positionMeasurementColumn == 4) measurementName = "_1_AUC";
+    		else if(positionMeasurementColumn == 1) measurementName = "_2_Precision";
+    		else if(positionMeasurementColumn == 2) measurementName = "_3_Recall";
+    		else if(positionMeasurementColumn == 3) measurementName = "_4_Fmeasure";
+    		else if(positionMeasurementColumn == 5) measurementName = "_5_MCC";
     		
-        List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
+
+    		
+//        List<List<String>> allData = readCSV(path + baselinePath + "_baseline.csv");
+        List<List<String>> allData = readCSV(path + baselinePath + ".csv");
     		
     		for(String datasetName : dataset) {
         		ArrayList<Double> b1List = new ArrayList<Double>();
@@ -392,7 +431,7 @@ public class AverageArray {
     }
     
 	public static void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
-		FileWriter writer =  new FileWriter(path + baselinePath + "_average.csv", true);
+		FileWriter writer =  new FileWriter(path + baselinePath + measurementName + "_1_average.csv", true);
 	    // Add header for R studio when the first data set 
 		if(dataset.equals("AEEEM_EQ")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
