@@ -17,10 +17,10 @@ public class AverageArray {
 	int numberOfApproaches = 11;
 	static String measurementName = "";
 	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/ICSE21_exp_results/";
-	static String[] filenameArray = {
+//	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 			
-			"DT_total_results",			
+//			"DT_total_results",			
 //			"LR_total_results",
 //			"RF_total_results",
 			
@@ -31,45 +31,21 @@ public class AverageArray {
 //			"RandomForest_noHandling_total_result",
 //			"Add_RandomForest_smote_total_result"
 //			"RandomForest_spread_total_result"	
+//	};
+	static String[] MLmodels = {
+			"DT",			
+			"LR",
+			"RF",
+			"NB",
+			"LMT",
+			"BN"
 	};
-	
 	
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
-//		int auc_col = 4;
-//		int precision_col = 1;
-//		int recall_col = 2;
-//		int fmeasure_col = 3;
-//		int mcc_col = 5; 
-//		
-//		for(String filename : filenameArray) {
-//			myAverageArray.run(filename, auc_col);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
-//			myAverageArray.saveProjectAverageCSV(filename);
-//		}
-//		for(String filename : filenameArray) {
-//			myAverageArray.run(filename, precision_col);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
-//		}
-//		for(String filename : filenameArray) {
-//			myAverageArray.run(filename, recall_col);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
-//		}
-//		for(String filename : filenameArray) {
-//			myAverageArray.run(filename, fmeasure_col);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
-//		}
-//		for(String filename : filenameArray) {
-//			myAverageArray.run(filename, mcc_col);
-//			myAverageArray.saveRankingCSV(filename);
-//			myAverageArray.saveRankingAverageCSV(filename);
-//		}
 		
-		for(String filename : filenameArray) {
+		for(String ML : MLmodels) {
+			String filename = ML + "_total_results";
 			for(int i = 1; i <= 5; i++) {
 				myAverageArray.run(filename, i);
 				myAverageArray.saveRankingCSV(filename);
@@ -78,7 +54,35 @@ public class AverageArray {
 			}
 		}
 		
+		for(String ML : MLmodels) {
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "10.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "10.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "10.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "10.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "10.0");
+			
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "5.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "5.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "5.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "5.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "5.0");
+			
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "4.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "4.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "4.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "4.0");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "4.0");
+			
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "2.5");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "2.5");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "2.5");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "2.5");
+			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "2.5");
+	
+		}
 		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset) 맨 마지막
+		// DT_1_AUC_5_multicollinearity_with_None.csv
+		// RF_2_Precision_5_multicollinearity_with_None.csv
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "10.0");
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "5.0");
 //		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "4.0");
@@ -97,15 +101,13 @@ public class AverageArray {
 		ArrayList<Double> b9List = new ArrayList<Double>();
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
-		ArrayList<Double> b12List = new ArrayList<Double>(); 
-		ArrayList<Double> b13List = new ArrayList<Double>(); 
 		
-		List<List<String>> allData = readCSV(csv_path);
+		List<List<String>> allData = readCSV(csv_path + ".csv");
 		for(List<String> newLine : allData) {
             List<String> list = newLine;
                 if(list.get(3).equals("None") && list.get(1).equals(threshold)) {
                 		if(list.get(2).equals("NaN")) continue;
-                		else b1List.add(Double.valueOf(list.get(2))); // 각 메저마다 달라져야 한다.인자로 받아야 할 듯 
+                		else b1List.add(Double.valueOf(list.get(2)));
                 }
                 else if(list.get(3).equals("Default-PCA") && list.get(1).equals(threshold)) {
                 		if(list.get(2).equals("NaN")) continue;
@@ -143,21 +145,13 @@ public class AverageArray {
                 		if(list.get(2).equals("NaN")) continue;
                 		else b10List.add(Double.valueOf(list.get(2)));
                 }
-                else if(list.get(3).equals("CFS-BestFirst") && list.get(1).equals(threshold)) { 
-                		if(list.get(2).equals("NaN")) continue;
-                		else b11List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("WFS-BestFirst") && list.get(1).equals(threshold)) {
-            			if(list.get(2).equals("NaN")) continue;
-            			else b12List.add(Double.valueOf(list.get(2)));
-                }
                 else if(list.get(3).equals("VCRR") && list.get(1).equals(threshold)) {
          			if(list.get(2).equals("NaN")) continue;
-         			else b13List.add(Double.valueOf(list.get(2)));
+         			else b11List.add(Double.valueOf(list.get(2)));
                  }
 		}
 
-		FileWriter writer =  new FileWriter(path + "compare_CFS_average_DT.csv", true); // 표가 저장되는 
+		FileWriter writer =  new FileWriter(csv_path + "_6_average.csv", true); // 표가 저장되는 
 		// Only when threshold is 10
 		if (threshold.equals("10.0")) {
 			ArrayList<String> baselineList = new ArrayList<String>();
@@ -172,12 +166,10 @@ public class AverageArray {
 			baselineList.add("SVIF5");
 			baselineList.add("SVIF4");
 			baselineList.add("SVIF2.5");
-			baselineList.add("CFS-BestFirst");
-			baselineList.add("WFS-BestFirst");
 			baselineList.add("VCRR");
 			CSVUtils.writeLine(writer, baselineList);
 		}
-		CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List)), String.valueOf(averageArray(b12List)), String.valueOf(averageArray(b13List))));
+		CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List))));
 		writer.flush();
 		writer.close();
 		

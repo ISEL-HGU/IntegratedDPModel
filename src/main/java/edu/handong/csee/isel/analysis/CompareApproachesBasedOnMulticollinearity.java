@@ -84,7 +84,7 @@ public class CompareApproachesBasedOnMulticollinearity {
             }
 		}
 		Double numberOfMulticollinearity = Double.valueOf(listOfMulticollinearityData.size());
-		System.out.println("Thres: " + thres + " / Approach name: " + targetApproachName + " / Number: " + listOfMulticollinearityData.size() + " / Ratio: " + numberOfMulticollinearity/4500.0);
+		System.out.println("Input path: " + inputPath + "Thres: " + thres + " / Approach name: " + targetApproachName + " / Number: " + listOfMulticollinearityData.size() + " / Ratio: " + numberOfMulticollinearity/4500.0);
 		return listOfMulticollinearityData;
 	}
 	
