@@ -96,6 +96,9 @@ public class CrossValidation implements Runnable{
 			Instances testData = null, temp = null;
 			for (int i = 0; i < filePathList.size(); i++) {
 				if (i == idx) {
+					// For test
+					System.out.println("Test path is " + filePathList.get(i));
+					//
 					final BufferedReader reader = new BufferedReader(new FileReader(filePathList.get(i)));
 					testData = new Instances(reader);
 					reader.close();
