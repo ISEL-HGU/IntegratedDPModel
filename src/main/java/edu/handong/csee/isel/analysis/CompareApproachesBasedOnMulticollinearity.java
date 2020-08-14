@@ -198,14 +198,35 @@ public class CompareApproachesBasedOnMulticollinearity {
 				}
 			}
 			if(firstFlag == true) {
-				saveAverageCSV(firstFlag, outputCSVPath, project, AverageArray.averageArray(b1List), AverageArray.averageArray(b2List), AverageArray.averageArray(b3List), AverageArray.averageArray(b4List), AverageArray.averageArray(b5List), AverageArray.averageArray(b6List), AverageArray.averageArray(b7List), AverageArray.averageArray(b8List), AverageArray.averageArray(b9List), AverageArray.averageArray(b10List), AverageArray.averageArray(b11List));
+				saveAverageCSV(firstFlag, outputCSVPath, project + "_" + dataset, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List));
 				firstFlag = false;
 			}
-			saveAverageCSV(firstFlag, outputCSVPath, project, AverageArray.averageArray(b1List), AverageArray.averageArray(b2List), AverageArray.averageArray(b3List), AverageArray.averageArray(b4List), AverageArray.averageArray(b5List), AverageArray.averageArray(b6List), AverageArray.averageArray(b7List), AverageArray.averageArray(b8List), AverageArray.averageArray(b9List), AverageArray.averageArray(b10List), AverageArray.averageArray(b11List));
+			saveAverageCSV(firstFlag, outputCSVPath, project + "_" + dataset, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b11List));
 
 		}
 //		System.out.println("Finish saving the performance of approaches!");
 	}
+	
+	public double averageArray(ArrayList<Double> list) {
+		int NaNCnt = 0;
+		if(list.size() == 0) {
+			System.out.println("Can not average list because list size is 0, check your list!");
+//			System.exit(-1);
+		}
+		double sum = 0;
+		double average = 0;
+		for(int i = 0; i < list.size(); i++) {
+			if(!list.get(i).isNaN()) {
+				sum += list.get(i);
+			}
+			else {
+				NaNCnt++;
+			}
+		}
+		average = sum / (list.size() - NaNCnt);
+		return average;
+	}
+	
 	public void saveAverageCSV(boolean headerFlag, String outputCSVPath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
 		FileWriter writer =  new FileWriter(outputCSVPath, true);
 		// Add header for R studio when the first data set 
