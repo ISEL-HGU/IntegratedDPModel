@@ -54,126 +54,10 @@ public class AverageArray {
 			}
 		}
 		
-		for(String ML : MLmodels) {
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "10.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "10.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "10.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "10.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "10.0");
-			
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "5.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "5.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "5.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "5.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "5.0");
-			
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "4.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "4.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "4.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "4.0");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "4.0");
-			
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_1_AUC_5_multicollinearity_with_None", "2.5");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_2_Precision_5_multicollinearity_with_None", "2.5");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_3_Recall_5_multicollinearity_with_None", "2.5");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_4_Fmeasure_5_multicollinearity_with_None", "2.5");
-			myAverageArray.calculateMeanAUCOfEachApproaches(path + ML + "_5_MCC_5_multicollinearity_with_None", "2.5");
-	
-		}
-		// Calculate Mean AUC of each approaches (calculate only multicollinearity dataset) 맨 마지막
-		// DT_1_AUC_5_multicollinearity_with_None.csv
-		// RF_2_Precision_5_multicollinearity_with_None.csv
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "10.0");
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "5.0");
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "4.0");
-//		myAverageArray.calculateMeanAUCOfEachApproaches(path + "compare_CFS_DT.csv", "2.5");
+		
 	}
 	
-	public void calculateMeanAUCOfEachApproaches(String csv_path, String threshold) throws IOException {
-		ArrayList<Double> b1List = new ArrayList<Double>();
-		ArrayList<Double> b2List = new ArrayList<Double>();
-		ArrayList<Double> b3List = new ArrayList<Double>();
-		ArrayList<Double> b4List = new ArrayList<Double>();
-		ArrayList<Double> b5List = new ArrayList<Double>();
-		ArrayList<Double> b6List = new ArrayList<Double>();
-		ArrayList<Double> b7List = new ArrayList<Double>();
-		ArrayList<Double> b8List = new ArrayList<Double>();
-		ArrayList<Double> b9List = new ArrayList<Double>();
-		ArrayList<Double> b10List = new ArrayList<Double>();
-		ArrayList<Double> b11List = new ArrayList<Double>();
-		
-		List<List<String>> allData = readCSV(csv_path + ".csv");
-		for(List<String> newLine : allData) {
-            List<String> list = newLine;
-                if(list.get(3).equals("None") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b1List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("Default-PCA") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b2List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("NSVIF10") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b3List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("NSVIF5") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b4List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("NSVIF4") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b5List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("NSVIF2.5") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b6List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("SVIF10") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b7List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("SVIF5") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b8List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("SVIF4") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b9List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("SVIF2.5") && list.get(1).equals(threshold)) {
-                		if(list.get(2).equals("NaN")) continue;
-                		else b10List.add(Double.valueOf(list.get(2)));
-                }
-                else if(list.get(3).equals("VCRR") && list.get(1).equals(threshold)) {
-         			if(list.get(2).equals("NaN")) continue;
-         			else b11List.add(Double.valueOf(list.get(2)));
-                 }
-		}
 
-		FileWriter writer =  new FileWriter(csv_path + "_6_average.csv", true); // 표가 저장되는 
-		// Only when threshold is 10
-		if (threshold.equals("10.0")) {
-			ArrayList<String> baselineList = new ArrayList<String>();
-			baselineList.add("Threshold");
-			baselineList.add("None");
-			baselineList.add("Default-PCA");
-			baselineList.add("NSVIF10");
-			baselineList.add("NSVIF5");
-			baselineList.add("NSVIF4");
-			baselineList.add("NSVIF2.5");
-			baselineList.add("SVIF10");
-			baselineList.add("SVIF5");
-			baselineList.add("SVIF4");
-			baselineList.add("SVIF2.5");
-			baselineList.add("VCRR");
-			CSVUtils.writeLine(writer, baselineList);
-		}
-		CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List))));
-		writer.flush();
-		writer.close();
-		
-	}
 	
 	public void saveProjectAverageCSV(String baselinePath) {
 		ArrayList<Double> b1List = new ArrayList<Double>();
@@ -515,7 +399,7 @@ public class AverageArray {
  
     }
     
-	public static void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
+	public void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
 		FileWriter writer =  new FileWriter(path + baselinePath + measurementName + "_1_average.csv", true);
 	    // Add header for R studio when the first data set 
 		if(dataset.equals("AEEEM_EQ")) {
@@ -541,7 +425,8 @@ public class AverageArray {
 		writer.close();
 	}
 	
-	public double averageArray(ArrayList<Double> list) {
+	public static double averageArray(ArrayList<Double> list) {
+		int NaNCnt = 0;
 		if(list.size() == 0) {
 			System.out.println("Can not average list because list size is 0, check your list!");
 //			System.exit(-1);
@@ -549,9 +434,14 @@ public class AverageArray {
 		double sum = 0;
 		double average = 0;
 		for(int i = 0; i < list.size(); i++) {
-			sum += list.get(i);
+			if(!list.get(i).isNaN()) {
+				sum += list.get(i);
+			}
+			else {
+				NaNCnt++;
+			}
 		}
-		average = sum / list.size();
+		average = sum / (list.size() - NaNCnt);
 		return average;
 	}
 	
@@ -590,5 +480,90 @@ public class AverageArray {
         return ret;
     }
 
+//	public void calculateMeanAUCOfEachApproaches(String csv_path, String threshold) throws IOException {
+//	ArrayList<Double> b1List = new ArrayList<Double>();
+//	ArrayList<Double> b2List = new ArrayList<Double>();
+//	ArrayList<Double> b3List = new ArrayList<Double>();
+//	ArrayList<Double> b4List = new ArrayList<Double>();
+//	ArrayList<Double> b5List = new ArrayList<Double>();
+//	ArrayList<Double> b6List = new ArrayList<Double>();
+//	ArrayList<Double> b7List = new ArrayList<Double>();
+//	ArrayList<Double> b8List = new ArrayList<Double>();
+//	ArrayList<Double> b9List = new ArrayList<Double>();
+//	ArrayList<Double> b10List = new ArrayList<Double>();
+//	ArrayList<Double> b11List = new ArrayList<Double>();
+//	
+//	List<List<String>> allData = readCSV(csv_path + ".csv");
+//	for(List<String> newLine : allData) {
+//        List<String> list = newLine;
+//            if(list.get(3).equals("None") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b1List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("Default-PCA") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b2List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("NSVIF10") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b3List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("NSVIF5") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b4List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("NSVIF4") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b5List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("NSVIF2.5") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b6List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("SVIF10") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b7List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("SVIF5") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b8List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("SVIF4") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b9List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("SVIF2.5") && list.get(1).equals(threshold)) {
+//            		if(list.get(2).equals("NaN")) continue;
+//            		else b10List.add(Double.valueOf(list.get(2)));
+//            }
+//            else if(list.get(3).equals("VCRR") && list.get(1).equals(threshold)) {
+//     			if(list.get(2).equals("NaN")) continue;
+//     			else b11List.add(Double.valueOf(list.get(2)));
+//             }
+//	}
+//
+//	FileWriter writer =  new FileWriter(csv_path + "_6_average.csv", true); // 표가 저장되는 
+//	// Only when threshold is 10
+//	if (threshold.equals("10.0")) {
+//		ArrayList<String> baselineList = new ArrayList<String>();
+//		baselineList.add("Threshold");
+//		baselineList.add("None");
+//		baselineList.add("Default-PCA");
+//		baselineList.add("NSVIF10");
+//		baselineList.add("NSVIF5");
+//		baselineList.add("NSVIF4");
+//		baselineList.add("NSVIF2.5");
+//		baselineList.add("SVIF10");
+//		baselineList.add("SVIF5");
+//		baselineList.add("SVIF4");
+//		baselineList.add("SVIF2.5");
+//		baselineList.add("VCRR");
+//		CSVUtils.writeLine(writer, baselineList);
+//	}
+//	CSVUtils.writeLine(writer, Arrays.asList(threshold, String.valueOf(averageArray(b1List)), String.valueOf(averageArray(b2List)), String.valueOf(averageArray(b3List)), String.valueOf(averageArray(b4List)), String.valueOf(averageArray(b5List)), String.valueOf(averageArray(b6List)), String.valueOf(averageArray(b7List)), String.valueOf(averageArray(b8List)), String.valueOf(averageArray(b9List)), String.valueOf(averageArray(b10List)), String.valueOf(averageArray(b11List))));
+//	writer.flush();
+//	writer.close();
+//	
+//}
     
 }
