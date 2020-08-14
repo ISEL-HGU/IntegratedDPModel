@@ -99,8 +99,8 @@ public class CompareApproachesBasedOnMulticollinearity {
 		else if(positionMeasurementColumn == 5) measurementName = "_5_MCC";
 		
 		List<List<String>> allData = CSVUtils.readCSV(inputPath);  
-		
-		FileWriter writer = new FileWriter(outputPath + measurementName + "_5_multicollinearity_with_None_thres_" + thresholdVIF + ".csv", true);
+		String outputCSVPath = outputPath + measurementName + "_5_multicollinearity_with_None_thres_" + thresholdVIF + ".csv";
+//		FileWriter writer = new FileWriter(outputPath + measurementName + "_5_multicollinearity_with_None_thres_" + thresholdVIF + ".csv", true);
 		boolean firstFlag = true;
 		for(String AbsoluteSourcePath : listOfMulticollinearityData) {
 			ArrayList<Double> b1List = new ArrayList<Double>();
@@ -198,18 +198,17 @@ public class CompareApproachesBasedOnMulticollinearity {
 				}
 			}
 			if(firstFlag == true) {
-				saveAverageCSV(firstFlag, writer, project, AverageArray.averageArray(b1List), AverageArray.averageArray(b2List), AverageArray.averageArray(b3List), AverageArray.averageArray(b4List), AverageArray.averageArray(b5List), AverageArray.averageArray(b6List), AverageArray.averageArray(b7List), AverageArray.averageArray(b8List), AverageArray.averageArray(b9List), AverageArray.averageArray(b10List), AverageArray.averageArray(b11List));
+				saveAverageCSV(firstFlag, outputCSVPath, project, AverageArray.averageArray(b1List), AverageArray.averageArray(b2List), AverageArray.averageArray(b3List), AverageArray.averageArray(b4List), AverageArray.averageArray(b5List), AverageArray.averageArray(b6List), AverageArray.averageArray(b7List), AverageArray.averageArray(b8List), AverageArray.averageArray(b9List), AverageArray.averageArray(b10List), AverageArray.averageArray(b11List));
 				firstFlag = false;
 			}
-			saveAverageCSV(firstFlag, writer, project, AverageArray.averageArray(b1List), AverageArray.averageArray(b2List), AverageArray.averageArray(b3List), AverageArray.averageArray(b4List), AverageArray.averageArray(b5List), AverageArray.averageArray(b6List), AverageArray.averageArray(b7List), AverageArray.averageArray(b8List), AverageArray.averageArray(b9List), AverageArray.averageArray(b10List), AverageArray.averageArray(b11List));
+			saveAverageCSV(firstFlag, outputCSVPath, project, AverageArray.averageArray(b1List), AverageArray.averageArray(b2List), AverageArray.averageArray(b3List), AverageArray.averageArray(b4List), AverageArray.averageArray(b5List), AverageArray.averageArray(b6List), AverageArray.averageArray(b7List), AverageArray.averageArray(b8List), AverageArray.averageArray(b9List), AverageArray.averageArray(b10List), AverageArray.averageArray(b11List));
 
 		}
-		writer.flush();
-		writer.close();	
 //		System.out.println("Finish saving the performance of approaches!");
 	}
-	public void saveAverageCSV(boolean headerFlag, FileWriter writer, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
-	    // Add header for R studio when the first data set 
+	public void saveAverageCSV(boolean headerFlag, String outputCSVPath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
+		FileWriter writer =  new FileWriter(outputCSVPath, true);
+		// Add header for R studio when the first data set 
 		if(headerFlag) {
 			ArrayList<String> baselineList = new ArrayList<String>();
 			baselineList.add("");
