@@ -14,9 +14,9 @@ import java.util.List;
 import edu.handong.csee.isel.weka.CSVUtils;
 
 public class AverageArray {
-	int numberOfApproaches = 11;
+	static int numberOfApproaches = 11;
 	static String measurementName = "";
-	static String path = "/Users/eunjiwon/Desktop/Multicollinearity/exp_results/ICSE21_exp_results/";
+	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/CVParameterSelection/";
 //	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 			
@@ -33,12 +33,12 @@ public class AverageArray {
 //			"RandomForest_spread_total_result"	
 //	};
 	static String[] MLmodels = {
-			"DT",			
-			"LR",
-			"RF",
-			"NB",
-			"LMT",
-			"BN"
+			"PT_DT",			
+			"PT_LR",
+			"PT_RF",
+			"PT_NB",
+			"PT_LMT",
+			"PT_BN"
 	};
 	
 	public static void main(String[] args) throws IOException{
@@ -278,7 +278,7 @@ public class AverageArray {
         }
 	}
 	
-	public int[] ranking(ArrayList<Double> list) {
+	public static int[] ranking(ArrayList<Double> list) {
 		int[] ranking = new int[numberOfApproaches];
 		for(int i = 0; i < ranking.length; i++) {
 			ranking[i] = 1;
@@ -387,7 +387,7 @@ public class AverageArray {
                     
             }
             try {
-            		System.out.println(datasetName + "size of None list : " + b1List.size());
+            		System.out.println(datasetName + " / size of None list : " + b1List.size());
             		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b13List));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -425,7 +425,7 @@ public class AverageArray {
 		writer.close();
 	}
 	
-	public static double averageArray(ArrayList<Double> list) {
+	public double averageArray(ArrayList<Double> list) {
 		int NaNCnt = 0;
 		if(list.size() == 0) {
 			System.out.println("Can not average list because list size is 0, check your list!");

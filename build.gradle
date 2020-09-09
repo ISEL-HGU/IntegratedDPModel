@@ -37,6 +37,10 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/org.eclipse.jdt/org.eclipse.jdt.core
 	compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.18.0'
+	
+	// https://jar-download.com/artifacts/nz.ac.waikato.cms.weka/gridSearch/1.0.12/source-code/weka/classifiers/meta/GridSearch.java
+	compile group: 'nz.ac.waikato.cms.weka', name: 'gridSearch', version: '1.0.12' //Thanks for using https://jar-download.com 
+	
     
 }
 
