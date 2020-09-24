@@ -14,9 +14,9 @@ import java.util.List;
 import edu.handong.csee.isel.weka.CSVUtils;
 
 public class AverageArray {
-	static int numberOfApproaches = 11;
+	static int numberOfApproaches = 12;
 	static String measurementName = "";
-	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/CVParameterSelection/";
+	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/NoParameterSelection/";
 //	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 			
@@ -33,23 +33,24 @@ public class AverageArray {
 //			"RandomForest_spread_total_result"	
 //	};
 	static String[] MLmodels = {
-			"PT_DT",			
-			"PT_LR",
-			"PT_RF",
-			"PT_NB",
-			"PT_LMT",
-			"PT_BN"
+			"CFS_DT",			
+			"CFS_LR",
+			"CFS_RF",
+			"CFS_NB",
+			"CFS_LMT",
+			"CFS_BN"
 	};
 	
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
 		
 		for(String ML : MLmodels) {
-			String filename = ML + "_total_results";
+			String filename = ML + "_result"; // for CFS
+//			String filename = ML + "_total_results";
 			for(int i = 1; i <= 5; i++) {
 				myAverageArray.run(filename, i);
-				myAverageArray.saveRankingCSV(filename);
-				myAverageArray.saveRankingAverageCSV(filename);
+//				myAverageArray.saveRankingCSV(filename);
+//				myAverageArray.saveRankingAverageCSV(filename);
 				myAverageArray.saveProjectAverageCSV(filename);
 			}
 		}
@@ -71,6 +72,7 @@ public class AverageArray {
 		ArrayList<Double> b9List = new ArrayList<Double>();
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
+		ArrayList<Double> b12List = new ArrayList<Double>(); // CFS
         BufferedWriter bufWriter = null;
 
         try{
@@ -96,6 +98,8 @@ public class AverageArray {
                 		if(i == 9) b9List.add(Double.valueOf(list.get(i)));
                 		if(i == 10) b10List.add(Double.valueOf(list.get(i))); 
                 		if(i == 11) b11List.add(Double.valueOf(list.get(i)));
+                		if(i == 12) b12List.add(Double.valueOf(list.get(i))); // CFS
+                		
                 }
             }
             
@@ -130,6 +134,8 @@ public class AverageArray {
 	        		if(i == 9) bufWriter.write(String.valueOf(averageArray(b9List)));
 	        		if(i == 10) bufWriter.write(String.valueOf(averageArray(b10List))); 
 	        		if(i == 11) bufWriter.write(String.valueOf(averageArray(b11List)));
+	        		if(i == 12) bufWriter.write(String.valueOf(averageArray(b12List))); // CFS
+	        		
 	    			bufWriter.write(",");
 	        }
 	        
@@ -327,7 +333,7 @@ public class AverageArray {
         		ArrayList<Double> b8List = new ArrayList<Double>();
         		ArrayList<Double> b9List = new ArrayList<Double>();
         		ArrayList<Double> b10List = new ArrayList<Double>();
-//        		ArrayList<Double> b11List = new ArrayList<Double>();
+        		ArrayList<Double> b11List = new ArrayList<Double>(); // CFS
 //        		ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
         		ArrayList<Double> b13List = new ArrayList<Double>(); // VC and RR
             for(List<String> newLine : allData) {
@@ -372,10 +378,10 @@ public class AverageArray {
 	                		if(list.get(evaluation_measure).equals("NaN")) continue;
 	                		else b10List.add(Double.valueOf(list.get(evaluation_measure)));
                     }
-//                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("CFS-BestFirst")) { // type2
-//	                		if(list.get(evaluation_measure).equals("NaN")) continue;
-//	                		else b11List.add(Double.valueOf(list.get(evaluation_measure)));
-//                    }
+                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("CFS-BestFirst")) { // type2
+	                		if(list.get(evaluation_measure).equals("NaN")) continue;
+	                		else b11List.add(Double.valueOf(list.get(evaluation_measure)));
+                    }
 //                    else if(list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("WFS-BestFirst")) { // type3
 //                			if(list.get(evaluation_measure).equals("NaN")) continue;
 //                			else b12List.add(Double.valueOf(list.get(evaluation_measure)));
@@ -388,7 +394,8 @@ public class AverageArray {
             }
             try {
             		System.out.println(datasetName + " / size of None list : " + b1List.size());
-            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b13List));
+            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b13List), averageArray(b11List));
+//            		saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List), averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b13List));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -399,7 +406,7 @@ public class AverageArray {
  
     }
     
-	public void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
+	public void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average, Double b8Average, Double b9Average, Double b10Average, Double b13Average, Double b11Average) throws Exception {
 		FileWriter writer =  new FileWriter(path + baselinePath + measurementName + "_1_average.csv", true);
 	    // Add header for R studio when the first data set 
 		if(dataset.equals("AEEEM_EQ")) {
@@ -418,9 +425,10 @@ public class AverageArray {
 //			baselineList.add("CFS-BestFirst");
 //			baselineList.add("WFS-BestFirst");
 			baselineList.add("VCRR");
+			baselineList.add("CFS-BestFirst");
 			CSVUtils.writeLine(writer, baselineList);
 		}
-		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average), String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b13Average)));
+		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average), String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b13Average), String.valueOf(b11Average)));
 		writer.flush();
 		writer.close();
 	}

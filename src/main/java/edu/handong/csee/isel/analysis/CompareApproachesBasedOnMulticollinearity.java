@@ -19,26 +19,31 @@ public class CompareApproachesBasedOnMulticollinearity {
 	int approachname_col = 19;
 	static String measurementName = "";
 	static String[] MLmodels = {
-			"PT_DT",			
-			"PT_LR",
-			"PT_RF",
-			"PT_NB",
-			"PT_LMT",
-			"PT_BN"
+			"DT",			
+			"LR",
+			"RF",
+			"NB",
+			"LMT",
+			"BN"
 	};
-	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/CVParameterSelection/";
+	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/NoParameterSelection/";
+//	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/CVParameterSelection/";
+	
 	
 	public static void main(String[] args) throws IOException {
 		CompareApproachesBasedOnMulticollinearity myCABOM = new CompareApproachesBasedOnMulticollinearity();
 
 		for (String ML : MLmodels) {
-			String inputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/" + ML + "_total_results.csv"; // DT_total_results.csv로 바꿔야
-			String outputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
-			String approachName = "None";
+			String inputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/CFS_" + ML + "_result.csv"; 
+			String inputPath2 = "/home/eunjiwon/Git/EJTool/multi_results/" + ML + "_total_results.csv"; // DT_total_results.csv로 바꿔야
+			String outputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/CFS_" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
+			String approachName = "CFS-BestFirst";
+//			String approachName = "None";
+			
 			String thresholdVIF = "10.0";
 			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
 			for (int i = 1; i <= 5; i++) {
-				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
+				myCABOM.savedPerformanceOfApproaches(inputPath2, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
 			}
 		}
 		
@@ -163,6 +168,7 @@ public class CompareApproachesBasedOnMulticollinearity {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("Error writing average to csv");
+				System.exit(-1);
 			}
 
 		}
