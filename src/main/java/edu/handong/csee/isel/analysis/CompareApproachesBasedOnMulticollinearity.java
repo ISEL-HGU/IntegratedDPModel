@@ -14,7 +14,7 @@ import java.util.List;
 import edu.handong.csee.isel.weka.CSVUtils;
 
 public class CompareApproachesBasedOnMulticollinearity {
-	static int numberOfApproaches = 11;
+	static int numberOfApproaches = 12;
 	int dataname_col = 18;
 	int approachname_col = 19;
 	static String measurementName = "";
@@ -33,19 +33,20 @@ public class CompareApproachesBasedOnMulticollinearity {
 	public static void main(String[] args) throws IOException {
 		CompareApproachesBasedOnMulticollinearity myCABOM = new CompareApproachesBasedOnMulticollinearity();
 
-		for (String ML : MLmodels) {
-			String inputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/CFS_" + ML + "_result.csv"; 
-			String inputPath2 = "/home/eunjiwon/Git/EJTool/multi_results/" + ML + "_total_results.csv"; // DT_total_results.csv로 바꿔야
-			String outputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/CFS_" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
-			String approachName = "CFS-BestFirst";
-//			String approachName = "None";
-			
-			String thresholdVIF = "10.0";
-			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-			for (int i = 1; i <= 5; i++) {
-				myCABOM.savedPerformanceOfApproaches(inputPath2, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
-			}
-		}
+//		for (String ML : MLmodels) {
+//			String inputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/CFS_" + ML + "_result.csv"; 
+//			String inputPath2 = "/home/eunjiwon/Git/EJTool/multi_results/" + ML + "_total_results.csv"; // for CFS
+//			String outputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/CFS_" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
+//			String approachName = "CFS-BestFirst";
+////			String approachName = "None";
+//			
+//			String thresholdVIF = "10.0";
+//			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+//			for (int i = 1; i <= 5; i++) {
+//				myCABOM.savedPerformanceOfApproaches(inputPath2, outputPath, listOfMulticollinearityData_10, thresholdVIF, i); // For CFS
+////				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
+//			}
+//		}
 		
 //		for(String ML : MLmodels) {
 //			for(int i = 1; i <= 5; i++) {
@@ -59,16 +60,30 @@ public class CompareApproachesBasedOnMulticollinearity {
 //					measurementName = "_4_Fmeasure";
 //				else if (i == 5)
 //					measurementName = "_5_MCC";
-//				String filename = ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
+////				String filename = ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
+//				String filename = "CFS_" + ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
 //				myCABOM.run(filename);
-//				myCABOM.saveRankingCSV(filename);
-//				myCABOM.saveRankingAverageCSV(filename);
+////				myCABOM.saveRankingCSV(filename);
+////				myCABOM.saveRankingAverageCSV(filename);
 //				myCABOM.saveProjectAverageCSV(filename);
 //
 //			}
 //		}
 		
-
+		for (String ML : MLmodels) {
+			String inputPath = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/NoParameterSelection/CFS_" + ML + "_result.csv"; 
+			String outputPath = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/NoParameterSelection/CFS_" + ML; 
+			String approachName = "CFS-BestFirst";
+		
+			
+			String thresholdVIF = "10.0";
+			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+			for (int i = 1; i <= 5; i++) {
+				myCABOM.savedWithMulticollinearityBasedOnCFSPerformanceAverage(inputPath, outputPath, thresholdVIF, approachName, i);
+			}
+		}
+		 
+		
 	}
 
 	public void run(String baselinePath) {
@@ -96,7 +111,7 @@ public class CompareApproachesBasedOnMulticollinearity {
 			ArrayList<Double> b8List = new ArrayList<Double>();
 			ArrayList<Double> b9List = new ArrayList<Double>();
 			ArrayList<Double> b10List = new ArrayList<Double>();
-			// ArrayList<Double> b11List = new ArrayList<Double>();
+			 ArrayList<Double> b11List = new ArrayList<Double>(); // CFS
 			// ArrayList<Double> b12List = new ArrayList<Double>(); // WFS
 			ArrayList<Double> b13List = new ArrayList<Double>(); // VC and RR
 			for (List<String> newLine : allData) {
@@ -158,12 +173,18 @@ public class CompareApproachesBasedOnMulticollinearity {
 					else
 						b13List.add(Double.valueOf(list.get(evaluation_measure)));
 				}
+				else if (list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals("CFS-BestFirst")) { 
+					if (list.get(evaluation_measure).equals("NaN"))
+						continue;
+					else
+						b11List.add(Double.valueOf(list.get(evaluation_measure)));
+				}
 
 			}
 			try {
 				System.out.println(datasetName + "size of None list : " + b1List.size());
 				saveAverageCSV(baselinePath, datasetName, averageArray(b1List), averageArray(b2List), averageArray(b3List), averageArray(b4List), averageArray(b5List), averageArray(b6List),
-						averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b13List));
+						averageArray(b7List), averageArray(b8List), averageArray(b9List), averageArray(b10List), averageArray(b13List), averageArray(b11List));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -176,7 +197,7 @@ public class CompareApproachesBasedOnMulticollinearity {
 	}
 	// DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0_6_average.csv
 	public void saveAverageCSV(String baselinePath, String dataset, Double b1Average, Double b2Average, Double b3Average, Double b4Average, Double b5Average, Double b6Average, Double b7Average,
-			Double b8Average, Double b9Average, Double b10Average, Double b13Average) throws Exception {
+			Double b8Average, Double b9Average, Double b10Average, Double b13Average, Double b11Average) throws Exception {
 		FileWriter writer = new FileWriter(path + baselinePath + "_6_average.csv", true);
 		// Add header for R studio when the first data set
 		if (dataset.equals("AEEEM_EQ")) {
@@ -192,13 +213,13 @@ public class CompareApproachesBasedOnMulticollinearity {
 			baselineList.add("SVIF5");
 			baselineList.add("SVIF4");
 			baselineList.add("SVIF2.5");
-			// baselineList.add("CFS-BestFirst");
 			// baselineList.add("WFS-BestFirst");
 			baselineList.add("VCRR");
+			baselineList.add("CFS-BestFirst");
 			CSVUtils.writeLine(writer, baselineList);
 		}
 		CSVUtils.writeLine(writer, Arrays.asList(dataset, String.valueOf(b1Average), String.valueOf(b2Average), String.valueOf(b3Average), String.valueOf(b4Average), String.valueOf(b5Average),
-				String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b13Average)));
+				String.valueOf(b6Average), String.valueOf(b7Average), String.valueOf(b8Average), String.valueOf(b9Average), String.valueOf(b10Average), String.valueOf(b13Average), String.valueOf(b11Average)));
 		writer.flush();
 		writer.close();
 	}
@@ -343,6 +364,7 @@ public class CompareApproachesBasedOnMulticollinearity {
 		ArrayList<Double> b9List = new ArrayList<Double>();
 		ArrayList<Double> b10List = new ArrayList<Double>();
 		ArrayList<Double> b11List = new ArrayList<Double>();
+		ArrayList<Double> b12List = new ArrayList<Double>(); // CFS
         BufferedWriter bufWriter = null;
 
         try{
@@ -368,6 +390,7 @@ public class CompareApproachesBasedOnMulticollinearity {
                 		if(i == 9) b9List.add(Double.valueOf(list.get(i)));
                 		if(i == 10) b10List.add(Double.valueOf(list.get(i))); 
                 		if(i == 11) b11List.add(Double.valueOf(list.get(i)));
+                		if(i == 12) b12List.add(Double.valueOf(list.get(i)));
                 }
             }
             
@@ -402,6 +425,7 @@ public class CompareApproachesBasedOnMulticollinearity {
 	        		if(i == 9) bufWriter.write(String.valueOf(averageArray(b9List)));
 	        		if(i == 10) bufWriter.write(String.valueOf(averageArray(b10List))); 
 	        		if(i == 11) bufWriter.write(String.valueOf(averageArray(b11List)));
+	        		if(i == 12) bufWriter.write(String.valueOf(averageArray(b12List)));
 	    			bufWriter.write(",");
 	        }
 	        
@@ -475,6 +499,56 @@ public class CompareApproachesBasedOnMulticollinearity {
 		return ret;
 	}
 
+	public void savedWithMulticollinearityBasedOnCFSPerformanceAverage(String inputPath, String outputPath, String thres, String targetApproachName, int positionMeasurementColumn) throws IOException {
+		int idx = 0;
+
+		if (thres.equals("10.0"))
+			idx = 20;
+		else if (thres.equals("5.0"))
+			idx = 21;
+		else if (thres.equals("4.0"))
+			idx = 22;
+		else if (thres.equals("2.5"))
+			idx = 23;
+		else {
+			System.out.println("Wrong threshold of VIF");
+			System.exit(-1);
+		}
+		
+		int evaluation_measure = positionMeasurementColumn;
+
+		if (positionMeasurementColumn == 4)
+			measurementName = "_1_AUC";
+		else if (positionMeasurementColumn == 1)
+			measurementName = "_2_Precision";
+		else if (positionMeasurementColumn == 2)
+			measurementName = "_3_Recall";
+		else if (positionMeasurementColumn == 3)
+			measurementName = "_4_Fmeasure";
+		else if (positionMeasurementColumn == 5)
+			measurementName = "_5_MCC";
+
+		FileWriter writer = new FileWriter(outputPath + measurementName + "_10_multicollinearity_with_None_thres_" + thres + ".csv", true);
+		ArrayList<Double> b12List = new ArrayList<Double>(); // CFS
+		
+		ArrayList<String> listOfMulticollinearityData = new ArrayList<>();
+		List<List<String>> allData = CSVUtils.readCSV(inputPath);
+		for (List<String> newLine : allData) {
+			List<String> list = newLine;
+			if (list.get(approachname_col).equals(targetApproachName) && list.get(idx).equals(thres)) {
+				if (list.get(evaluation_measure).equals("NaN"))
+					continue;
+				else
+					b12List.add(Double.valueOf(list.get(evaluation_measure)));
+			}
+		}
+		// save average
+		CSVUtils.writeLine(writer, Arrays.asList(String.valueOf(averageArray(b12List))));
+		writer.flush();
+		writer.close();
+		
+	}
+	
 	// savedDataHavingMulticollinearity(inputPath, "10.0", "None")
 	public ArrayList<String> savedDataHavingMulticollinearity(String inputPath, String thres, String targetApproachName) {
 		int idx = 0;
