@@ -26,24 +26,33 @@ public class CompareApproachesBasedOnMulticollinearity {
 			"LMT",
 			"BN"
 	};
-	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch/";
+	static String[] measurements = {
+			"AUC",
+			"Fmeasure",
+			"MCC"
+	};
+	
+	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch_Eval/";
 	
 	
 	public static void main(String[] args) throws IOException {
 		CompareApproachesBasedOnMulticollinearity myCABOM = new CompareApproachesBasedOnMulticollinearity();
 		
 		// execute on the server to get "_5_multicollinearity_with_None_thres_" file
-		for (String ML : MLmodels) {
-			String inputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/MultiSearch_" + ML + "_total_results.csv"; 
-			String outputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/MultiSearch_" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
-			String approachName = "None";
-			
-			String thresholdVIF = "10.0";
-			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
-			for (int i = 1; i <= 5; i++) {
-				myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
+		for(String measure : measurements) {
+			for (String ML : MLmodels) {
+				String inputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/" + measure + "_MultiSearch_" + ML + "_total_results.csv"; 
+				String outputPath = "/home/eunjiwon/Git/MulticollinearityExpTool/multi_results/" + measure + "_MultiSearch_" + ML; // None 기준으로 다중공선성 있는 것들만 따로 모아놓음
+				String approachName = "None";
+				
+				String thresholdVIF = "10.0";
+				ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+				for (int i = 1; i <= 5; i++) {
+					myCABOM.savedPerformanceOfApproaches(inputPath, outputPath, listOfMulticollinearityData_10, thresholdVIF, i);
+				}
 			}
 		}
+
 		
 		// execute on the local
 //		for(String ML : MLmodels) {

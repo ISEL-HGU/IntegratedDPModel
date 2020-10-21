@@ -16,7 +16,7 @@ import edu.handong.csee.isel.weka.CSVUtils;
 public class AverageArray {
 	static int numberOfApproaches = 11;
 	static String measurementName = "";
-	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/MultiSearch/";
+	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch_Eval/";
 //	static String[] filenameArray = {
 //			"DecisionTree_noHadling_total_result",
 			
@@ -32,14 +32,25 @@ public class AverageArray {
 //			"Add_RandomForest_smote_total_result"
 //			"RandomForest_spread_total_result"	
 //	};
+
 	static String[] MLmodels = {
-			"MultiSearch_DT",			
-			"MultiSearch_LR",
-			"MultiSearch_RF",
-			"MultiSearch_NB",
-			"MultiSearch_LMT",
-			"MultiSearch_BN"
+			"AUC_MultiSearch_DT",			
+			"AUC_MultiSearch_LR",
+			"AUC_MultiSearch_RF",
+			"AUC_MultiSearch_NB",
+			"AUC_MultiSearch_LMT",
+			"AUC_MultiSearch_BN",
+			"Fmeasure_MultiSearch_DT",			
+			"Fmeasure_MultiSearch_LR",
+			"Fmeasure_MultiSearch_RF",
+			"Fmeasure_MultiSearch_NB",
+			"Fmeasure_MultiSearch_LMT",
+			"Fmeasure_MultiSearch_BN",
+			"MCC_MultiSearch_DT",			
+			"MCC_MultiSearch_LR",
+			"MCC_MultiSearch_RF"
 	};
+
 	
 	public static void main(String[] args) throws IOException{
 		AverageArray myAverageArray = new AverageArray();
