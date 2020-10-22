@@ -19,17 +19,17 @@ public class CompareApproachesBasedOnMulticollinearity {
 	int approachname_col = 19;
 	static String measurementName = "";
 	static String[] MLmodels = {
-			"DT",			
-			"LR",
-			"RF",
+//			"DT",			
+//			"LR",
+//			"RF",
 			"NB",
-			"LMT",
+//			"LMT",
 			"BN"
 	};
 	static String[] measurements = {
-			"AUC",
+//			"AUC",
 			"Fmeasure",
-			"MCC"
+//			"MCC"
 	};
 	
 	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch_Eval/";
@@ -55,27 +55,31 @@ public class CompareApproachesBasedOnMulticollinearity {
 
 		
 		// execute on the local
-//		for(String ML : MLmodels) {
-//			for(int i = 1; i <= 5; i++) {
-//				if (i == 4)
-//					measurementName = "_1_AUC";
-//				else if (i == 1)
-//					measurementName = "_2_Precision";
-//				else if (i == 2)
-//					measurementName = "_3_Recall";
-//				else if (i == 3)
-//					measurementName = "_4_Fmeasure";
-//				else if (i == 5)
-//					measurementName = "_5_MCC";
-////				String filename = ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
-//				String filename = "MultiSearch_" + ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
-//				myCABOM.run(filename);
-//				myCABOM.saveRankingCSV(filename);
-//				myCABOM.saveRankingAverageCSV(filename);
-//				myCABOM.saveProjectAverageCSV(filename);
+//		for(String measure : measurements) {
+//			for(String ML : MLmodels) {
+//				for(int i = 1; i <= 5; i++) {
+//					if (i == 4)
+//						measurementName = "_1_AUC";
+//					else if (i == 1)
+//						measurementName = "_2_Precision";
+//					else if (i == 2)
+//						measurementName = "_3_Recall";
+//					else if (i == 3)
+//						measurementName = "_4_Fmeasure";
+//					else if (i == 5)
+//						measurementName = "_5_MCC";
+////					String filename = ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
+//					String filename = measure + "_MultiSearch_" + ML + measurementName + "_5_multicollinearity_with_None_thres_10.0"; // DT_4_Fmeasure_5_multicollinearity_with_None_thres_10.0
+//					myCABOM.run(filename);
+//					myCABOM.saveRankingCSV(filename);
+//					myCABOM.saveRankingAverageCSV(filename);
+//					myCABOM.saveProjectAverageCSV(filename);
 //
+//				}
 //			}
 //		}
+//		
+
 		
 		 
 		
