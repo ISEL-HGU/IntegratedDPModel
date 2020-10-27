@@ -71,21 +71,92 @@ public class CompareApproachesBasedOnMulticollinearity {
 //		}
 		
 		for (String ML : MLmodels) {
-			String inputPath = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/NoParameterSelection/CFS_" + ML + "_result.csv"; 
-			String outputPath = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/NoParameterSelection/CFS_" + ML; 
+			String inputPath = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/CFS_NoPT/CFS_" + ML + "_result.csv"; 
+			String outputPath = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/CFS_NoPT/CFS_" + ML; 
 			String approachName = "CFS-BestFirst";
 		
 			
 			String thresholdVIF = "10.0";
-			ArrayList<String> listOfMulticollinearityData_10 = myCABOM.savedDataHavingMulticollinearity(inputPath, thresholdVIF, approachName);
+//			for (int i = 1; i <= 5; i++) {
+//				myCABOM.savedWithMulticollinearityBasedOnCFSPerformanceAverage(inputPath, outputPath, thresholdVIF, approachName, i);
+//			}
+			
 			for (int i = 1; i <= 5; i++) {
-				myCABOM.savedWithMulticollinearityBasedOnCFSPerformanceAverage(inputPath, outputPath, thresholdVIF, approachName, i);
+				myCABOM.savedWithMulticollinearityBasedOnCFSPerformance(inputPath, outputPath, thresholdVIF, approachName, i);
 			}
+			
 		}
 		 
 		
 	}
+	
+	public void savedWithMulticollinearityBasedOnCFSPerformance(String inputPath, String outputPath, String thres, String targetApproachName, int positionMeasurementColumn) throws IOException {
+		String[] dataset = {"AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1", "NASA_jm1", "NASA_kc1", "NASA_kc2", "NASA_pc1", "PROMISE_ant-1.5", "PROMISE_ant-1.6", "PROMISE_ant-1.7", "PROMISE_camel-1.2", "PROMISE_camel-1.4", "PROMISE_camel-1.6", "PROMISE_ivy-1.4", "PROMISE_ivy-2.0", "PROMISE_jedit-3.2", "PROMISE_jedit-4.0", "PROMISE_jedit-4.1", "PROMISE_log4j-1.0", "PROMISE_log4j-1.1", "PROMISE_lucene-2.0", "PROMISE_lucene-2.2", "PROMISE_lucene-2.4", "PROMISE_poi-1.5", "PROMISE_poi-2.5", "PROMISE_poi-3.0", "PROMISE_synapse-1.0", "PROMISE_synapse-1.1", "PROMISE_synapse-1.2", "PROMISE_xalan-2.4", "PROMISE_xalan-2.5", "PROMISE_xerces-1.2", "PROMISE_xerces-1.3", "Relink_Apache", "Relink_Safe", "Relink_Zxing"};	
 
+		int idx = 0;
+
+		if (thres.equals("10.0"))
+			idx = 20;
+		else if (thres.equals("5.0"))
+			idx = 21;
+		else if (thres.equals("4.0"))
+			idx = 22;
+		else if (thres.equals("2.5"))
+			idx = 23;
+		else {
+			System.out.println("Wrong threshold of VIF");
+			System.exit(-1);
+		}
+		
+		int evaluation_measure = positionMeasurementColumn;
+
+		if (positionMeasurementColumn == 4)
+			measurementName = "_1_AUC";
+		else if (positionMeasurementColumn == 1)
+			measurementName = "_2_Precision";
+		else if (positionMeasurementColumn == 2)
+			measurementName = "_3_Recall";
+		else if (positionMeasurementColumn == 3)
+			measurementName = "_4_Fmeasure";
+		else if (positionMeasurementColumn == 5)
+			measurementName = "_5_MCC";
+
+		List<List<String>> allData = CSVUtils.readCSV(inputPath);
+		for(String datasetName : dataset) {
+			ArrayList<Double> CFSList = new ArrayList<Double>(); // CFS
+			for (List<String> newLine : allData) {
+				List<String> list = newLine;
+				if (list.get(dataname_col).contains(datasetName) && list.get(approachname_col).equals(targetApproachName) && list.get(idx).equals(thres)) {
+					if (list.get(evaluation_measure).equals("NaN"))
+						continue;
+					else
+						CFSList.add(Double.valueOf(list.get(evaluation_measure)));
+				}
+			
+				
+			}
+			FileWriter writer =  new FileWriter(outputPath + measurementName + "_CFS_NoPT_6_average.csv", true);
+		    // Add header for R studio when the first data set 
+			if(datasetName.equals("AEEEM_EQ")) {
+				ArrayList<String> baselineList = new ArrayList<String>();
+				baselineList.add("");
+				baselineList.add("CFS-BestFirst");
+				CSVUtils.writeLine(writer, baselineList);
+			}
+			
+			CSVUtils.writeLine(writer, Arrays.asList(datasetName, String.valueOf(averageArray(CFSList))));
+			writer.flush();
+			writer.close();
+			
+			
+			
+			
+			
+			
+		}
+		
+	}
+	
 	public void run(String baselinePath) {
 
 		String[] dataset = { "AEEEM_EQ", "AEEEM_JDT", "AEEEM_LC", "AEEEM_ML", "AEEEM_PDE", "JIT_bugzilla", "JIT_columba", "JIT_jdt", "JIT_mozilla", "JIT_platform", "JIT_postgres", "NASA_cm1",
