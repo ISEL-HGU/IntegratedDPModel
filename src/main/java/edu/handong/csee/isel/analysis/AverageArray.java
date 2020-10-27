@@ -17,21 +17,6 @@ public class AverageArray {
 	static int numberOfApproaches = 11;
 	static String measurementName = "";
 	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch_Eval/";
-//	static String[] filenameArray = {
-//			"DecisionTree_noHadling_total_result",
-			
-//			"DT_total_results",			
-//			"LR_total_results",
-//			"RF_total_results",
-			
-//			"MCC_DT_total_result",
-//			"Logistic_noHandling_total_result",
-//			"Add_Logistic_smote_total_result",
-//			"Logistic_spread_total_result",
-//			"RandomForest_noHandling_total_result",
-//			"Add_RandomForest_smote_total_result"
-//			"RandomForest_spread_total_result"	
-//	};
 
 	static String[] MLmodels = {
 			"AUC_MultiSearch_DT",			
