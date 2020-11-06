@@ -19,21 +19,24 @@ public class AverageArray {
 	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch_Eval/";
 
 	static String[] MLmodels = {
-			"AUC_MultiSearch_DT",			
-			"AUC_MultiSearch_LR",
-			"AUC_MultiSearch_RF",
-			"AUC_MultiSearch_NB",
-			"AUC_MultiSearch_LMT",
-			"AUC_MultiSearch_BN",
-			"Fmeasure_MultiSearch_DT",			
-			"Fmeasure_MultiSearch_LR",
-			"Fmeasure_MultiSearch_RF",
-			"Fmeasure_MultiSearch_NB",
-			"Fmeasure_MultiSearch_LMT",
+//			"Fmeasure_MultiSearch_NB",
+//			"Fmeasure_MultiSearch_LMT",
 			"Fmeasure_MultiSearch_BN",
-			"MCC_MultiSearch_DT",			
-			"MCC_MultiSearch_LR",
-			"MCC_MultiSearch_RF"
+//			"MCC_MultiSearch_NB",			
+//			"MCC_MultiSearch_LMT",
+//			"MCC_MultiSearch_BN",
+//			"Precision_MultiSearch_DT",			
+//			"Precision_MultiSearch_LR",
+//			"Precision_MultiSearch_RF",
+//			"Precision_MultiSearch_NB",			
+//			"Precision_MultiSearch_LMT",
+//			"Precision_MultiSearch_BN",
+//			"Recall_MultiSearch_DT",			
+//			"Recall_MultiSearch_LR",
+//			"Recall_MultiSearch_RF",
+//			"Recall_MultiSearch_NB",			
+//			"Recall_MultiSearch_LMT",
+//			"Recall_MultiSearch_BN"		
 	};
 
 	

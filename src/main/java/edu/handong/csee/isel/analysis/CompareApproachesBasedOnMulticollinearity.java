@@ -22,14 +22,15 @@ public class CompareApproachesBasedOnMulticollinearity {
 			"DT",			
 			"LR",
 			"RF",
-//			"NB",
-//			"LMT",
-//			"BN"
+			"NB",
+			"LMT",
+			"BN"
 	};
 	static String[] measurements = {
-//			"AUC",
 			"Fmeasure",
-			"MCC"
+			"MCC",
+			"Precision",
+			"Recall"
 	};
 	
 	static String path = "/Users/eunjiwon/Desktop/Researches/Multicollinearity/exp_results/Master_thesis_exp_results/Multisearch_Eval/";
